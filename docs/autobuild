@@ -1,0 +1,1 @@
+sphinx-autobuild --watch ../cslug --open-browser --ignore ~* ./source ./build  
