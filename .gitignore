@@ -107,3 +107,9 @@ ENV/
 # IDE settings
 .vscode/
 .idea
+
+# CSLug build artifacts
+*.dll
+*.so
+*.dylib
+*.json
