@@ -5,12 +5,13 @@
 import os
 from pathlib import Path
 import ctypes
-import subprocess
+from subprocess import Popen, PIPE
 import re
 import warnings
 import platform
 
 from cslug._types_file import Types
+from cslug import misc
 
 # TODO: maybe try utilising this. Probably not worth it...
 # https://stackoverflow.com/questions/17942874/stdout-redirection-with-ctypes
@@ -35,25 +36,35 @@ _ADDRESS_VIEW = ctypes.ARRAY(ctypes.c_void_p, 100)
 class CSlug(object):
 
     def __init__(self, path, *sources):
-        path = Path(path)
+        path = misc.as_path_or_buffer(path)
+        if not isinstance(path, Path):
+            raise TypeError("The path to a CSlug's DLL must be a true path, not"
+                            "a {}.".format(type(path)))
         self.path = path.with_suffix(SUFFIX)
         if len(sources) == 0 and path.suffix == ".c":
             sources = (path,)
-        self.sources = [Path(i) for i in sources]
+        self.sources = [misc.as_path_or_readable_buffer(i) for i in sources]
         self.types_dict = Types(self.path.with_suffix(".json"), *self.sources)
+        self.types_dict.init_from_json()
         self._dll = None
 
     def compile(self):
         self.close()
 
-        command = self.make_command()
-        status, msg = subprocess.getstatusoutput(command)
+        command, buffers = self.make_command()
+        p = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE,
+                  universal_newlines=True)
+        for buffer in buffers:
+            p.stdin.write(misc.read(buffer)[0])
+        p.stdin.close()
+        p.wait()
+        msg = p.stderr.read()
 
         # If all just whitespace.
         if not re.search(r"\S", msg):
             msg = ""
 
-        if status:
+        if p.returncode:
             raise BuildError(command, msg)
             return False
 
@@ -110,9 +121,13 @@ class CSlug(object):
 
         # Compile all .c files into 1 combined library.
         # Note that you don't pass header files to gcc.
-        files = [str(i) for i in self.sources]
+        true_files = [str(i) for i in self.sources if isinstance(i, Path)]
+        buffers = [i for i in self.sources if not isinstance(i, Path)]
 
-        return _escape(["gcc"] + output + flags + warning_flags + files)
+        stdin_flags = "-x c -".split() if buffers else []
+
+        return (["gcc"] + output + flags + warning_flags + true_files +
+                stdin_flags, buffers)
 
 
 def ptr(bytes_like):
@@ -170,11 +185,3 @@ def check_printfs(file=None, name=None):
             out = True
         i += 1
     return out
-
-
-def _escape(args):
-    """Wrap anything with a " " in it in quotes.
-
-    This shouldn't be necessary, but for some reason macOS breaks without it.
-    """
-    return " ".join("\"" + i + "\"" if " " in i else i for i in args)
