@@ -9,16 +9,17 @@ import json
 import ctypes
 
 from cslug.c_parse import extract_prototypes, parse_prototype
+from cslug import misc
 
 
 class Types(object):
 
     def __init__(self, path, *sources):
-        self.sources = [Path(i) for i in sources]
-        self.json_path = Path(path).with_suffix(".json")
+        self.sources = [misc.as_path_or_buffer(i) for i in sources]
+        self.json_path = misc.as_path_or_buffer(path)
 
-        reload = (not self.json_path.exists()) \
-                or all(map(Path.exists, self.sources))
+        reload = (not misc.exists_or_buffer(self.json_path)) \
+            or all(map(misc.exists_or_buffer, self.sources))
 
         if reload:
             self.types = self._types_from_source()
@@ -33,22 +34,17 @@ class Types(object):
         """
         types = {}
         for source in self.sources:
-            prototypes = extract_prototypes(source.read_text("utf-8"))
+            prototypes = extract_prototypes(misc.read(source)[0])
             for func in prototypes:
                 name, *args = parse_prototype(func)
                 types[name] = args
         return types
 
     def _types_from_json(self):
-        with self.json_path.open("r") as f:
-            return json.load(f)
+        return json.loads(misc.read(self.json_path)[0])
 
     def write(self, path=sys.stdout):
-        file = path if isinstance(path, io.TextIOBase) else open(str(path), "w")
-        json.dump(self.types, file, indent="  ")
-        file.write("\n")
-        if file is not path:
-            file.close()
+        misc.write(path, json.dumps(self.types, indent="  "), "\n")
 
     def apply(self, dll):
         """
