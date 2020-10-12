@@ -10,7 +10,6 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-
 setup(
     author="Brénainn Woodsend",
     author_email='bwoodsend@gmail.com',
@@ -28,9 +27,7 @@ setup(
     ],
     description="Quick and painless wrapping C code into Python",
     entry_points={
-        'console_scripts': [
-            'cslug=cslug.cli:main',
-        ],
+        'console_scripts': ['cslug=cslug.cli:main',],
     },
     install_requires=['Click>=7.0'],
     extras_require={"test": ['pytest>=3', 'pytest-ordering']},
