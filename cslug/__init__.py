@@ -8,3 +8,4 @@ from ._headers import Header
 from . import c_parse
 from ._cdll import CSlug, ptr, BuildWarning, BuildError
 from ._types_file import Types
+from .misc import anchor
