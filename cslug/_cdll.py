@@ -19,8 +19,6 @@ from cslug import misc, exceptions
 OS = platform.system()
 SUFFIX = {"Windows": ".dll", "Linux": ".so", "Darwin": ".dylib"}.get(OS, ".so")
 
-_ADDRESS_VIEW = ctypes.ARRAY(ctypes.c_void_p, 100)
-
 
 class CSlug(object):
 
@@ -120,11 +118,14 @@ class CSlug(object):
 
 def ptr(bytes_like):
     """Get a ``ctypes.c_void_p`` to any Python object supporting the C buffer
-    protocol. i.e. calling ``bytes(obj)`` doesn't raise a ``TypeError``.
-    This includes bytes, memoryviews and numpy arrays. This intentionally
-    doesn't inc-ref the buffer so don't let it be deleted in Python until C is
-    done with it. i.e. ``c_method(ptr(b"buffer"))`` will likely crash Python.
-    Instead use:
+    protocol.
+
+    A ``bytes_like`` object is anything that calling ``bytes(obj)`` doesn't
+    raise a ``TypeError``. This includes bytes, memoryviews and numpy arrays.
+
+    This intentionally doesn't inc-ref the buffer so don't let it be deleted in
+    Python until C is done with it. i.e. ``c_method(ptr(b"buffer"))`` will
+    likely crash Python. Instead use:
 
     .. code-block:: python
 
@@ -135,11 +136,50 @@ def ptr(bytes_like):
         # automatically as you normally would any other Python object).
         del buffer # optional
 
+    If you are using `numpy`_ then you should be aware that this method only
+    accepts C-contiguous buffers. If you understand how contiguity works and
+    have explicitly supported non-contiguous buffers in your C code then you may
+    use :meth:`nc_ptr` instead. Otherwise convert your arrays to contiguous ones
+    using either::
+
+        array = np.ascontiguousarray(array)
+
+    or::
+
+        array = np.asarray(array, order="C")
+
     """
+    try:
+        return _ptr(bytes_like, 0)
+    except ValueError as ex:
+        if len(ex.args) == 1 and "not C-contiguous" in ex.args[0]:
+            raise ValueError(
+                ex.args[0] + " and, by using `ptr()`, you have specified that "
+                "a contiguous array is required. See `help(cslug.ptr) for how "
+                "to resolve this.")
+        raise
+
+
+def nc_ptr(bytes_like):
+    """Retrieve a pointer to a non-contiguous buffer.
+
+    Use with caution. If your function assumes a contiguous array but gets a
+    non-contiguous one then you will either get garbage results or memory
+    errors.
+
+    """
+    return _ptr(bytes_like, 0x18)
+
+
+_ADDRESS_VIEW = ctypes.ARRAY(ctypes.c_void_p, 100)
+
+
+def _ptr(bytes_like, flags):
+    # https://docs.python.org/3/c-api/buffer.html
     # I'm really not convinced by this.
     obj = ctypes.py_object(bytes_like)
     address = _ADDRESS_VIEW()
-    ctypes.pythonapi.PyObject_GetBuffer(obj, address, 24)
+    ctypes.pythonapi.PyObject_GetBuffer(obj, address, flags)
     # The above inc-refs it which leads to memory leaks. We should call the
     # following after we're finished with the pointer to safely allow it to be
     # deleted but it's easier just to say always hang onto buffers in Python
