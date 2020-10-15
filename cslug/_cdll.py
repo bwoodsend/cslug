@@ -11,21 +11,10 @@ import warnings
 import platform
 
 from cslug._types_file import Types
-from cslug import misc
+from cslug import misc, exceptions
 
 # TODO: maybe try utilising this. Probably not worth it...
 # https://stackoverflow.com/questions/17942874/stdout-redirection-with-ctypes
-
-
-class BuildError(Exception):
-
-    def __str__(self):
-        return "The build command:\n\n%s\n\nFailed with:\n\n%s\n" % self.args
-
-
-class BuildWarning(Warning):
-    pass
-
 
 OS = platform.system()
 SUFFIX = {"Windows": ".dll", "Linux": ".so", "Darwin": ".dylib"}.get(OS, ".so")
@@ -65,12 +54,11 @@ class CSlug(object):
             msg = ""
 
         if p.returncode:
-            raise BuildError(command, msg)
-            return False
+            raise exceptions.BuildError(command, msg)
 
         if msg:
             # Propagate any gcc compile warnings.
-            warnings.warn(msg, category=BuildWarning)
+            warnings.warn(msg, category=exceptions.BuildWarning)
         return True
 
     def close(self):
