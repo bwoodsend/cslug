@@ -3,6 +3,8 @@
 """
 import io
 import json
+import warnings
+
 import cslug
 
 SOURCE = """
@@ -32,18 +34,28 @@ byte ÀÂÄÆÈÊÌÎÐÒÔÖÙÛÝßáãåçéëíïñóõøùûýÿ(شيء * �
 
 PARSED = {
     'main': ['None', []],
+    #
     'many_voids': ['c_bool', []],
-    'foo': ['c_long', ['c_char']],
-    'bar': ['c_float', ['c_long', 'c_short', 'c_ulonglong']],
+    #
+    'foo': ['c_int', ['c_char']],
+    'bar': ['c_float', ['c_int32', 'c_int16', 'c_uint64']],
     'whack': ['c_short', ['c_ulong', 'c_double', 'c_long']],
+    #
     'baz': ['c_void_p', ['c_void_p'] * 6],
+    #
     'zap': ['c_char', ['None']],
+    #
     'flop': ['None', ['None']],
+    #
     'ÀÂÄÆÈÊÌÎÐÒÔÖÙÛÝßáãåçéëíïñóõøùûýÿ': ['c_byte', ['c_void_p', 'c_void_p']]
 }
 
 
 def test_io():
-    self = cslug.Types(io.StringIO(), io.StringIO(SOURCE))
-    assert self.types == PARSED
-    assert json.loads(self.json_path.getvalue()) == PARSED
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore",
+                                category=cslug.exceptions.TypeParseWarning)
+
+        self = cslug.Types(io.StringIO(), io.StringIO(SOURCE))
+        assert self.types == PARSED
+        assert json.loads(self.json_path.getvalue()) == PARSED

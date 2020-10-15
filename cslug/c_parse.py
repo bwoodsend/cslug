@@ -84,27 +84,87 @@ def parse_prototype(string):
     res, args = _prototype_type_name_re.fullmatch(string).groups()
     args = list(_filter(None, _re.split(r"\s*,\s*", args)))
     args = [i for i in args if not _re.fullmatch(r"\s*void\s*", i)]
-    a, b, name = _parse_type_name(res)
+    a, b, name = parse_parameter(res)
     res = _choose_ctype(a, b, name)
-    args = [_choose_ctype(*_parse_type_name(i)) for i in args]
+    args = [_choose_ctype(*parse_parameter(i)) for i in args]
     return name, res, args
 
 
-def _parse_type_name(string):
+def parse_parameter(string):
+    """Parse a variable or parameter declaration e.g. ``int * foo`` into
+
+    :param string: Declaration to parse.
+    :type string: str
+    :return: ``(ctypes_type_name, is_pointer, name)``
+    :rtype: tuple[str, bool, str]
+
+    """
+    # XXX: This logic is pretty hacky.
     pointer = False
-    type = None
-    prefix = ""
+    type_words = []
+    name = None
     for word in _re.findall(r"\w+|[*&]", string):
-        if word.endswith("_t"):
-            word = word[:-2]
+
         if word == "unsigned":
-            prefix = "u"
+            type_words.append("u")
+            # All unsigned types are prefixed with "u" in ctypes.
+            continue
+
+        if word == "signed":
+            # Signed is a default anyway and ctypes never uses it.
+            continue
+
         if _re.fullmatch(r"\*+", word):
+            # Pointers to pointers (**) are to be treated as just pointers.
             pointer = True
-        type = type or getattr(_ctypes, "c_" + prefix + word, None)
-    return type, pointer, word
+            continue
+
+        if word.endswith("_t") and word != "size_t":
+            # Exact types (e.g. int32_t) have the _t suffix removed in ctypes.
+            # Except for size_t.
+            word = word[:-2]
+
+        if word == "int":
+            # Int is particularly awkward in that it's optional and a default.
+            # Just ignore it here. We'll add it on at the end later if it turns
+            # out we need it.
+            continue
+
+        if hasattr(_ctypes, "c_" + word):
+            # To test if `word` is a type, check if it exists in ctypes. This
+            # may not be the whole type too be returned if the type given is
+            # multi-worded e.g. long double.
+            type_words.append(word)
+        else:
+            # Otherwise assume this is the parameter name. This will get
+            # confused by custom types but I don't see how to avoid that without
+            # some much heavier parsing of the rest of the file.
+            name = word
+
+    if type_words or "signed" in string or "int" in string:
+        type = "c_" + "".join(type_words)
+        # Check if type is a valid ctype:
+        if not hasattr(_ctypes, type):
+            # If not, append `int` and try again:
+            type += "int"
+            if not hasattr(_ctypes, type):
+                # Presumably this is a custom type. Or unsupported by ctypes.
+                type = None
+    else:
+        type = None
+
+    if type is None:
+        from warnings import warn
+        from cslug.exceptions import TypeParseWarning
+        warn("Unrecognised type '{}'. Type will not be set in wrapped C "
+             "functions.".format(string), TypeParseWarning) # yapf: disable
+        # str None is less ugly to serialise.
+        type = "None"
+
+    return type, pointer, name
 
 
 def _choose_ctype(type, pointer, word):
-    ctype = _ctypes.c_void_p if pointer else type
-    return ctype.__name__ if ctype is not None else "None"
+    if pointer:
+        return _ctypes.c_void_p.__name__
+    return type if type is not None else "None"
