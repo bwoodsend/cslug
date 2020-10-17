@@ -5,31 +5,33 @@ import io
 import json
 import warnings
 
+import pytest
+
 import cslug
 
 SOURCE = """
 // Something simple.
-void main()
+void main() {}
 
 // Arguments of just ``void`` should be ignored.
-bool many_voids(void, void, void)
+bool many_voids(void, void, void) {}
 
 // Some random types.
-int foo(char x)
-float bar(int32_t a, int16_t b, uint64_t c)
-short whack(unsigned long d, double e, long)
+int foo(char x) {}
+float bar(int32_t a, int16_t b, uint64_t c) {}
+short whack(unsigned long d, double e, long) {}
 
 // All pointers reduce to just void pointer.
-void * baz(float * a, int **, * Custom, *Custom, Custom*, Custom  *  )
+void * baz(float * a, int **, * Custom, *Custom, Custom*, Custom  *  ) {}
 
 // Invalid syntax defaults to ``None`` - leave the compiler to raise any issues.
-char zap(I like cake)
+char zap(I like cake) {}
 
 // Likewise with invalid types.
-void flop(long long long)
+void flop(long long long) {}
 
 // Unicode shouldn't break anything...
-byte ÀÂÄÆÈÊÌÎÐÒÔÖÙÛÝßáãåçéëíïñóõøùûýÿ(شيء * مخصص, 習俗 ** 事情)
+byte ÀÂÄÆÈÊÌÎÐÒÔÖÙÛÝßáãåçéëíïñóõøùûýÿ(شيء * مخصص, 習俗 ** 事情) {}
 """
 
 PARSED_FUNCTIONS = {
@@ -51,15 +53,26 @@ PARSED_FUNCTIONS = {
 }
 
 
-def test_functions():
+@pytest.mark.parametrize("modifier",
+                         [lambda x: x, lambda x: x.replace("{", "\n{")])
+def test_functions(modifier):
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore",
                                 category=cslug.exceptions.TypeParseWarning)
 
-        self = cslug.Types(io.StringIO(), io.StringIO(SOURCE))
+        self = cslug.Types(io.StringIO(), io.StringIO(modifier(SOURCE)))
         assert self.types["functions"] == PARSED_FUNCTIONS
         assert json.loads(
             self.json_path.getvalue())["functions"] == PARSED_FUNCTIONS
+
+
+
+@pytest.mark.parametrize(
+    "modifier",
+    [lambda x: x.replace("{}", ";"), lambda x: x.replace("{", ";{")])
+def test_ignores_prototypes(modifier):
+    self = cslug.Types(io.StringIO(), io.StringIO(modifier(SOURCE)))
+    assert not self.types["functions"]
 
 
 STRUCT_TEXT = """
