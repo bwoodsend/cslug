@@ -67,13 +67,29 @@ def filter(text, token_types):
     return "".join(keep)
 
 
-# Matches a function prototype or declaration e.g. ``void foo(int x)``
-_function_re = _re.compile(r"\w+(?:(?: +)|(?: *\* *))\w+\([\w*&\s,]*\)",
-                           flags=_re.MULTILINE)
+# Matches a function declaration such as ``void foo(int x)``
+_function_re = _re.compile(r"""
+# Return type:
+(?:\w+) # initial type word
+(?:\w+|\*|\ )* # more type word or * symbols
+# Function name:
+\w+
+# Possible whitespace:
+\s*
+# Parameters. Lazily, just look for brackets.
+\([^\)]*\)
+""", flags=_re.MULTILINE | _re.VERBOSE) # yapf: disable
 
 
 def search_function_declarations(text):
-    return _function_re.findall(filter(text, TokenType.CODE))
+    text = filter(text, TokenType.CODE)
+    for match in _function_re.finditer(text):
+        # Search for a following `{` to be sure this isn't just a prototype.
+        # This should be combinable into the ``_function_re`` regex but it
+        # causes it to become indefinitely slow so we stick to old-school
+        # checking in Python.
+        if _re.match(r"\s*\{", text[match.end():]):
+            yield match.group()
 
 
 # Matches the same as ``_function_re`` but splits a prototype into a return
