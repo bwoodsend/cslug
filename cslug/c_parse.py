@@ -168,3 +168,35 @@ def _choose_ctype(type, pointer, word):
     if pointer:
         return _ctypes.c_void_p.__name__
     return type if type is not None else "None"
+
+
+_struct_re = _re.compile(r"\s*typedef\s+struct(?:\s+\w+)?\s*"
+                         r"\{([^\}]*)\}\s*(\w+)\s*;")
+
+
+def parse_struct(text):
+    params_str, name = _struct_re.match(text).groups()
+    params = []
+    param: str
+    for param in params_str.split(";"):
+        param = param.strip(" \n\t")
+        if not param:
+            continue
+        colon = param.find(":")
+        if colon != -1:
+            bitfield_size = int(param[colon + 1:])
+            param = param[:colon]
+        else:
+            bitfield_size = None
+        type, pointer, param_name = parse_parameter(param)
+        ctype = _choose_ctype(type, pointer, None)
+        if bitfield_size is None:
+            params.append((param_name, ctype))
+        else:
+            params.append((param_name, ctype, bitfield_size))
+
+    return name, params
+
+
+def parse_structs(text):
+    return (parse_struct(i.group(0)) for i in _struct_re.finditer(text))
