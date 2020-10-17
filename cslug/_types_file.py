@@ -8,7 +8,7 @@ from pathlib import Path
 import json
 import ctypes
 
-from cslug.c_parse import extract_prototypes, parse_prototype, parse_structs
+from cslug.c_parse import search_function_declarations, parse_function_declaration, parse_structs
 from cslug import misc
 from cslug._struct import make_struct
 
@@ -37,9 +37,8 @@ class Types(object):
         structs = {}
         for source in self.sources:
             source = misc.read(source)[0]
-            prototypes = extract_prototypes(source)
-            for func in prototypes:
-                name, *args = parse_prototype(func)
+            for func in search_function_declarations(source):
+                name, *args = parse_function_declaration(func)
                 functions[name] = args
 
             structs.update(parse_structs(source))
