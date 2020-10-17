@@ -8,7 +8,7 @@ import collections
 import io
 from enum import Enum
 
-from cslug.c_parse import extract_prototypes
+from cslug.c_parse import search_function_declarations
 
 
 class Header(object):
@@ -19,7 +19,7 @@ class Header(object):
             sources = (self.path,)
             self.path = self.path.with_suffix(".h")
         self.includes = includes
-        self.prototypes = collections.defaultdict(list)
+        self.functions = collections.defaultdict(list)
         self.sources = [Path(i) for i in sources]
         self.defines = defines
         assert self.path.suffix == ".h"
@@ -30,7 +30,8 @@ class Header(object):
 
     def add_source(self, source):
         source = Path(source)
-        self.prototypes[source] += extract_prototypes(source.read_text("utf-8"))
+        self.functions[source] += search_function_declarations(
+            source.read_text("utf-8"))
 
     def generate(self):
         lines = [
@@ -51,7 +52,7 @@ class Header(object):
                 lines.append("#define {} {}\n".format(*i))
             lines.append("\n")
 
-        for (path, funcs) in self.prototypes.items():
+        for (path, funcs) in self.functions.items():
             lines.append("// " + path.name + "\n")
             lines.extend(i + ";\n" for i in funcs)
             lines.append("\n")

@@ -6,9 +6,11 @@ cslug.c_parse
 
 The :mod:`c_parse` submodule provides some very bare-bones C parsing tools.
 
-This module's sole purposes are to extract function prototypes to be used in
-automatically generated header files. And to parse type information from those
-prototypes.
+This module's sole purpose is to extract function and struct declarations to
+generate prototypes in automatically generated header files, and to parse
+type information from the declarations to be passed to :class:`Types`.
+
+For a proper C parser, use `pycparser`_.
 
 """
 
@@ -66,22 +68,23 @@ def filter(text, token_types):
 
 
 # Matches a function prototype or declaration e.g. ``void foo(int x)``
-_prototype_re = _re.compile(r"\w+(?:(?: +)|(?: *\* *))\w+\([\w*&\s,]*\)",
-                            flags=_re.MULTILINE)
+_function_re = _re.compile(r"\w+(?:(?: +)|(?: *\* *))\w+\([\w*&\s,]*\)",
+                           flags=_re.MULTILINE)
 
 
-def extract_prototypes(text):
-    return _prototype_re.findall(filter(text, TokenType.CODE))
+def search_function_declarations(text):
+    return _function_re.findall(filter(text, TokenType.CODE))
 
 
-# Matches the same as ``_prototype_re`` but splits a prototype into a return
+# Matches the same as ``_function_re`` but splits a prototype into a return
 # type/name and a separate type/name for each parameter.
-_prototype_type_name_re = _re.compile(r"([^(]*)\(([^)]*)\)\s*")
+_parameter_re = _re.compile(r"([^(]*)\(([^)]*)\)\s*")
 
 
-def parse_prototype(string):
-    """Parse a function prototype."""
-    res, args = _prototype_type_name_re.fullmatch(string).groups()
+def parse_function_declaration(string):
+    """Parse a function declaration into its name, its return type and its
+    arguments."""
+    res, args = _parameter_re.fullmatch(string).groups()
     args = list(_filter(None, _re.split(r"\s*,\s*", args)))
     args = [i for i in args if not _re.fullmatch(r"\s*void\s*", i)]
     a, b, name = parse_parameter(res)
@@ -91,7 +94,7 @@ def parse_prototype(string):
 
 
 def parse_parameter(string):
-    """Parse a variable or parameter declaration e.g. ``int * foo`` into
+    """Parse a variable or parameter declaration such as ``int * foo``.
 
     :param string: Declaration to parse.
     :type string: str
