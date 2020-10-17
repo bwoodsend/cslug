@@ -8,8 +8,9 @@ from pathlib import Path
 import json
 import ctypes
 
-from cslug.c_parse import extract_prototypes, parse_prototype
+from cslug.c_parse import extract_prototypes, parse_prototype, parse_structs
 from cslug import misc
+from cslug._struct import make_struct
 
 
 class Types(object):
@@ -32,13 +33,18 @@ class Types(object):
 
         :rtype: dict
         """
-        types = {}
+        functions = {}
+        structs = {}
         for source in self.sources:
-            prototypes = extract_prototypes(misc.read(source)[0])
+            source = misc.read(source)[0]
+            prototypes = extract_prototypes(source)
             for func in prototypes:
                 name, *args = parse_prototype(func)
-                types[name] = args
-        return types
+                functions[name] = args
+
+            structs.update(parse_structs(source))
+
+        return {"functions": functions, "structs": structs}
 
     def _types_from_json(self):
         return json.loads(misc.read(self.json_path)[0])
@@ -53,10 +59,15 @@ class Types(object):
         :type dll: :class:`ctypes.CDLL`
         """
 
-        for (name, (return_type, arg_types)) in self.types.items():
+        for (name, (return_type, arg_types)) in self.types["functions"].items():
             func = getattr(dll, name)
             func.restype = getattr(ctypes, return_type, None)
             func.argtypes = [getattr(ctypes, i) for i in arg_types]
+
+        for (name, params) in self.types["structs"].items():
+            fields = [(name, getattr(ctypes, type), *bits)
+                      for (name, type, *bits) in params]
+            setattr(dll, name, make_struct(name, fields))
 
 
 if __name__ == "__main__":

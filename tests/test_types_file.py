@@ -32,7 +32,7 @@ void flop(long long long)
 byte ÀÂÄÆÈÊÌÎÐÒÔÖÙÛÝßáãåçéëíïñóõøùûýÿ(شيء * مخصص, 習俗 ** 事情)
 """
 
-PARSED = {
+PARSED_FUNCTIONS = {
     'main': ['None', []],
     #
     'many_voids': ['c_bool', []],
@@ -51,11 +51,34 @@ PARSED = {
 }
 
 
-def test_io():
+def test_functions():
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore",
                                 category=cslug.exceptions.TypeParseWarning)
 
         self = cslug.Types(io.StringIO(), io.StringIO(SOURCE))
-        assert self.types == PARSED
-        assert json.loads(self.json_path.getvalue()) == PARSED
+        assert self.types["functions"] == PARSED_FUNCTIONS
+        assert json.loads(
+            self.json_path.getvalue())["functions"] == PARSED_FUNCTIONS
+
+
+STRUCT_TEXT = """
+typedef struct spam
+{
+    char a;
+    int b;
+    int c:3;
+    unsigned int d: 4;
+} Test;
+"""
+
+PARSED_STRUCTS = {
+    'Test': [('a', 'c_char'), ('b', 'c_int'), ('c', 'c_int', 3),
+             ('d', 'c_uint', 4)]
+}
+
+
+def test_struct():
+    self = cslug.Types(io.StringIO(), io.StringIO(STRUCT_TEXT))
+    assert not self.types["functions"]
+    assert self.types["structs"] == PARSED_STRUCTS
