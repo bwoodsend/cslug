@@ -49,7 +49,8 @@ class Types(object):
         return json.loads(misc.read(self.json_path)[0])
 
     def write(self, path=sys.stdout):
-        misc.write(path, json.dumps(self.types, indent="  "), "\n")
+        misc.write(path, json.dumps(self.types, indent="  ", sort_keys=True),
+                   "\n")
 
     def apply(self, dll):
         """
