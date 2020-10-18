@@ -3,6 +3,12 @@
 """
 
 
+class NoGccError(Exception):
+
+    def __str__(self):
+        return "Building requires gcc to be installed and in your PATH."
+
+
 class BuildError(Exception):
 
     def __str__(self):
