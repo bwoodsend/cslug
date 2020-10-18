@@ -32,7 +32,6 @@ class CSlug(object):
             sources = (path,)
         self.sources = [misc.as_path_or_readable_buffer(i) for i in sources]
         self.types_dict = Types(self.path.with_suffix(".json"), *self.sources)
-        self.types_dict.init_from_json()
         self._dll = None
 
     def compile(self):
@@ -76,15 +75,15 @@ class CSlug(object):
             if not self.path.exists():
                 self.make()
             self._dll = ctypes.CDLL(path)
+            self.types_dict.init_from_json()
             self.types_dict.apply(self._dll)
         return self._dll
 
     def make(self):
         self.close()
-        # check_printfs()
-        # make_header()
-        # make_json_header()
-        return self.compile()
+        ok = self.compile()
+        self.types_dict.make()
+        return ok
 
     def __del__(self):
         self.close()

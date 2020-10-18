@@ -61,10 +61,13 @@ def test_functions(modifier):
                                 category=cslug.exceptions.TypeParseWarning)
 
         self = cslug.Types(io.StringIO(), io.StringIO(modifier(SOURCE)))
+        self.make()
         assert self.types["functions"] == PARSED_FUNCTIONS
         assert json.loads(
             self.json_path.getvalue())["functions"] == PARSED_FUNCTIONS
-
+        from_json = cslug.Types(io.StringIO(self.json_path.getvalue()))
+        from_json.init_from_json()
+        assert from_json.types == self.types
 
 
 @pytest.mark.parametrize(
@@ -72,6 +75,7 @@ def test_functions(modifier):
     [lambda x: x.replace("{}", ";"), lambda x: x.replace("{", ";{")])
 def test_ignores_prototypes(modifier):
     self = cslug.Types(io.StringIO(), io.StringIO(modifier(SOURCE)))
+    self.init_from_source()
     assert not self.types["functions"]
 
 
@@ -93,5 +97,6 @@ PARSED_STRUCTS = {
 
 def test_struct():
     self = cslug.Types(io.StringIO(), io.StringIO(STRUCT_TEXT))
+    self.make()
     assert not self.types["functions"]
     assert self.types["structs"] == PARSED_STRUCTS
