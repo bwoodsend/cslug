@@ -9,6 +9,7 @@ from subprocess import Popen, PIPE
 import re
 import warnings
 import platform
+import shutil
 
 from cslug._types_file import Types
 from cslug import misc, exceptions
@@ -36,6 +37,8 @@ class CSlug(object):
 
     def compile(self):
         self.close()
+        if shutil.which("gcc") is None:
+            raise exceptions.NoGccError
 
         command, buffers = self.make_command()
         p = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE,

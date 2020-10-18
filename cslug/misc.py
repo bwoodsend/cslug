@@ -60,3 +60,13 @@ def anchor(*paths):
         parent / i if isinstance(i, Path) and not i.is_absolute() else i
         for i in paths
     ]
+
+
+def hide_from_PATH(name):
+    import os
+    import shutil
+    old = os.environ["PATH"]
+    paths = old.split(os.pathsep)
+    paths = [i for i in paths if shutil.which(name, path=i) is None]
+    os.environ["PATH"] = os.pathsep.join(paths)
+    return old
