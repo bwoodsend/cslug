@@ -70,14 +70,15 @@ def filter(text, token_types):
 # Matches a function declaration such as ``void foo(int x)``
 _function_re = _re.compile(r"""
 # Return type:
-(?:\w+) # initial type word
-(?:\w+|\*|\ )* # more type word or * symbols
+(?:\w+) # initial type word.
+(?=[\ \*]) # Non-consuming space or a * to split 1st type from whatever's next
+[\w\*\ ]+ # more type words or * symbols (or at least a space)
 # Function name:
 \w+
 # Possible whitespace:
 \s*
 # Parameters. Lazily, just look for brackets.
-\([^\)]*\)
+\([^=;+\)]*\)
 """, flags=_re.MULTILINE | _re.VERBOSE) # yapf: disable
 
 
