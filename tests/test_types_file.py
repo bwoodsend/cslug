@@ -32,6 +32,11 @@ void flop(long long long) {}
 
 // Unicode shouldn't break anything...
 byte ÀÂÄÆÈÊÌÎÐÒÔÖÙÛÝßáãåçéëíïñóõøùûýÿ(شيء * مخصص, 習俗 ** 事情) {}
+
+// Some red herrings that look vaguely like function definitions.
+return f();
+for (int i = 0; i < 10; i++) {}
+
 """
 
 PARSED_FUNCTIONS = {
