@@ -149,6 +149,10 @@ def parse_parameter(string):
             # out we need it.
             continue
 
+        if word == "void":
+            type_words.append("void")
+            continue
+
         if hasattr(_ctypes, "c_" + word):
             # To test if `word` is a type, check if it exists in ctypes. This
             # may not be the whole type too be returned if the type given is
@@ -172,7 +176,7 @@ def parse_parameter(string):
     else:
         type = None
 
-    if type is None:
+    if type is None and not pointer and "void" not in type_words:
         from warnings import warn
         from cslug.exceptions import TypeParseWarning
         warn("Unrecognised type '{}'. Type will not be set in wrapped C "
