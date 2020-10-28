@@ -89,7 +89,10 @@ class CSlug(object):
         return ok
 
     def __del__(self):
-        self.close()
+        try:
+            self.close()
+        except:
+            pass
 
     def make_command(self):
         """Gets the compile command invoked by :meth:`call_gcc`."""
