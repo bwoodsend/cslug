@@ -70,7 +70,7 @@ def filter(text, token_types):
 # Matches a function declaration such as ``void foo(int x)``
 _function_re = _re.compile(r"""
 # Return type:
-(?:\w+) # initial type word.
+(\w+) # initial type word.
 (?=[\ \*]) # Non-consuming space or a * to split 1st type from whatever's next
 [\w\*\ ]+ # more type words or * symbols (or at least a space)
 # Function name:
@@ -85,6 +85,10 @@ _function_re = _re.compile(r"""
 def search_function_declarations(text):
     text = filter(text, TokenType.CODE)
     for match in _function_re.finditer(text):
+
+        if match.group(1) == "else":
+            continue
+
         # Search for a following `{` to be sure this isn't just a prototype.
         # This should be combinable into the ``_function_re`` regex but it
         # causes it to become indefinitely slow so we stick to old-school
