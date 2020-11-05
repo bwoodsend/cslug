@@ -72,9 +72,26 @@ class Types(object):
         """
 
         for (name, (return_type, arg_types)) in self.types["functions"].items():
-            func = getattr(dll, name)
+            func = getattr(dll, name, None)
+            if func is None:
+                # A function may be missing if any of:
+                #
+                #   - The function was declared `inline`.
+                #   - The function was not `__dll_export`ed and the `--fPIC`
+                #     build flag was not used.
+                #   - CSlug screwed up (not that unlikely).
+                #
+                # Don't crash if this is the case.
+                continue
+
+            # Set function return type. Default to no return value.
             func.restype = getattr(ctypes, return_type, None)
-            func.argtypes = [getattr(ctypes, i) for i in arg_types]
+
+            # Set argument types. Default to int. If this is wrong however this
+            # will almost certainly cause strange incorrect behaviour.
+            func.argtypes = [
+                getattr(ctypes, i, ctypes.c_int) for i in arg_types
+            ]
 
         for (name, params) in self.types["structs"].items():
             fields = [(name, getattr(ctypes, type), *bits)
