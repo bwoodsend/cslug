@@ -81,9 +81,10 @@ class CSlug(object):
                 path = os.path.join(".", str(path))
             if not (self.path.exists() and self.types_dict.json_path.exists()):
                 self.make()
-            self._dll = ctypes.CDLL(path)
+            dll = ctypes.CDLL(path)
             self.types_dict.init_from_json()
-            self.types_dict.apply(self._dll)
+            self.types_dict.apply(dll)
+            self._dll = dll
         return self._dll
 
     def make(self):
