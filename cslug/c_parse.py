@@ -114,6 +114,22 @@ def parse_function_declaration(string):
     return name, res, args
 
 
+# --- Some weird Windows-only typedefs ---
+
+_ALIAS_TYPES = {
+    "SIZE_T": "size_t",
+    "WORD": "int16_t",
+    "DWORD": "int32_t",
+    "QWORD": "int64_t",
+}
+
+_ALIAS_PTR_TYPES = {
+    "LPSTR": "char",
+    "LPCSTR": "char",
+    "LPVOID": "void",
+}
+
+
 def parse_parameter(string):
     """Parse a variable or parameter declaration such as ``int * foo``.
 
@@ -128,6 +144,15 @@ def parse_parameter(string):
     type_words = []
     name = None
     for word in _re.findall(r"\w+|[*&]", string):
+
+        # Check for aliases.
+        if word in _ALIAS_TYPES:
+            word = _ALIAS_TYPES[word]
+
+        # Check for aliased pointer types.
+        if word in _ALIAS_PTR_TYPES:
+            word = _ALIAS_PTR_TYPES[word]
+            pointer = True
 
         if word == "unsigned":
             type_words.append("u")

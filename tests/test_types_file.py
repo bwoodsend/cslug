@@ -36,6 +36,11 @@ byte ÀÂÄÆÈÊÌÎÐÒÔÖÙÛÝßáãåçéëíïñóõøùûýÿ(شيء * �
 // Some red herrings that look vaguely like function definitions.
 return f();
 for (int i = 0; i < 10; i++) {}
+else if() {}
+
+// Windows only type aliases.
+SIZE_T quack(WORD a, DWORD b, QWORD c) {}
+LPSTR moo(LPCSTR a, LPVOID b) {}
 
 """
 
@@ -54,7 +59,10 @@ PARSED_FUNCTIONS = {
     #
     'flop': ['None', ['None']],
     #
-    'ÀÂÄÆÈÊÌÎÐÒÔÖÙÛÝßáãåçéëíïñóõøùûýÿ': ['c_byte', ['c_void_p', 'c_void_p']]
+    'ÀÂÄÆÈÊÌÎÐÒÔÖÙÛÝßáãåçéëíïñóõøùûýÿ': ['c_byte', ['c_void_p', 'c_void_p']],
+    #
+    'quack': ['c_size_t', ['c_int16', 'c_int32', 'c_int64']],
+    'moo': ['c_void_p', ['c_void_p'] * 2],
 }
 
 
