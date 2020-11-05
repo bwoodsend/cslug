@@ -79,7 +79,7 @@ class CSlug(object):
             path = str(self.path)
             if not self.path.is_absolute():
                 path = os.path.join(".", str(path))
-            if not self.path.exists():
+            if not (self.path.exists() and self.types_dict.json_path.exists()):
                 self.make()
             self._dll = ctypes.CDLL(path)
             self.types_dict.init_from_json()
