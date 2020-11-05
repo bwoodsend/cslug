@@ -17,8 +17,15 @@ from cslug import misc, exceptions
 # TODO: maybe try utilising this. Probably not worth it...
 # https://stackoverflow.com/questions/17942874/stdout-redirection-with-ctypes
 
+# Choose an appropriate DLL suffix. Asides from keeping files from different OSs
+# or 64/32bits getting mixed up, it also gives Linux .so files invalid Python
+# names which prevents Python from trying (and failing) to interpret a CSlug
+# file as a Python extension module if a CSlug has the same name as a .py file.
+
 OS = platform.system()
 SUFFIX = {"Windows": ".dll", "Linux": ".so", "Darwin": ".dylib"}.get(OS, ".so")
+BIT_NESS = 8 * ctypes.sizeof(ctypes.c_void_p)
+SUFFIX = "-{}-{}bit{}".format(OS, BIT_NESS, SUFFIX)
 
 
 class CSlug(object):
@@ -28,11 +35,11 @@ class CSlug(object):
         if not isinstance(path, Path):
             raise TypeError("The path to a CSlug's DLL must be a true path, not"
                             "a {}.".format(type(path)))
-        self.path = path.with_suffix(SUFFIX)
+        self.path = path.with_name(path.stem + SUFFIX)
         if len(sources) == 0 and path.suffix == ".c":
             sources = (path,)
         self.sources = [misc.as_path_or_readable_buffer(i) for i in sources]
-        self.types_dict = Types(self.path.with_suffix(".json"), *self.sources)
+        self.types_dict = Types(path.with_suffix(".json"), *self.sources)
         self._dll = None
 
     def compile(self):
@@ -106,6 +113,9 @@ class CSlug(object):
         # Compile for older versions of macOS.
         if OS == "Darwin":
             flags += ["-mmacosx-version-min=10.1"]
+
+        # Set 32/64 bit.
+        flags += ["-m" + str(BIT_NESS)]
 
         # Super noisy build warnings.
         warning_flags = "-Wall -Wextra".split()
