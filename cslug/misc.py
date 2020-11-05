@@ -54,7 +54,7 @@ def anchor(*paths):
     paths = map(as_path_or_buffer, paths)
     file = sys._getframe().f_back.f_globals.get("__file__")
     if file is None or file[0] == "<":
-        return list(paths)
+        return [Path.cwd() / i for i in paths]
     parent = Path(file).parent
     return [
         parent / i if isinstance(i, Path) and not i.is_absolute() else i
