@@ -69,12 +69,9 @@ class CSlug(object):
         return True
 
     def close(self):
-        try:
-            handle = self._dll._handle
-            ctypes.windll.kernel32.FreeLibrary(handle)
-        except (NameError, AttributeError):
-            pass
-        self._dll = None
+        if self._dll is not None:
+            free_dll_handle(ctypes.c_void_p(self._dll._handle))
+            self._dll = None
 
     @property
     def dll(self):
@@ -96,10 +93,16 @@ class CSlug(object):
         return ok
 
     def __del__(self):
-        try:
-            self.close()
-        except:
-            pass
+        # Release the DLL on deletion of this object on Windows so that make()
+        # can be called without tripping permission errors.
+        # At Python exit, the DLL may have been closed and deleted already. If
+        # we try to re-close on Linux we get a seg-fault. On Windows we get
+        # some kind of AttributeError or occasionally an OSError.
+        if OS == "Windows":
+            try:
+                self.close()
+            except:
+                pass
 
     def make_command(self):
         """Gets the compile command invoked by :meth:`call_gcc`."""
@@ -205,6 +208,12 @@ def _ptr(bytes_like, flags):
     # in future, but it makes numpy as dependency.
     # np.frombuffer(bytes_like, dtype=np.uint8).ctypes.data
     return address[0]
+
+
+if OS == "Windows":
+    free_dll_handle = ctypes.windll.kernel32.FreeLibrary
+else:
+    free_dll_handle = ctypes.CDLL("").dlclose
 
 
 def check_printfs(file=None, name=None):
