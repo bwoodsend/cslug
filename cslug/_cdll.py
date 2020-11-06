@@ -170,7 +170,10 @@ def ptr(bytes_like):
     """
     try:
         return _ptr(bytes_like, 0)
-    except ValueError as ex:
+    # I'm not sure why the difference but depending on the input, you may get
+    # either of these exception types from requesting a contiguous buffer from
+    # a non-contiguous one.
+    except (ValueError, BufferError) as ex:
         if len(ex.args) == 1 and "not C-contiguous" in ex.args[0]:
             raise ValueError(
                 ex.args[0] + " and, by using `ptr()`, you have specified that "
