@@ -19,5 +19,9 @@ class BuildWarning(Warning):
     pass
 
 
+class PrintfWarning(Warning):
+    pass
+
+
 class TypeParseWarning(Warning):
     pass

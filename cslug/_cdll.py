@@ -12,7 +12,7 @@ import platform
 import shutil
 
 from cslug._types_file import Types
-from cslug import misc, exceptions
+from cslug import misc, exceptions, c_parse
 
 # TODO: maybe try utilising this. Probably not worth it...
 # https://stackoverflow.com/questions/17942874/stdout-redirection-with-ctypes
@@ -93,6 +93,7 @@ class CSlug(object):
         self.close()
         ok = self.compile()
         self.types_dict.make()
+        self._check_printfs()
         return ok
 
     def __del__(self):
@@ -135,6 +136,9 @@ class CSlug(object):
 
         return (["gcc"] + output + flags + warning_flags + true_files +
                 stdin_flags, buffers)
+
+    def _check_printfs(self):
+        return any(check_printfs(*misc.read(i)) for i in self.sources)
 
 
 def ptr(bytes_like):
@@ -222,24 +226,31 @@ else:
     free_dll_handle = ctypes.CDLL("").dlclose
 
 
-def check_printfs(file=None, name=None):
-    if file is None:
-        return any(check_printfs(i) for i in HERE.glob("*.c"))
-    if isinstance(file, Path):
-        return check_printfs(file.read_text("utf-8"), name or file.name)
+def check_printfs(text, name=None):
+    """Test and warn for ``printf()``\\ s in C code.
 
-    file = _strip_comments(file)
+    :return: True is there were any found.
+    """
+    text = c_parse.filter(text, c_parse.TokenType.CODE)
+    name = name or "<string>"
     out = False
-    # Can't use enumerate(file.split("\n")) here because of "# n" line number
-    # changes.
+
+    # We can't use enumerate(file.split("\n")) here because of "# n" line number
+    # changes, otherwise this would be a lot less wordy.
     i = 0
-    for line in file.split("\n"):
+    for line in text.split("\n"):
+
         match = re.search(r"# (\d+)", line)
         if match:
             i = int(match.group(1))
+
         if "printf" in line:
-            # if "//" not in line or line.index("//") > line.index("printf"):
-            warnings.warn("printf in {} on line {}".format(name or "?", i))
+            warnings.warn(
+                "printf() detected at \"{}:{}\". Note you will only see its "
+                "output if running Python from shell. Otherwise it will slow "
+                "you code down with no apparent cause.".format(name, i),
+                category=exceptions.PrintfWarning,
+            ) # yapf: disable
             out = True
         i += 1
     return out
