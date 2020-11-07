@@ -70,3 +70,14 @@ def hide_from_PATH(name):
     paths = [i for i in paths if shutil.which(name, path=i) is None]
     os.environ["PATH"] = os.pathsep.join(paths)
     return old
+
+
+def flatten(iterable, types=list, initial=None):
+    if initial is None:
+        initial = []
+    if isinstance(iterable, types):
+        for i in iterable:
+            flatten(i, types, initial)
+    else:
+        initial.append(iterable)
+    return initial
