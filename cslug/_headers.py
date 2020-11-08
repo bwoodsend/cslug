@@ -6,22 +6,24 @@ import sys
 from pathlib import Path
 import collections
 import io
-from enum import Enum
+from enum import EnumMeta
 
 from cslug.c_parse import search_function_declarations
+from cslug import misc
 
 
 class Header(object):
 
     def __init__(self, path, *sources, includes=(), defines=()):
+        # TODO: Add support for io buffers.
         self.path = Path(path)
         if len(sources) == 0 and self.path.suffix != ".h":
             sources = (self.path,)
             self.path = self.path.with_suffix(".h")
-        self.includes = includes
+        self.includes = misc.flatten(includes, types=(tuple, list))
         self.functions = collections.defaultdict(list)
         self.sources = [Path(i) for i in sources]
-        self.defines = defines
+        self.defines = misc.flatten(defines, types=(tuple, list))
         assert self.path.suffix == ".h"
         assert all(i.suffix != ".h" for i in self.sources)
         if all(map(Path.exists, self.sources)):
@@ -35,21 +37,25 @@ class Header(object):
 
     def generate(self):
         lines = [
+            "// -*- coding: utf-8 -*-\n",
             "// Header file generated automatically by cslug.\n",
-            "// It is unadvisable to modify this file directly.\n\n",
-            "#ifndef HEADER_H\n#define HEADER_H\n\n"
+            "// Do not modify this file directly as your changes will be "
+            "overwritten.\n\n", "#ifndef HEADER_H\n#define HEADER_H\n\n"
         ]
 
-        [lines.append("#include %s\n" % i) for i in self.includes]
+        if self.includes:
+            [lines.append("#include %s\n" % i) for i in self.includes]
+            lines.append("\n")
 
         for defines in self.defines:
-            if isinstance(self.defines, Enum):
+            if isinstance(defines, EnumMeta):
                 lines.append("// {}\n".format(defines.__name__))
                 defines = defines.__members__
             else:
                 lines.append("// Definitions\n")
-            for i in defines.items():
-                lines.append("#define {} {}\n".format(*i))
+            for (key, val) in defines.items():
+                val = getattr(val, "value", val)
+                lines.append("#define {} {}\n".format(key, val))
             lines.append("\n")
 
         for (path, funcs) in self.functions.items():
