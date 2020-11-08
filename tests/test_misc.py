@@ -5,10 +5,14 @@
 import os, sys
 from pathlib import Path
 import random
+import io
 
 import pytest
 
 import cslug
+from cslug.misc import read
+
+from tests import RESOURCES
 
 
 def random_dir():
@@ -59,3 +63,27 @@ def _test_anchor(test_dir, prefix, namespace):
 
     finally:
         os.chdir(old_wd)
+
+
+def test_read():
+    """
+    Test :meth:`cslug.misc.read`.
+    """
+    path = RESOURCES / "to_headerise.c"
+    target = path.read_text()
+
+    # Read from an open file handle without closing it.
+    with open(path) as f:
+        assert read(f) == (target, None)
+        assert not f.closed
+    assert f.closed
+
+    file = io.StringIO(target)
+    assert read(file) == (target, None)
+    # `read()` should avoid consuming a file's buffer if it can get away
+    # without.
+    assert read(file) == (target, None)
+    assert file.read() == target
+
+    assert read(path) == (target, path)
+    assert read(str(path)) == (target, str(path))
