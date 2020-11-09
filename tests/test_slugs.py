@@ -14,7 +14,7 @@ from cslug import exceptions, anchor, CSlug, misc
 
 from tests import DUMP, name
 
-pytestmark = pytest.mark.last
+pytestmark = pytest.mark.order(-3)
 
 
 def test_basic():
