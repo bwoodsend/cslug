@@ -48,3 +48,12 @@ def test():
     # (although checking them into git is still not recommended) we aim for
     # exact byte-for-byte reproducibility.
     assert written == (RESOURCES / "target_header.h").read_text()
+
+
+def test_implicit_name_no_includes_sourceless():
+    self = Header(RESOURCES / "non-existent.c")
+    assert self.sources == [RESOURCES / "non-existent.c"]
+    assert self.path == RESOURCES / "non-existent.h"
+    assert not self.path.exists()
+
+    self.generate()
