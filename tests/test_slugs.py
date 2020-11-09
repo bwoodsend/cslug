@@ -139,3 +139,38 @@ def test_printf_warns():
         assert check_printfs("printf(stuff)//")
     with pytest.warns(exceptions.PrintfWarning, match='.* at "<string>:102".*'):
         assert check_printfs("# 100\n\nprintf()")
+
+
+def test_names_not_in_dll():
+    """
+    Check that CSlug doesn't get into too much of a mess if it thinks a
+    function should exist but doesn't.
+    """
+
+    # Both the functions in the C source below look to cslug like they would be
+    # included in the DLL but in fact aren't.
+    self = CSlug(*anchor(name(), io.StringIO("""
+
+        inline int add_1(int x) { return x + 1; }
+
+        #if 0
+        float times_2(float y) { return y * 2.0; }
+        #endif
+
+    """))) # yapf: disable
+
+    # Ensure built:
+    self.dll
+
+    # Check cslug found them.
+    assert "add_1" in self.types_dict.types["functions"]
+    assert "times_2" in self.types_dict.types["functions"]
+
+    # But are not in the DLL.
+    assert not hasattr(self.dll, "add_1")
+    assert not hasattr(self.dll, "times_2")
+
+    with pytest.raises(AttributeError):
+        self.dll.add_1
+    with pytest.raises(AttributeError):
+        self.dll.time_2
