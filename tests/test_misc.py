@@ -10,7 +10,7 @@ import io
 import pytest
 
 import cslug
-from cslug.misc import read
+from cslug.misc import read, as_path_or_readable_buffer
 
 from tests import RESOURCES
 
@@ -76,10 +76,13 @@ def test_read():
     with open(path) as f:
         assert read(f) == (target, None)
         assert not f.closed
+        assert isinstance(as_path_or_readable_buffer(f), io.StringIO)
     assert f.closed
 
     file = io.StringIO(target)
     assert read(file) == (target, None)
+    assert as_path_or_readable_buffer(file) is file
+
     # `read()` should avoid consuming a file's buffer if it can get away
     # without.
     assert read(file) == (target, None)
