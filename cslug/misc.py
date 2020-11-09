@@ -19,10 +19,6 @@ def as_path_or_readable_buffer(file):
     return Path(file)
 
 
-def exists_or_buffer(file):
-    return isinstance(file, io.IOBase) or file.exists()
-
-
 def read(path, mode="r"):
     if isinstance(path, io.IOBase):
         if hasattr(path, "getvalue"):

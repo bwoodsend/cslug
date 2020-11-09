@@ -19,12 +19,6 @@ class Types(object):
         self.sources = [misc.as_path_or_buffer(i) for i in sources]
         self.json_path = misc.as_path_or_buffer(path)
 
-    def init(self):
-        try:
-            self.init_from_json()
-        except (json.JSONDecodeError, FileNotFoundError):
-            self.init_from_source()
-
     def init_from_source(self):
         self.types = self._types_from_source()
 
