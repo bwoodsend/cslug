@@ -4,7 +4,6 @@
 
 import os, sys
 from pathlib import Path
-import uuid
 import io
 import ctypes
 import fnmatch
@@ -13,14 +12,9 @@ import pytest
 
 from cslug import exceptions, anchor, CSlug, misc
 
-DUMP = anchor("dump")[0]
-DUMP.mkdir(exist_ok=True)
+from tests import DUMP, name
 
 pytestmark = pytest.mark.last
-
-
-def name():
-    return Path("dump", str(uuid.uuid1()))
 
 
 def test_basic():
