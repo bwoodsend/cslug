@@ -122,3 +122,20 @@ def test_no_anchor():
 
     finally:
         os.chdir(old_cwd)
+
+
+def test_printf_warns():
+    from cslug._cdll import check_printfs
+
+    assert not check_printfs("//printf(stuff)")
+    assert not check_printfs("  //  \tprintf(stuff)")
+    assert not check_printfs("/*\n\nprintf(stuff)\n*/")
+
+    with pytest.warns(exceptions.PrintfWarning, match='.* at "<string>:0".*'):
+        assert check_printfs("printf(stuff)")
+    with pytest.warns(exceptions.PrintfWarning, match='.* at "name.c:0".*'):
+        assert check_printfs("printf(stuff)", "name.c")
+    with pytest.warns(exceptions.PrintfWarning):
+        assert check_printfs("printf(stuff)//")
+    with pytest.warns(exceptions.PrintfWarning, match='.* at "<string>:102".*'):
+        assert check_printfs("# 100\n\nprintf()")
