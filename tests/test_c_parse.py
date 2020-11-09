@@ -9,7 +9,7 @@ import pytest
 
 import cslug
 
-pytestmark = pytest.mark.first
+pytestmark = pytest.mark.order(0)
 
 ALL_TOKEN_TYPE_PERMUTATIONS = range(
     max(cslug.c_parse.TokenType.__members__.values()) * 2)

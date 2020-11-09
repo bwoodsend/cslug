@@ -6,7 +6,11 @@ import io
 
 from cslug import CSlug, anchor
 
+import pytest
+
 from tests import name
+
+pytestmark = pytest.mark.order(-1)
 
 
 class Nested:
