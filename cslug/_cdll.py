@@ -102,7 +102,7 @@ class CSlug(object):
         # At Python exit, the DLL may have been closed and deleted already. If
         # we try to re-close on Linux we get a seg-fault. On Windows we get
         # some kind of AttributeError or occasionally an OSError.
-        if OS == "Windows":
+        if OS == "Windows":  # pragma: no branch
             try:
                 self.close()
             except:
@@ -118,7 +118,7 @@ class CSlug(object):
         flags = "-shared -fPIC -Ofast".split()
 
         # Compile for older versions of macOS.
-        if OS == "Darwin":
+        if OS == "Darwin":  # pragma: no cover
             flags += ["-mmacosx-version-min=10.1"]
 
         # Set 32/64 bit.
@@ -179,13 +179,14 @@ def ptr(bytes_like):
     # I'm not sure why the difference but depending on the input, you may get
     # either of these exception types from requesting a contiguous buffer from
     # a non-contiguous one.
-    except (ValueError, BufferError) as ex:
+    except (ValueError, BufferError) as ex:  # pragma: no branch
         if len(ex.args) == 1 and "not C-contiguous" in ex.args[0]:
             raise ValueError(
                 ex.args[0] + " and, by using `ptr()`, you have specified that "
                 "a contiguous array is required. See `help(cslug.ptr) for how "
                 "to resolve this.")
-        raise
+        # I'm fairly certain this is impossible.
+        raise  # pragma: no cover
 
 
 def nc_ptr(bytes_like):
@@ -220,9 +221,9 @@ def _ptr(bytes_like, flags):
     return address[0]
 
 
-if OS == "Windows":
+if OS == "Windows":  # pragma: no cover
     free_dll_handle = ctypes.windll.kernel32.FreeLibrary
-else:
+else:  # pragma: no cover
     free_dll_handle = ctypes.CDLL("").dlclose
 
 
