@@ -5,7 +5,7 @@
 import os
 from pathlib import Path
 import ctypes
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, run
 import re
 import warnings
 import platform
@@ -115,7 +115,10 @@ class CSlug(object):
         output = ["-o", str(self.path)]
 
         # Create a library, in a format Windows will accept, optimize for speed.
-        flags = "-shared -fPIC -Ofast".split()
+        flags = "-shared -fPIC".split()
+
+        if gcc_version() >= (4, 6, 0):
+            flags.append("-Ofast")
 
         # Compile for older versions of macOS.
         if OS == "Darwin":  # pragma: no cover
@@ -271,3 +274,9 @@ def check_printfs(text, name=None):
             out = True
         i += 1
     return out
+
+
+def gcc_version():
+    p = Popen(["gcc", "-dumpversion"], stdout=PIPE)
+    p.wait()
+    return tuple(map(int, p.stdout.read().strip().split(b".")))
