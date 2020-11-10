@@ -116,3 +116,6 @@ ENV/
 
 # Test artifacts
 tests/dump
+
+# Junk from Apple
+.DS_Store
