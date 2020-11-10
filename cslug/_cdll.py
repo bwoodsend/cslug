@@ -223,6 +223,22 @@ def _ptr(bytes_like, flags):
 
 if OS == "Windows":  # pragma: no cover
     free_dll_handle = ctypes.windll.kernel32.FreeLibrary
+elif OS == "Darwin":  # pragma: no cover
+    try:
+        lib_system = ctypes.CDLL("libSystem")
+    except OSError:
+        # Older macOSs. Not only is the name inconsistent but it's
+        # not even in PATH.
+        _lib_system = "/usr/lib/system/libsystem_c.dylib"
+        if os.path.exists(_lib_system):
+            lib_system = ctypes.CDLL(_lib_system)
+        else:
+            lib_system = None
+    if lib_system is not None:
+        free_dll_handle = lib_system.dlclose
+    else:
+        # I hope this never happens.
+        free_dll_handle = lambda *spam: None
 else:  # pragma: no cover
     free_dll_handle = ctypes.CDLL("").dlclose
 
