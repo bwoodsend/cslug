@@ -20,7 +20,7 @@ def random_dir():
     Pick a random existing folder that we have sufficient permission to access.
 
     """
-    path = Path("/").resolve()
+    path = Path.home().resolve()
     for i in range(10):
         for _path in path.glob("*"):
             if _path.is_dir() and random.random() < .3:
