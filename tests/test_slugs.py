@@ -177,3 +177,33 @@ def test_names_not_in_dll():
     assert not hasattr(self.dll, "times_2")
     with pytest.raises(AttributeError):
         self.dll.time_2
+
+
+def test_bit_ness():
+    from cslug._cdll import BIT_NESS
+
+    self = CSlug(*anchor(name(), io.StringIO("""
+
+        # include <stddef.h>
+        # include <stdbool.h>
+
+        bool add_1_overflows(size_t x) {
+            return (x + 1) < x;
+        }
+
+    """))) # yapf: disable
+
+    def add_1_overflows(x):
+        x = ctypes.c_size_t(x).value
+        return ctypes.c_size_t(x + 1).value < x
+
+    if BIT_NESS == 64:
+        assert add_1_overflows((1 << 64) - 1)
+        assert self.dll.add_1_overflows((1 << 64) - 1)
+
+        assert not add_1_overflows((1 << 32) - 1)
+        assert not self.dll.add_1_overflows((1 << 32) - 1)
+
+    else:
+        assert add_1_overflows((1 << 32) - 1)
+        assert self.dll.add_1_overflows((1 << 32) - 1)
