@@ -26,6 +26,7 @@ def random_dir():
             if _path.is_dir() and random.random() < .3:
                 try:
                     os.listdir(_path)
+                    _path.is_dir()
                     path = _path.resolve()
                 except PermissionError:
                     continue
