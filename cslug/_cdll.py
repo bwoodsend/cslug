@@ -50,13 +50,10 @@ class CSlug(object):
             raise exceptions.NoGccError
 
         command, buffers = self.make_command()
-        p = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE,
-                  universal_newlines=True)
-        for buffer in buffers:
-            p.stdin.write(misc.read(buffer)[0])
-        p.stdin.close()
-        p.wait()
-        msg = p.stderr.read()
+
+        p = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True,
+                input="\n".join(i.read() for i in buffers) or None)
+        msg = p.stderr
 
         # If all just whitespace.
         if not re.search(r"\S", msg):
