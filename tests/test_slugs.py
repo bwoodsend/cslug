@@ -17,13 +17,19 @@ from tests import DUMP, name
 pytestmark = pytest.mark.order(-3)
 
 
-def test_basic():
-    self = CSlug(*anchor(name(), io.StringIO("""
-        int add_1(int x) { return x + 1; }
-
-        float times_2(float y) { return y * 2.0; }
-
-        """))) # yapf: disable
+@pytest.mark.order(0)
+@pytest.mark.parametrize("true_file", [True, False])
+def test_basic(true_file):
+    SOURCE = """
+    int add_1(int x) { return x + 1; }
+    float times_2(float y) { return y * 2.0; }
+    """
+    if true_file:
+        file = DUMP / "basic.c"
+        file.write_text(SOURCE)
+    else:
+        file = io.StringIO(SOURCE)
+    self = CSlug(*anchor(name(), file)) # yapf: disable
 
     assert not self.path.exists()
     assert not self.types_dict.json_path.exists()
