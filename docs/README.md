@@ -3,7 +3,7 @@
 The documentation can either be built statically using the conventional:
 
 ```shell script
-./make html
+make html
 ```
 Or if you `pip install sphinx-autobuild` you can build dynamically (all changes
 updated automatically and your browser refreshed) using on Windows:
@@ -12,10 +12,10 @@ updated automatically and your browser refreshed) using on Windows:
 type ./autobuild | cmd
 ```
 
-Or on Linux:
+Or on Unix:
 
 ```
-type ./autobuild | bash
+cat ./autobuild | bash
 ```
 
 In both cases your working directory must be this `docs` folder rather than the

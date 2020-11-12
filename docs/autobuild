@@ -1,1 +1,1 @@
-sphinx-autobuild --watch ../cslug --open-browser --ignore ~* ./source ./build  
+sphinx-autobuild --watch ../cslug --watch ../README.rst --open-browser --ignore ~* ./source ./build
