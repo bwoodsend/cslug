@@ -2,7 +2,9 @@
 Welcome to cslug!
 =================
 
-.. image:: https://img.shields.io/badge/python-%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-blue.svg
+.. image::
+    https://img.shields.io/badge/
+    python-\ 3.6\ |\ 3.7\ |\ 3.8\ |\ 3.9\ -blue.svg
 
 Quick and painless wrapping C code into Python.
 
