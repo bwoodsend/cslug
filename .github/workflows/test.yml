@@ -19,10 +19,14 @@ jobs:
             os: windows-latest
             python-version: 3.9
             architecture: 'x64'
-          - name: Windows 32-bit
-            os: windows-latest
-            python-version: 3.9
-            architecture: 'x86'
+            # I'd like to test 32-bit too but the gcc on Github actions appears
+            # to be missing something it needs to compile 32-bit binaries. See:
+            # https://github.com/bwoodsend/cslug/runs/1387759265
+            # It works perfectly locally.
+#          - name: Windows 32-bit
+#            os: windows-latest
+#            python-version: 3.9
+#            architecture: 'x86'
 
       fail-fast: false
 
