@@ -30,7 +30,9 @@ setup(
         'console_scripts': ['cslug=cslug.cli:main',],
     },
     install_requires=['Click>=7.0'],
-    extras_require={"test": ['pytest>=3', 'pytest-order', 'psutil']},
+    extras_require={
+        "test": ['pytest>=3', 'pytest-order', 'psutil', 'pytest-timeout']
+    },
     license="MIT license",
     long_description=readme + '\n\n' + history,
     include_package_data=True,
