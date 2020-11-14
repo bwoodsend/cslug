@@ -186,6 +186,8 @@ def test_names_not_in_dll():
 
 
 def test_bit_ness():
+    """Check 32/64b-bits behaves as expected by looking at integer overflow.
+    """
     from cslug._cdll import BIT_NESS
 
     self = CSlug(*anchor(name(), io.StringIO("""
@@ -193,23 +195,24 @@ def test_bit_ness():
         # include <stddef.h>
         # include <stdbool.h>
 
-        bool add_1_overflows(size_t x) {
+        bool adding_1_causes_overflow(size_t x) {
             return (x + 1) < x;
         }
 
     """))) # yapf: disable
 
-    def add_1_overflows(x):
-        x = ctypes.c_size_t(x).value
-        return ctypes.c_size_t(x + 1).value < x
+    for int_size in range(8, 128, 8):
+        # Maximum possible value for an unsigned int of size ``int_size``.
+        int_max = (1 << int_size) - 1
+        if BIT_NESS <= int_size:
+            assert adding_1_causes_overflow_py(int_max)
+            assert self.dll.adding_1_causes_overflow(int_max)
 
-    if BIT_NESS == 64:
-        assert add_1_overflows((1 << 64) - 1)
-        assert self.dll.add_1_overflows((1 << 64) - 1)
+        else:
+            assert not adding_1_causes_overflow_py(int_max)
+            assert not self.dll.adding_1_causes_overflow(int_max)
 
-        assert not add_1_overflows((1 << 32) - 1)
-        assert not self.dll.add_1_overflows((1 << 32) - 1)
 
-    else:
-        assert add_1_overflows((1 << 32) - 1)
-        assert self.dll.add_1_overflows((1 << 32) - 1)
+def adding_1_causes_overflow_py(x):
+    x = ctypes.c_size_t(x).value
+    return ctypes.c_size_t(x + 1).value < x
