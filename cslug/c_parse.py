@@ -71,14 +71,14 @@ def filter(text, token_types):
 _function_re = _re.compile(r"""
 # Return type:
 (\w+) # initial type word.
-(?=[\ \*]) # Non-consuming space or a * to split 1st type from whatever's next
-[\w\*\ ]+ # more type words or * symbols (or at least a space)
+(?=[ *]) # Non-consuming space or a * to split 1st type from whatever's next
+[\w* ]+ # more type words or * symbols (or at least a space)
 # Function name:
 \w+
 # Possible whitespace:
 \s*
-# Parameters. Lazily, just look for brackets.
-\([^=;+\)]*\)
+# Parameters. Lazily, just look for brackets. Detailed subparsing happens later.
+\([^=;+)]*\)
 """, flags=_re.MULTILINE | _re.VERBOSE) # yapf: disable
 
 
@@ -93,7 +93,7 @@ def search_function_declarations(text):
         # This should be combinable into the ``_function_re`` regex but it
         # causes it to become indefinitely slow so we stick to old-school
         # checking in Python.
-        if _re.match(r"\s*\{", text[match.end():]):
+        if _re.match(r"\s*{", text[match.end():]):
             yield match.group()
 
 
@@ -224,7 +224,7 @@ def _choose_ctype(type, pointer, word):
 
 
 _struct_re = _re.compile(r"\s*typedef\s+struct(?:\s+\w+)?\s*"
-                         r"\{([^\}]*)\}\s*(\w+)\s*;")
+                         r"{([^}]*)}\s*(\w+)\s*;")
 
 
 def parse_struct(text):
