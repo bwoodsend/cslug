@@ -58,14 +58,18 @@ MEM_BLOCK_SIZE = 1 << 28
 MEM_LEAK_TOL = MEM_BLOCK_SIZE // 100
 
 
-def _test_leaks(f, tol=None):
-    """Tracks the memory usage of this process (i.e Python) before and after
-    calling ``f()`` and returns the difference in bytes. If **f** cleans itself
-    up correctly the output should be roughly zero.
+def leaks(f, tol=None, n=1):
+    """
+    Test if a function leaks memory.
+
+    Tracks the memory usage of this process (i.e Python) before and after
+    calling ``f()`` ``n`` times and returns the difference in bytes. If **f**
+    cleans itself up correctly the output should be roughly zero.
     """
     p = psutil.Process(os.getpid())
     old = p.memory_info().vms
-    f()
+    for i in range(n):
+        f()
     new = p.memory_info().vms
     out = new - old
     if tol is not None:
@@ -73,13 +77,13 @@ def _test_leaks(f, tol=None):
     return out
 
 
-def test_test_leaks():
-    """Sanity check that :meth:`_test_leaks` works."""
+def test_leaks():
+    """Sanity check that :meth:`leaks` works."""
     a = []
     with pytest.raises(AssertionError):
-        _test_leaks(lambda: a.append(bytes(MEM_BLOCK_SIZE)), MEM_LEAK_TOL)
+        leaks(lambda: a.append(bytes(MEM_BLOCK_SIZE)), MEM_LEAK_TOL)
 
 
 def test_ptr_leaks():
-    _test_leaks(lambda: ptr(bytes(MEM_BLOCK_SIZE)), MEM_LEAK_TOL)
-    _test_leaks(lambda: nc_ptr(bytes(MEM_BLOCK_SIZE)), MEM_LEAK_TOL)
+    leaks(lambda: ptr(bytes(MEM_BLOCK_SIZE)), MEM_LEAK_TOL)
+    leaks(lambda: nc_ptr(bytes(MEM_BLOCK_SIZE)), MEM_LEAK_TOL)
