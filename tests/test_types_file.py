@@ -11,10 +11,10 @@ import cslug
 
 SOURCE = """
 // Something simple.
-void main() {}
+void simple() {}
 
 // Arguments of just ``void`` should be ignored.
-bool many_voids(void, void, void) {}
+bool voids(void, void, void) {}
 
 // Some random types.
 int foo(char x) {}
@@ -22,16 +22,15 @@ float bar(int32_t a, int16_t b, uint64_t c) {}
 short whack(unsigned long d, double e, long) {}
 
 // All pointers reduce to just void pointer.
-void * baz(float * a, int **, * Custom, *Custom, Custom*, Custom  *  ) {}
+void * ptrs(float * a, int **, * Custom, *Custom, Custom*, Custom  *  ) {}
 
 // Invalid syntax defaults to ``None`` - leave the compiler to raise any issues.
-char zap(I like cake) {}
-
+char invalid_argument(I like cake) {}
 // Likewise with invalid types.
-void flop(long long long) {}
+void invalid_argument_2(long long long) {}
 
 // Unicode shouldn't break anything...
-byte ÀÂÄÆÈÊÌÎÐÒÔÖÙÛÝßáãåçéëíïñóõøùûýÿ(شيء * مخصص, 習俗 ** 事情) {}
+byte unicode_ÀÆÌÐÔÙÝáåéíñõùý(شيء * مخصص, 習俗 ** 事情) {}
 
 // Some red herrings that look vaguely like function definitions.
 return f();
@@ -39,30 +38,29 @@ for (int i = 0; i < 10; i++) {}
 else if() {}
 
 // Windows only type aliases.
-SIZE_T quack(WORD a, DWORD b, QWORD c) {}
-LPSTR moo(LPCSTR a, LPVOID b) {}
+SIZE_T windows_aliases(WORD a, DWORD b, QWORD c) {}
+LPSTR windows_ptr_aliases(LPCSTR a, LPVOID b) {}
 
 """
 
 PARSED_FUNCTIONS = {
-    'main': ['None', []],
+    'simple': ['None', []],
     #
-    'many_voids': ['c_bool', []],
+    'voids': ['c_bool', []],
     #
     'foo': ['c_int', ['c_char']],
     'bar': ['c_float', ['c_int32', 'c_int16', 'c_uint64']],
     'whack': ['c_short', ['c_ulong', 'c_double', 'c_long']],
     #
-    'baz': ['c_void_p', ['c_void_p'] * 6],
+    'ptrs': ['c_void_p', ['c_void_p'] * 6],
     #
-    'zap': ['c_char', ['None']],
+    'invalid_argument': ['c_char', ['None']],
+    'invalid_argument_2': ['None', ['None']],
     #
-    'flop': ['None', ['None']],
+    'unicode_ÀÆÌÐÔÙÝáåéíñõùý': ['c_byte', ['c_void_p', 'c_void_p']],
     #
-    'ÀÂÄÆÈÊÌÎÐÒÔÖÙÛÝßáãåçéëíïñóõøùûýÿ': ['c_byte', ['c_void_p', 'c_void_p']],
-    #
-    'quack': ['c_size_t', ['c_int16', 'c_int32', 'c_int64']],
-    'moo': ['c_void_p', ['c_void_p'] * 2],
+    'windows_aliases': ['c_size_t', ['c_int16', 'c_int32', 'c_int64']],
+    'windows_ptr_aliases': ['c_void_p', ['c_void_p']],
 }
 
 
