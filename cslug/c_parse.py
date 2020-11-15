@@ -136,14 +136,13 @@ def parse_parameter(string):
     :param string: Declaration to parse.
     :type string: str
     :return: ``(ctypes_type_name, is_pointer, name)``
-    :rtype: tuple[str, bool, str]
+    :rtype: tuple[str, str, str]
 
     """
-    # XXX: This logic is pretty hacky.
-    pointer = False
+    pointer = 0
     type_words = []
     name = None
-    for word in _re.findall(r"\w+|[*&]", string):
+    for word in _re.findall(r"\w+", string):
 
         # Check for aliases.
         if word in _ALIAS_TYPES:
@@ -152,7 +151,7 @@ def parse_parameter(string):
         # Check for aliased pointer types.
         if word in _ALIAS_PTR_TYPES:
             word = _ALIAS_PTR_TYPES[word]
-            pointer = True
+            pointer += 1
 
         if word == "unsigned":
             type_words.append("u")
@@ -161,11 +160,6 @@ def parse_parameter(string):
 
         if word == "signed":
             # Signed is a default anyway and ctypes never uses it.
-            continue
-
-        if _re.fullmatch(r"\*+", word):
-            # Pointers to pointers (**) are to be treated as just pointers.
-            pointer = True
             continue
 
         if word.endswith("_t") and word != "size_t":
@@ -194,6 +188,9 @@ def parse_parameter(string):
             # some much heavier parsing of the rest of the file.
             name = word
 
+    # Count how many *s or []s there are so check how many pointer layers deep.
+    pointer += len(_re.findall(r"  \*  |  \[ [^]]* ]  ", string, _re.VERBOSE))
+
     if type_words or "signed" in string or "int" in string:
         type = "c_" + "".join(type_words)
         # Check if type is a valid ctype:
@@ -211,6 +208,8 @@ def parse_parameter(string):
         from cslug.exceptions import TypeParseWarning
         warn("Unrecognised type '{}'. Type will not be set in wrapped C "
              "functions.".format(string), TypeParseWarning) # yapf: disable
+
+    if type is None:
         # str None is less ugly to serialise.
         type = "None"
 
