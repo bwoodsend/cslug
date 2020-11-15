@@ -165,9 +165,9 @@ def parse_parameter(string):
             # Signed is a default anyway and ctypes never uses it.
             continue
 
-        if word.endswith("_t") and word != "size_t":
+        if word.endswith("_t") and not _re.fullmatch("s?size_t", word):
             # Exact types (e.g. int32_t) have the _t suffix removed in ctypes.
-            # Except for size_t.
+            # Except for size_t and ssize_t.
             word = word[:-2]
 
         if word == "int":
