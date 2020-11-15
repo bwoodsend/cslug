@@ -116,6 +116,9 @@ def parse_function_declaration(string):
 
 # --- Some weird Windows-only typedefs ---
 
+# On second thought, there are 100s of these. I'm not adding them all...
+# https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types
+
 _ALIAS_TYPES = {
     "SIZE_T": "size_t",
     "WORD": "int16_t",
@@ -217,8 +220,22 @@ def parse_parameter(string):
 
 
 def _choose_ctype(type, pointer, word):
+    """
+    Select a ctypes type to assign a function parameter or return type.
+
+    :return: An attribute name of ctypes_ or "None" (as a string).
+    :restype: str
+
+    """
     if pointer:
+        # ctypes does allow construction of arbitrary pointer classes e.g.
+        # ``ctypes.POINTER(ctypes.c_int)`` but unlike the special ones for
+        # strings they don't add any kind of functionality or type safety. So
+        # for simplicity, just use anonymous void pointer.
         return _ctypes.c_void_p.__name__
+
+    # If ``pointer`` is 0 then just return ``type``, converting any ``None``s
+    # to strings.
     return type if type is not None else "None"
 
 
@@ -227,6 +244,11 @@ _struct_re = _re.compile(r"\s*typedef\s+struct(?:\s+\w+)?\s*"
 
 
 def parse_struct(text):
+    """
+
+    :param text:
+    :return:
+    """
     params_str, name = _struct_re.match(text).groups()
     params = []
     param: str
@@ -251,4 +273,12 @@ def parse_struct(text):
 
 
 def parse_structs(text):
+    """
+    Search for and parse C Structure definitions in a block of text.
+
+    :param text:
+    :return: Iterable of (name, parameters) pairs as given by
+             :meth:`parse_struct.
+
+    """
     return (parse_struct(i.group(0)) for i in _struct_re.finditer(text))
