@@ -70,6 +70,7 @@ signed char; c_char
 long double; c_longdouble
 int32_t; c_int32
 size_t; c_size_t
+ssize_t; c_ssize_t
 """.strip("\n").split("\n")
 ]
 
