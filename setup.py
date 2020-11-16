@@ -3,6 +3,7 @@
 """
 
 from setuptools import setup, find_packages
+import runpy
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -41,6 +42,6 @@ setup(
     packages=find_packages(include=['cslug', 'cslug.*']),
     test_suite='tests',
     url='https://github.com/bwoodsend/cslug',
-    version='0.1.0',
+    version=runpy.run_path("cslug/_version.py")["__version__"],
     zip_safe=True,
 )
