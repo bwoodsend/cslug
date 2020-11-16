@@ -1,3 +1,6 @@
+# Tests CSlug.
+# This has been intentionally strung out so that Linux is tested 1st, then
+# Windows, then macOS so as to minimise CI minutes wastage.
 ---
 name: Test
 
@@ -5,34 +8,16 @@ on:
   push:
 
 jobs:
-  test:
+  test-ubuntu:
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest]
         python-version: [3.9, 3.6, 3.7, 3.8]
         architecture: ['x64']
-        include:
-          - os: macos-latest
-            python-version: 3.9
-            architecture: 'x64'
-          - name: Windows
-            os: windows-latest
-            python-version: 3.9
-            architecture: 'x64'
-            # I'd like to test 32-bit too but the gcc on Github actions appears
-            # to be missing something it needs to compile 32-bit binaries. See:
-            # https://github.com/bwoodsend/cslug/runs/1387759265
-            # It works perfectly locally.
-#          - name: Windows 32-bit
-#            os: windows-latest
-#            python-version: 3.9
-#            architecture: 'x86'
 
-      fail-fast: false
+    runs-on: ubuntu-latest
 
-    runs-on: ${{ matrix.os }}
-
-    steps:
+    steps: &test-steps
 
       - uses: actions/checkout@v2
       - run: |
@@ -49,3 +34,29 @@ jobs:
 
       - name: Test
         run: pytest tests --timeout 30
+
+
+  test-windows:
+    needs: test-ubuntu
+    strategy:
+      matrix:
+        python-version: [3.9]
+        # I'd like to test 32-bit too but the gcc on Github actions appears
+        # to be missing something it needs to compile 32-bit binaries. See:
+        # https://github.com/bwoodsend/cslug/runs/1387759265
+        # It works perfectly locally.
+        architecture: ['x64']  # 'x86'
+
+    runs-on: windows-latest
+    steps: *test-steps
+
+
+  test-macos:
+    needs: test-windows
+    strategy:
+      matrix:
+        python-version: [3.9]
+        architecture: ['x64']
+
+    runs-on: macos-latest
+    steps: *test-steps
