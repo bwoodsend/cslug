@@ -7,12 +7,14 @@ from pathlib import Path
 import io
 import ctypes
 import fnmatch
+import itertools
 
 import pytest
 
 from cslug import exceptions, anchor, CSlug, misc
 
-from tests import DUMP, name
+from tests import DUMP, name, DEMOS
+from tests.test_pointers import leaks
 
 pytestmark = pytest.mark.order(-3)
 
@@ -216,3 +218,46 @@ def test_bit_ness():
 def adding_1_causes_overflow_py(x):
     x = ctypes.c_size_t(x).value
     return ctypes.c_size_t(x + 1).value < x
+
+
+def test_str():
+    self = CSlug(anchor(name()), DEMOS / "strings" / "reverse.c")
+    self.make()
+
+    def reverse_test(text):
+        out = ctypes.create_unicode_buffer(len(text) + 1)
+        assert self.dll.reverse(text, out, len(text)) == text[::-1]
+        assert out.value == text[::-1]
+        assert out[:] == text[::-1] + "\x00"
+
+    reverse_test("hello")
+
+    leaks(lambda: reverse_test("hello" * 100), n=100, tol=3000)
+
+
+def test_bytes():
+    self = CSlug(anchor(name()), DEMOS / "bytes" / "encrypt.c")
+    self.make()
+
+    def _crypt(data, key, multiplier):
+        out = ctypes.create_string_buffer(len(data))
+        self.dll.encrypt(data, len(data), out, key, len(key), multiplier)
+        return out[:]
+
+    def encrypt(data, key):
+        return _crypt(data, key, 1)
+
+    def decrypt(data, key):
+        return _crypt(data, key, -1)
+
+    data = bytes(range(256))
+    key = b"secret"
+    encrypted = encrypt(data, key)
+    assert isinstance(encrypted, bytes)
+
+    # A pure Python equivalent of the C code we're testing.
+    pure_py = bytes((i + j) % 256 for (i, j) in zip(data, itertools.cycle(key)))
+    assert encrypted == pure_py
+
+    assert decrypt(encrypted, key) == data
+    leaks(lambda: encrypt(data, key), n=100, tol=1000)
