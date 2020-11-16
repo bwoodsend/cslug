@@ -228,6 +228,16 @@ def _choose_ctype(type, pointer, word):
 
     """
     if pointer:
+        # String types have a special pointer types ``c_char_p`` and
+        # ``c_wchar_p`` for bytes and strings respectively. If ``type`` is
+        # either ``c_char`` or ``c_wchar`` then use the appropriate pointer
+        # type, but only if this is a direct pointer - not a pointer to a
+        # pointer. Hence the ``pointer == 1`` below.
+        if pointer == 1:
+            _type = type + "_p"
+            if hasattr(_ctypes, _type):
+                return _type
+
         # ctypes does allow construction of arbitrary pointer classes e.g.
         # ``ctypes.POINTER(ctypes.c_int)`` but unlike the special ones for
         # strings they don't add any kind of functionality or type safety. So
