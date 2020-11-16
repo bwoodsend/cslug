@@ -232,7 +232,9 @@ def test_str():
 
     reverse_test("hello")
 
-    leaks(lambda: reverse_test("hello" * 100), n=100, tol=3000)
+    # A 10th of the memory that would be leaked if `reverse_test()` leaked.
+    tolerance = ctypes.sizeof(ctypes.create_unicode_buffer("hello" * 100)) * 10
+    leaks(lambda: reverse_test("hello" * 100), n=100, tol=tolerance)
 
 
 def test_bytes():
@@ -260,4 +262,4 @@ def test_bytes():
     assert encrypted == pure_py
 
     assert decrypt(encrypted, key) == data
-    leaks(lambda: encrypt(data, key), n=100, tol=1000)
+    leaks(lambda: encrypt(data, key), n=100, tol=len(data) * 10)
