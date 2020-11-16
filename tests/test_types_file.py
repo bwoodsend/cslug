@@ -23,6 +23,10 @@ short whack(unsigned long d, double e, long) {}
 
 // All pointers reduce to just void pointer.
 void * ptrs(float * a, int **, * Custom, *Custom, Custom*, Custom  *  ) {}
+// Except for char arrays which get their own pointer types.
+void char_ptr(char [], char *, wchar_t*) {}
+// But pointers to char pointers are reduced to just void pointers.
+void char_ptr_ptr(char [][], char **, *wchar_t*) {}
 
 // Invalid syntax defaults to ``None`` - leave the compiler to raise any issues.
 char invalid_argument(I like cake) {}
@@ -53,6 +57,8 @@ PARSED_FUNCTIONS = {
     'whack': ['c_short', ['c_ulong', 'c_double', 'c_long']],
     #
     'ptrs': ['c_void_p', ['c_void_p'] * 6],
+    'char_ptr': ['None', ['c_char_p', 'c_char_p', 'c_wchar_p']],
+    'char_ptr_ptr': ['None', ['c_void_p', 'c_void_p', 'c_void_p']],
     #
     'invalid_argument': ['c_char', ['None']],
     'invalid_argument_2': ['None', ['None']],
@@ -60,7 +66,7 @@ PARSED_FUNCTIONS = {
     'unicode_ÀÆÌÐÔÙÝáåéíñõùý': ['c_byte', ['c_void_p', 'c_void_p']],
     #
     'windows_aliases': ['c_size_t', ['c_int16', 'c_int32', 'c_int64']],
-    'windows_ptr_aliases': ['c_void_p', ['c_void_p']],
+    'windows_ptr_aliases': ['c_char_p', ['c_char_p', 'c_void_p']],
 }
 
 
