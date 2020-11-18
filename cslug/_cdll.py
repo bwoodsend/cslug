@@ -121,7 +121,7 @@ class CSlug(object):
             flags.append("-Ofast")
 
         # Compile for older versions of macOS.
-        if OS == "Darwin":  # pragma: no cover
+        if OS == "Darwin":  # pragma: Darwin
             flags += ["-mmacosx-version-min=10.1"]
 
         # Set 32/64 bit.
@@ -224,9 +224,9 @@ def _ptr(bytes_like, flags):
     return address[0]
 
 
-if OS == "Windows":  # pragma: no cover
+if OS == "Windows":  # pragma: Windows
     free_dll_handle = ctypes.windll.kernel32.FreeLibrary
-elif OS == "Darwin":  # pragma: no cover
+elif OS == "Darwin":  # pragma: Darwin
     try:
         lib_system = ctypes.CDLL("libSystem")
     except OSError:
@@ -242,7 +242,7 @@ elif OS == "Darwin":  # pragma: no cover
     else:
         # I hope this never happens.
         free_dll_handle = lambda *spam: None
-else:  # pragma: no cover
+else:  # pragma: Linux
     free_dll_handle = ctypes.CDLL("").dlclose
 
 

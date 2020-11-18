@@ -2,6 +2,8 @@
 [run]
 branch = True
 source = cslug
+plugins =
+  coverage_conditional_plugin
 
 [report]
 # Regexes for lines to exclude from consideration
@@ -17,3 +19,10 @@ exclude_lines =
     if 0:
     if __name__ == .__main__.:
 ignore_errors = True
+
+[coverage_conditional_plugin]
+# Here we specify our pragma rules:
+rules =
+  "platform_system != 'Windows'": Windows
+  "platform_system != 'Darwin'": Darwin
+  "platform_system != 'Linux'": Linux
