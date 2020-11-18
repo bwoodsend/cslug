@@ -102,15 +102,15 @@ def search_function_declarations(text):
 _parameter_re = _re.compile(r"([^(]*)\(([^)]*)\)\s*")
 
 
-def parse_function_declaration(string):
+def parse_function_declaration(string, typedefs=None):
     """Parse a function declaration into its name, its return type and its
     arguments."""
     res, args = _parameter_re.fullmatch(string).groups()
     args = list(_filter(None, _re.split(r"\s*,\s*", args)))
     args = [i for i in args if not _re.fullmatch(r"\s*void\s*", i)]
-    a, b, name = parse_parameter(res)
+    a, b, name = parse_parameter(res, typedefs=typedefs)
     res = _choose_ctype(a, b, name)
-    args = [_choose_ctype(*parse_parameter(i)) for i in args]
+    args = [_choose_ctype(*parse_parameter(i, typedefs=typedefs)) for i in args]
     return name, res, args
 
 
@@ -133,11 +133,12 @@ _ALIAS_PTR_TYPES = {
 }
 
 
-def parse_parameter(string):
+def parse_parameter(string, typedefs=None):
     """Parse a variable or parameter declaration such as ``int * foo``.
 
     :param string: Declaration to parse.
     :type string: str
+    :param typedefs:
     :return: ``(ctypes_type_name, pointers, name)``
     :rtype: tuple[str, int, str]
 
@@ -149,6 +150,10 @@ def parse_parameter(string):
     type_words = []
     name = None
     for word in _re.findall(r"\w+", string):
+
+        # Check for user-defined types (without evaluating them).
+        if typedefs and word in typedefs:
+            type_words.append(word)
 
         # Check for aliases.
         if word in _ALIAS_TYPES:
@@ -197,7 +202,9 @@ def parse_parameter(string):
     # Count how many *s or []s there are so check how many pointer layers deep.
     pointer += len(_re.findall(r"  \*  |  \[ [^]]* ]  ", string, _re.VERBOSE))
 
-    if type_words or "signed" in string or "int" in string:
+    if len(type_words) == 1 and typedefs and type_words[0] in typedefs:
+        type = type_words[0]
+    elif type_words or "signed" in string or "int" in string:
         type = "c_" + "".join(type_words)
         # Check if type is a valid ctype:
         if not hasattr(_ctypes, type):
