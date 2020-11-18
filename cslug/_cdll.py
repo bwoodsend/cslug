@@ -122,7 +122,7 @@ class CSlug(object):
 
         # Compile for older versions of macOS.
         if OS == "Darwin":  # pragma: Darwin
-            flags += ["-mmacosx-version-min=10.1"]
+            flags += ["-mmacosx-version-min=10.5"]
 
         # Set 32/64 bit.
         flags += ["-m" + str(BIT_NESS)]
