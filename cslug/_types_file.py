@@ -33,12 +33,12 @@ class Types(object):
         functions = {}
         structs = {}
         for source in self.sources:
-            source = misc.read(source)[0]
-            for func in search_function_declarations(source):
-                name, *args = parse_function_declaration(func)
-                functions[name] = args
+            structs.update(parse_structs(misc.read(source)[0]))
 
-            structs.update(parse_structs(source))
+        for source in self.sources:
+            for func in search_function_declarations(misc.read(source)[0]):
+                name, *args = parse_function_declaration(func, typedefs=structs)
+                functions[name] = args
 
         return {"functions": functions, "structs": structs}
 
@@ -64,6 +64,14 @@ class Types(object):
         :param dll:
         :type dll: :class:`ctypes.CDLL`
         """
+        structs = {}
+
+        for (name, params) in self.types["structs"].items():
+            fields = [(name, getattr(ctypes, type), *bits)
+                      for (name, type, *bits) in params]
+            structs[name] = make_struct(name, fields)
+
+        dll.__dict__.update(structs)
 
         for (name, (return_type, arg_types)) in self.types["functions"].items():
             func = getattr(dll, name, None)
@@ -79,18 +87,15 @@ class Types(object):
                 continue
 
             # Set function return type. Default to no return value.
-            func.restype = getattr(ctypes, return_type, None)
+            func.restype = structs.get(return_type) \
+                           or getattr(ctypes, return_type, None)
 
             # Set argument types. Default to int. If this is wrong however this
             # will almost certainly cause strange incorrect behaviour.
             func.argtypes = [
-                getattr(ctypes, i, ctypes.c_int) for i in arg_types
+                structs.get(i) or getattr(ctypes, i, ctypes.c_int)
+                for i in arg_types
             ]
-
-        for (name, params) in self.types["structs"].items():
-            fields = [(name, getattr(ctypes, type), *bits)
-                      for (name, type, *bits) in params]
-            setattr(dll, name, make_struct(name, fields))
 
 
 if __name__ == "__main__":

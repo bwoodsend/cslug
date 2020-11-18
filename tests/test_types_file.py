@@ -111,9 +111,23 @@ PARSED_STRUCTS = {
              ('d', 'c_uint', 4)]
 }
 
+STRUCT_METHODS = """
+Test returns_test() {}
+Test * returns_test_ptr() {}
+void takes_test(Test t) {}
+void takes_test_ptr(Test * t) {}
+"""
+
+PARSED_STRUCT_METHODS = {
+    'returns_test': ['Test', []],
+    'returns_test_ptr': ['c_void_p', []],
+    'takes_test': ['None', ['Test']],
+    'takes_test_ptr': ['None', ['c_void_p']],
+}
+
 
 def test_struct():
-    self = cslug.Types(io.StringIO(), io.StringIO(STRUCT_TEXT))
+    self = cslug.Types(io.StringIO(), io.StringIO(STRUCT_TEXT + STRUCT_METHODS))
     self.make()
-    assert not self.types["functions"]
     assert self.types["structs"] == PARSED_STRUCTS
+    assert self.types["functions"] == PARSED_STRUCT_METHODS
