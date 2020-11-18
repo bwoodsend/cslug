@@ -3,6 +3,8 @@
 """
 
 import io
+import warnings
+import ctypes
 
 from cslug import CSlug, anchor
 
@@ -40,11 +42,31 @@ def test_struct_io():
         thing -> b = b;
     }
 
+    Thing make_thing(int a, float b) {
+        Thing thing;
+        thing.a = a;
+        thing.b = b;
+        return thing;
+    }
+
+    int get_a_plus_x(Thing thing, int x) {
+        return thing.a + x;
+    }
+
     """))
 
-    lib = slug.dll
+    with warnings.catch_warnings():
+        warnings.filterwarnings("error")
+        lib = slug.dll
 
     assert hasattr(lib, "Thing")
+
+    assert lib.get_a.argtypes == [ctypes.c_void_p]
+
+    assert lib.make_thing.argtypes == [ctypes.c_int, ctypes.c_float]
+    assert lib.make_thing.restype == lib.Thing
+    assert lib.get_a_plus_x.argtypes == [lib.Thing, ctypes.c_int]
+    assert lib.get_a_plus_x.restype == ctypes.c_int
 
     thing = lib.Thing(10, 3)
     assert lib.get_a(thing._ptr) == thing.a == 10
