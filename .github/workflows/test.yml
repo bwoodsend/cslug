@@ -44,8 +44,19 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
 
+      - name: Cache pip cached wheels
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: pip-cache
+          key: restore-key
+          restore-keys: restore-key
+
       - name: Install
-        run: pip install .[test]
+        run: |
+          pip install --cache-dir=pip-cache wheel
+          pip install --cache-dir=pip-cache .[test]
 
       - name: Test
         run: pytest tests --timeout 30
