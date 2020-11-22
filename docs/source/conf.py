@@ -12,15 +12,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-# If extensions (or modules to document with autodoc) are in another
-# directory, add these directories to sys.path here. If the directory is
-# relative to the documentation root, use os.path.abspath to make it
-# absolute, like shown here.
-#
-import os
-import sys
-sys.path.insert(0, os.path.abspath('..'))
-
 import cslug
 
 # -- General configuration ---------------------------------------------
@@ -84,6 +75,17 @@ todo_include_todos = False
 
 rst_epilog = cslug.anchor("rst_epilog.txt")[0].read_text()
 
+rst_epilog += """
+.. role:: tooltip(raw)
+   :format: html
+"""
+
+import sys
+sys.path.insert(0, ".")
+import tooltips_gen
+
+rst_epilog += tooltips_gen.epilog
+
 # -- Options for HTML output -------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -96,7 +98,12 @@ html_theme = "sphinx_rtd_theme"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['static']
+
+
+def setup(app):
+    app.add_css_file('tooltip.css')  # may also be an URL
+
 
 #html_favicon = 'favicon.png'
 
