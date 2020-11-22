@@ -5,6 +5,10 @@ Welcome to cslug's documentation!
     :maxdepth: 2
     :caption: Contents:
 
+    types
+    strings-and-bytes
+    cpp
+    jargon
     stubs/cslug.rst
 
    quickstart
