@@ -5,6 +5,7 @@ Welcome to cslug's documentation!
     :maxdepth: 2
     :caption: Contents:
 
+    stubs/cslug.rst
 
    quickstart
 
