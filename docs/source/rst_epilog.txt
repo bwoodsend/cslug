@@ -1,0 +1,11 @@
+.. _ctypes: https://docs.python.org/3.9/library/ctypes.html
+.. _mingw: http://mingw-w64.org/doku.php/download
+.. _gcc: https://gcc.gnu.org/
+.. _pycparser: https://github.com/eliben/pycparser
+.. _numpy: https://numpy.org/doc/stable/
+.. |cslug| replace:: **cslug**
+.. |gcc| replace:: **gcc**
+
+.. role:: tooltip(raw)
+   :format: html
+
