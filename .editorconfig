@@ -22,3 +22,6 @@ indent_style = tab
 
 [*.yml]
 indent_size = 2
+
+[*.{c,cpp,h,hpp}]
+indent_size = 2
