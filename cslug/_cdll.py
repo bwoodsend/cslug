@@ -109,7 +109,7 @@ class CSlug(object):
                 pass
 
     def make_command(self):
-        """Gets the compile command invoked by :meth:`call_gcc`."""
+        """Gets the compile command invoked by :meth:`compile`."""
 
         # Output filename
         output = ["-o", str(self.path)]
