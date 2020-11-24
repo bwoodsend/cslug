@@ -5,7 +5,7 @@ Shared libraries don't contain any information about the types of a function's
 arguments or its return type. It doesn't even count how many arguments a
 function takes - you just get seg-faults and memory errors if you get it wrong.
 
-ctypes_ allows you to set the type information for functions (accessible via
+:mod:`ctypes` allows you to set the type information for functions (accessible via
 ``function.argtypes`` and ``function.restype``) but it means you have to
 effectively copy and translate function prototypes from C into Python (which is
 both mind-numbing and error-prone).

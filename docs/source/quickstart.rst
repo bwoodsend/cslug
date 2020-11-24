@@ -37,8 +37,8 @@ Let's break down what just happened. |cslug| should have:
   single function called ``add_1()``.
 * Extracted type information from our C source code. Namely: ``add_1()`` takes
   one ``int`` input and returns an ``int`` output.
-* Loaded said shared library using ctypes_ (accessible via ``slug.dll``) and
-  set the type information for the functions it contains.
+* Loaded said shared library using :mod:`ctypes` (accessible via ``slug.dll``)
+  and set the type information for the functions it contains.
 
 Finally, ``print(slug.dll.add_1(10))`` will call our C function ``add_1()``
 on ``10`` and print the answer (``11`` I think?).
