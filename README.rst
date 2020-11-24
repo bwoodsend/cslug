@@ -13,8 +13,8 @@ Quick and painless wrapping C code into Python.
 * Source: https://github.com/bwoodsend/cslug
 * Releases: https://github.com/bwoodsend/cslug/releases
 
-The |cslug| package provides a thin layer on top of the built-in ctypes_
-library, making it easy to load functions and structures from C into Python.
+The **cslug** package provides a thin layer on top of the built-in ctypes_
+library, making it easier to load functions and structures from C into Python.
 
 Alternatives
 ------------
@@ -22,19 +22,25 @@ Alternatives
 Mixing C with Python is nothing new - there are plenty of other ways. A nice
 comparison of the various methods can be found `here
 <https://intermediate-and-advanced-software-carpentry.readthedocs.io/en/latest/c++-wrapping.html>`_.
-cslug aims to be the simplest although it certainly isn't the most flexible.
+**cslug** aims to be the simplest although it certainly isn't the most flexible.
 
 
 Installation
 ------------
 
-|cslug| requires gcc_ to compile your C code. If you're on Linux you probably
-already have it. Other OS users should get it with mingw_. To check you have it
-run the following in terminal::
+**cslug** requires gcc_ to compile C code. If you're on Linux you probably
+already have it but if you are on another OS then you should get it with
+mingw_. To check you have it run the following in terminal::
 
     gcc -v
 
-Install cslug itself with the usual::
+.. note::
+
+    gcc_ is a build time dependency only. If you provide wheels for a package
+    that contain binaries built with **cslug**, then your users will not need a
+    compiler; only if they try to build your package from source.
+
+To install **cslug** itself use the usual::
 
     pip install cslug
 
@@ -46,60 +52,8 @@ pin it in a ``requirements.txt``.
 Quickstart
 ----------
 
-Hello cslug
-~~~~~~~~~~~
-
-Typically, we write C source code in its own ``.c`` file but for the purposes of
-getting started we'll be lazy embed the C source into our Python code using
-:meth:`io.StringIO`.
-
-.. code-block:: python
-
-    import io
-    from cslug import CSlug
-
-    slug = CSlug("my-first-slug", io.StringIO("""
-        // Note that indentation has no effect in C.
-        int add_1(int x) {
-            return x + 1;
-        }
-    """))
-
-    print(slug.dll.add_1(10))
-
-If you get a :class:`NoGCCError` then please return to the
-:ref:`Installation` section. Provided nothing went pear-shaped, |cslug| should
-have:
-
-* Compiled a shared library called ``my-first-dll-[...]`` in your current
-  working directory (where ``[...]`` depends on your OS) containing a single
-  function ``add_1()``.
-* Extracted type information from our C source code. Namely: ``add_1()`` takes
-  one :class:`int` input and returns an :class:`int` output.
-* Loaded said shared library using ctypes_ (accessible via ``slug.dll``) and
-  set the type information for the functions it contains.
-
-The finally ``print(slug.dll.add_1(10))`` will call our C function ``add_1()``
-on ``10`` and print the answer (``11``).
-
-Type Safety
-...........
-
-By setting the type information for each function for you (accessible via
-``slug.dll.add_1.argtypes`` and ``slug.dll.add_1.restype``), |cslug| provides
-some degree of implicit type safety for basic types such as ``int``\ s (and
-its derivatives such as ``short int``), ``float``\ s, ``str``\s and ``bytes``.
-
-
-Modifying the C code
-~~~~~~~~~~~~~~~~~~~~
-
-|cslug| will only compile the shared library for you if it doesn't already
-exist. To recompile use :meth:`CSlug.make`.
-
-.. code-block:: python
-
-    slug.sources.append()
+Check out our `quickstart page on readthedocs
+<https://cslug.readthedocs.io/en/latest/quickstart.html>`_ to get started.
 
 
 Credits
@@ -113,4 +67,3 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 .. _ctypes: https://docs.python.org/3.9/library/ctypes.html
 .. _mingw: http://mingw-w64.org/doku.php/download
 .. _gcc: https://gcc.gnu.org/
-.. |cslug| replace:: **cslug**
