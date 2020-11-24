@@ -1,17 +1,17 @@
-Welcome to cslug's documentation!
-======================================
+
+.. include:: ../../README.rst
 
 .. toctree::
     :maxdepth: 2
     :caption: Contents:
 
+    quickstart
     types
     strings-and-bytes
     cpp
     jargon
     stubs/cslug.rst
 
-   quickstart
 
 Indices and tables
 ==================
