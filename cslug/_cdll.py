@@ -145,11 +145,12 @@ class CSlug(object):
 
 
 def ptr(bytes_like):
-    """Get a ``ctypes.c_void_p`` to any Python object supporting the C buffer
+    """Get the raw address of any Python object supporting the C buffer
     protocol.
 
-    A ``bytes_like`` object is anything that calling ``bytes(obj)`` doesn't
-    raise a ``TypeError``. This includes bytes, memoryviews and numpy arrays.
+    A `bytes-like` object is anything for which calling ``memoryview(obj)``
+    doesn't raise a :class:`TypeError`. This includes bytes, bytearrays,
+    memoryviews, array.arrays and numpy arrays.
 
     This intentionally doesn't inc-ref the buffer so don't let it be deleted in
     Python until C is done with it. i.e. ``c_method(ptr(b"buffer"))`` will
@@ -164,7 +165,7 @@ def ptr(bytes_like):
         # automatically as you normally would any other Python object).
         del buffer # optional
 
-    If you are using `numpy`_ then you should be aware that this method only
+    If you are using :mod:`numpy` then you should be aware that this method only
     accepts C-contiguous buffers. If you understand how contiguity works and
     have explicitly supported non-contiguous buffers in your C code then you may
     use :meth:`nc_ptr` instead. Otherwise convert your arrays to contiguous ones

@@ -27,6 +27,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx_copybutton',
     'sphinx.ext.autosectionlabel',
+    'sphinx.ext.intersphinx',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -154,3 +155,9 @@ texinfo_documents = [
     (master_doc, 'cslug', 'cslug Documentation', author, 'cslug',
      'One line description of project.', 'Miscellaneous'),
 ]
+
+# Add mappings for :class:`xxx` cross references to non-cslug docs.
+intersphinx_mapping = {
+    'python': ('http://docs.python.org/3', None),
+    'numpy': ('https://numpy.org/doc/stable/', None),
+}
