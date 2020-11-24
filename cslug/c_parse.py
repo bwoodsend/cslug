@@ -4,11 +4,12 @@
 cslug.c_parse
 =============
 
-The :mod:`c_parse` submodule provides some very bare-bones C parsing tools.
+The :mod:`cslug.c_parse` submodule provides some very bare-bones C parsing
+tools.
 
 This module's sole purpose is to extract function and struct declarations to
 generate prototypes in automatically generated header files, and to parse
-type information from the declarations to be passed to :class:`Types`.
+type information from the declarations to be passed to :class:`cslug.Types`.
 
 For a proper C parser, use `pycparser`_.
 
