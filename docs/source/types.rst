@@ -12,10 +12,10 @@ both mind-numbing and error-prone).
 
 |cslug| tries to do the above for you by scanning your C source code for
 function definitions, dumping the information into a json file with the same
-name as your shared library (first argument to :meth:`CSlug`) then setting the
-type information for each function on loading the library (invoked by accessing
-``slug.dll``). This provides some degree of implicit type safety and casting for
-the basic types:
+name as your shared library (first argument to :meth:`~cslug.CSlug`) then
+setting the type information for each function on loading the library (invoked
+by accessing ``slug.dll``). This provides some degree of implicit type safety
+and casting for the basic types:
 
 ===============================   ====================================================================================
 Python Type                       Equivalent C Type(s)
@@ -65,7 +65,7 @@ But anything else gives a :class:`TypeError` as we'd expect::
     TypeError: this function takes at least 1 argument (0 given)
 
 To see what it's like without the safety net, remove the type information from
-:meth:`slug.dll.reciprocal` and try calling it again::
+:meth:`!slug.dll.reciprocal` and try calling it again::
 
     slug.dll.reciprocal.restype = int  # The default return type.
     slug.dll.reciprocal.argtypes = None  # Unknown arguments.
