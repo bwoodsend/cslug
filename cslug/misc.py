@@ -4,6 +4,7 @@
 
 import io
 import sys
+import re
 from pathlib import Path
 
 
@@ -19,13 +20,20 @@ def as_path_or_readable_buffer(file):
     return Path(file)
 
 
-def read(path, mode="r"):
+def _read(path, mode="r"):
     if isinstance(path, io.IOBase):
         if hasattr(path, "getvalue"):
             return path.getvalue(), None
         return path.read(), None
     with open(path, mode, encoding="utf-8") as f:
         return f.read(), path
+
+
+def read(path, mode="r"):
+    text, path = _read(path, mode)
+    if mode == "r":
+        text = re.sub("\r\n?", "\n", text)
+    return text, path
 
 
 def write(path, *data, mode="w"):

@@ -91,3 +91,13 @@ def test_read():
 
     assert read(path) == (target, path)
     assert read(str(path)) == (target, str(path))
+
+
+@pytest.mark.parametrize("ending", ["\r", "\n", "\r\n"])
+def test_read_crlf(ending):
+    TEXT = str(copyright)
+    assert "\r" not in TEXT
+    assert read(io.StringIO(TEXT.replace("\n", ending))) == (TEXT, None)
+
+    BINARY = TEXT.replace("\n", ending).encode()
+    assert read(io.BytesIO(BINARY), "rb") == (BINARY, None)
