@@ -32,7 +32,7 @@ StatusCodes = {
 
 
 def test():
-    self = Header(HERE / "dump" / "header.h", RESOURCES / "to_headerise.c",
+    self = Header(HERE / "dump" / "a header-file.h", RESOURCES / "to_headerise.c",
                   defines=(Farmers, StatusCodes, Burger), includes="<stdio.h>")
     file = io.StringIO()
     self.write(file)

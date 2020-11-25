@@ -2,8 +2,8 @@
 // Header file generated automatically by cslug.
 // Do not modify this file directly as your changes will be overwritten.
 
-#ifndef HEADER_H
-#define HEADER_H
+#ifndef A_HEADER_FILE_H
+#define A_HEADER_FILE_H
 
 #include <stdio.h>
 
