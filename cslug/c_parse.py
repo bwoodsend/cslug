@@ -303,3 +303,18 @@ def parse_structs(text):
 
     """
     return (parse_struct(i.group(0)) for i in _struct_re.finditer(text))
+
+
+def global_scoped_code_only(text):
+    start = 0
+    depth = 0
+    for (i, c) in enumerate(text):
+        if c == "{":
+            if depth == 0:
+                yield text[start:i]
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                start = i + 1
+    yield text[start:]
