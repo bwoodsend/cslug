@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 import collections
 import io
+import re
 from enum import EnumMeta
 
 from cslug.c_parse import search_function_declarations
@@ -40,8 +41,11 @@ class Header(object):
             "// -*- coding: utf-8 -*-\n",
             "// Header file generated automatically by cslug.\n",
             "// Do not modify this file directly as your changes will be "
-            "overwritten.\n\n", "#ifndef HEADER_H\n#define HEADER_H\n\n"
+            "overwritten.\n\n",
         ]
+
+        guard = re.sub(r"\W", "_", self.path.name.upper())
+        lines += ["#ifndef {}\n".format(guard), "#define {}\n\n".format(guard)]
 
         if self.includes:
             [lines.append("#include %s\n" % i) for i in self.includes]
