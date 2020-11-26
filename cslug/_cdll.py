@@ -13,6 +13,7 @@ import shutil
 
 from cslug._types_file import Types
 from cslug import misc, exceptions, c_parse
+from cslug._headers import Header
 
 # TODO: maybe try utilising this. Probably not worth it...
 # https://stackoverflow.com/questions/17942874/stdout-redirection-with-ctypes
@@ -30,7 +31,7 @@ SUFFIX = "-{}-{}bit{}".format(OS, BIT_NESS, SUFFIX)
 
 class CSlug(object):
 
-    def __init__(self, path, *sources):
+    def __init__(self, path, *sources, headers=()):
         path, *sources = misc.flatten(sources, initial=misc.flatten(path))
         path = misc.as_path_or_buffer(path)
         if not isinstance(path, Path):
@@ -40,6 +41,12 @@ class CSlug(object):
         if len(sources) == 0 and path.suffix == ".c":
             sources = (path,)
         self.sources = [misc.as_path_or_readable_buffer(i) for i in sources]
+        self.headers = misc.flatten(headers)
+        for h in self.headers:
+            if not isinstance(h, Header):
+                raise TypeError(
+                    "The `headers` argument must be of `cslug.Header()` type, "
+                    "not {}.".format(type(h)))
         self.types_dict = Types(path.with_suffix(".json"), *self.sources)
         self._dll = None
 
@@ -90,6 +97,8 @@ class CSlug(object):
 
     def make(self):
         self.close()
+        for header in self.headers:
+            header.make()
         ok = self.compile()
         self.types_dict.make()
         self._check_printfs()
