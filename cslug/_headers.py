@@ -27,9 +27,6 @@ class Header(object):
         self.defines = misc.flatten(defines)
         assert self.path.suffix == ".h"
         assert all(i.suffix != ".h" for i in self.sources)
-        if all(map(Path.exists, self.sources)):
-            [self.add_source(i) for i in self.sources]
-            self.write(self.path)
 
     def add_source(self, source):
         source = Path(source)
@@ -76,3 +73,6 @@ class Header(object):
         else:
             with open(str(path), "w") as f:
                 f.writelines(self.generate())
+
+    def make(self):
+        self.write(self.path)
