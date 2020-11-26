@@ -6,6 +6,8 @@ import enum
 import io
 import re
 
+import pytest
+
 from cslug import Header
 
 from tests import RESOURCES, HERE
@@ -31,8 +33,13 @@ StatusCodes = {
 }
 
 
-def test():
-    self = Header(HERE / "dump" / "a header-file.h", RESOURCES / "to_headerise.c",
+@pytest.mark.parametrize("pseudo_input", [False, True])
+def test(pseudo_input):
+    source = RESOURCES / "to_headerise.c"
+    if pseudo_input:
+        source = io.StringIO(source.read_text())
+
+    self = Header(HERE / "dump" / "a header-file.h", source,
                   defines=(Farmers, StatusCodes, Burger), includes="<stdio.h>")
     file = io.StringIO()
     self.write(file)
@@ -47,7 +54,10 @@ def test():
     # Ae want automatically generated headers to be as git-friendly as possible
     # (although checking them into git is still not recommended) we aim for
     # exact byte-for-byte reproducibility.
-    assert written == (RESOURCES / "target_header.h").read_text()
+    target = (RESOURCES / "target_header.h").read_text()
+    if pseudo_input:
+        target = target.replace("to_headerise.c", "<string>")
+    assert written == target
 
 
 def test_implicit_name_no_includes_sourceless():
@@ -55,5 +65,3 @@ def test_implicit_name_no_includes_sourceless():
     assert self.sources == [RESOURCES / "non-existent.c"]
     assert self.path == RESOURCES / "non-existent.h"
     assert not self.path.exists()
-
-    self.generate()
