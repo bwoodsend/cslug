@@ -16,22 +16,23 @@ from cslug import misc
 class Header(object):
 
     def __init__(self, path, *sources, includes=(), defines=()):
-        # TODO: Add support for io buffers.
         self.path = Path(path)
         if len(sources) == 0 and self.path.suffix != ".h":
             sources = (self.path,)
             self.path = self.path.with_suffix(".h")
         self.includes = misc.flatten(includes)
-        self.functions = collections.defaultdict(list)
-        self.sources = [Path(i) for i in sources]
+
+        self.sources = [misc.as_path_or_buffer(i) for i in sources]
         self.defines = misc.flatten(defines)
         assert self.path.suffix == ".h"
-        assert all(i.suffix != ".h" for i in self.sources)
 
-    def add_source(self, source):
-        source = Path(source)
-        self.functions[source] += search_function_declarations(
-            source.read_text("utf-8"))
+    def functions(self):
+        functions = collections.defaultdict(list)
+        for source in self.sources:
+            code, name = misc.read(source)
+            name = "<string>" if name is None else name.name
+            functions[name] += search_function_declarations(code)
+        return functions
 
     def generate(self):
         lines = [
@@ -59,8 +60,8 @@ class Header(object):
                 lines.append("#define {} {}\n".format(key, val))
             lines.append("\n")
 
-        for (path, funcs) in self.functions.items():
-            lines.append("// " + path.name + "\n")
+        for (name, funcs) in self.functions().items():
+            lines.append("// " + name + "\n")
             lines.extend(i + ";\n" for i in funcs)
             lines.append("\n")
 
