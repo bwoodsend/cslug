@@ -76,7 +76,7 @@ def hide_from_PATH(name):
     return old
 
 
-def flatten(iterable, types=list, initial=None):
+def flatten(iterable, types=(tuple, list), initial=None):
     if initial is None:
         initial = []
     if isinstance(iterable, types):

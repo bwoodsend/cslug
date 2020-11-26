@@ -21,10 +21,10 @@ class Header(object):
         if len(sources) == 0 and self.path.suffix != ".h":
             sources = (self.path,)
             self.path = self.path.with_suffix(".h")
-        self.includes = misc.flatten(includes, types=(tuple, list))
+        self.includes = misc.flatten(includes)
         self.functions = collections.defaultdict(list)
         self.sources = [Path(i) for i in sources]
-        self.defines = misc.flatten(defines, types=(tuple, list))
+        self.defines = misc.flatten(defines)
         assert self.path.suffix == ".h"
         assert all(i.suffix != ".h" for i in self.sources)
         if all(map(Path.exists, self.sources)):

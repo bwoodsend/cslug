@@ -31,8 +31,7 @@ SUFFIX = "-{}-{}bit{}".format(OS, BIT_NESS, SUFFIX)
 class CSlug(object):
 
     def __init__(self, path, *sources):
-        path, *sources = misc.flatten(sources, (tuple, list),
-                                      initial=misc.flatten(path, (tuple, list)))
+        path, *sources = misc.flatten(sources, initial=misc.flatten(path))
         path = misc.as_path_or_buffer(path)
         if not isinstance(path, Path):
             raise TypeError("The path to a CSlug's DLL must be a true path, not"
