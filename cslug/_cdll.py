@@ -55,7 +55,7 @@ class CSlug(object):
         if shutil.which("gcc") is None:
             raise exceptions.NoGccError
 
-        command, buffers = self.make_command()
+        command, buffers = self.compile_command()
         p = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE,
                   universal_newlines=True)
         for buffer in buffers:
@@ -116,7 +116,7 @@ class CSlug(object):
             except:
                 pass
 
-    def make_command(self):
+    def compile_command(self):
         """Gets the compile command invoked by :meth:`compile`."""
 
         # Output filename
