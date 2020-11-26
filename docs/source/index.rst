@@ -8,6 +8,7 @@
     quickstart
     types
     strings-and-bytes
+    headers
     cpp
     jargon
     stubs/cslug.rst
