@@ -9,6 +9,7 @@
     types
     strings-and-bytes
     headers
+    oop-structs
     cpp
     jargon
     stubs/cslug.rst
