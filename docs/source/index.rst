@@ -8,6 +8,7 @@
     quickstart
     types
     strings-and-bytes
+    oop-structs
     cpp
     jargon
     stubs/cslug.rst
