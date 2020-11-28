@@ -7,7 +7,6 @@ import sys
 import array
 
 import pytest
-import psutil
 
 from cslug import ptr, nc_ptr
 
@@ -66,6 +65,11 @@ def leaks(f, tol=None, n=1):
     calling ``f()`` ``n`` times and returns the difference in bytes. If **f**
     cleans itself up correctly the output should be roughly zero.
     """
+    # psutil isn't supported on msys2, hence the not making it a strict test
+    # dependency.
+    pytest.importorskip("psutil")
+    import psutil
+
     p = psutil.Process(os.getpid())
     old = p.memory_info().vms
     for i in range(n):
