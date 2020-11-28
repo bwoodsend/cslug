@@ -251,8 +251,12 @@ elif OS == "Darwin":  # pragma: Darwin
     else:
         # I hope this never happens.
         free_dll_handle = lambda *spam: None
-else:  # pragma: Linux
+elif OS == "Linux":  # pragma: Linux
     free_dll_handle = ctypes.CDLL("").dlclose
+else:  # pragma: no cover
+    # XXX: This is for msys2. PR wanted from anyone who knows how to unload a
+    #      DLL under such an environment.
+    free_dll_handle = lambda x: None
 
 
 def check_printfs(text, name=None):
