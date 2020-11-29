@@ -9,6 +9,8 @@
     types
     strings-and-bytes
     oop-structs
+    globals
+    error-handling
     cpp
     jargon
     stubs/cslug.rst
