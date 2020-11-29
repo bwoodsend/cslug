@@ -3,6 +3,7 @@
 .. _pycparser: https://github.com/eliben/pycparser
 .. |cslug| replace:: **cslug**
 .. |gcc| replace:: **gcc**
+.. _`ctypes types table`: https://docs.python.org/3/library/ctypes.html#fundamental-data-types
 
 .. role:: tooltip(raw)
    :format: html
