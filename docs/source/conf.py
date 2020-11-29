@@ -107,7 +107,7 @@ def setup(app):
     app.add_css_file('theme-overrides.css')
 
 
-#html_favicon = 'favicon.png'
+html_favicon = html_logo = 'icons/venomous-sea-slug-flare-icon.png'
 
 # -- Options for HTMLHelp output ---------------------------------------
 
