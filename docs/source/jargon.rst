@@ -57,3 +57,16 @@ Glossary
         Windows is slightly nicer than Unix in that you usually get
         :class:`OSError`\ s (which are catchable) instead of seg-faults.
 
+    null terminated
+
+        Ends with a zero byte to signify end of string.
+
+        Strings in C (just arrays of characters) don't know their own length. As
+        a lazy alternative to having to keep track of string lengths in separate
+        integer variables, a string can sometimes be null terminated instead. If
+        the string contains zeros then this is not an option.
+
+        Note that *zero* is ascii zero, denoted by ``'\x00'`` or ``chr(0)`` in
+        Python or ``'\00'`` in C, not simply the character ``'0'`` (which is
+        actually ``'\\30'`` or ``48`` in C).
+
