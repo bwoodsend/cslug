@@ -10,6 +10,7 @@
     strings-and-bytes
     headers
     oop-structs
+    globals
     cpp
     jargon
     stubs/cslug.rst
