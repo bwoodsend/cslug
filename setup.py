@@ -27,10 +27,6 @@ setup(
         'Programming Language :: Python :: 3.9',
     ],
     description="Quick and painless wrapping C code into Python",
-    entry_points={
-        'console_scripts': ['cslug=cslug.cli:main',],
-    },
-    install_requires=['Click>=7.0'],
     extras_require={"test": ['pytest>=3', 'pytest-order', 'pytest-timeout']},
     license="MIT license",
     long_description=readme + '\n\n' + history,
