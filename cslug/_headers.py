@@ -14,7 +14,6 @@ from cslug import misc
 
 
 class Header(object):
-
     def __init__(self, path, *sources, includes=(), defines=()):
         self.path = Path(path)
         if len(sources) == 0 and self.path.suffix != ".h":

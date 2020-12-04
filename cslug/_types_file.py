@@ -14,7 +14,6 @@ from cslug._struct import make_struct
 
 
 class Types(object):
-
     def __init__(self, path, *sources):
         self.sources = [misc.as_path_or_buffer(i) for i in sources]
         self.json_path = misc.as_path_or_buffer(path)

@@ -64,9 +64,7 @@ def build_slugs(*names, base=_build):
     :return: A modified subclass of **base**.
 
     """
-
     class build(base):
-
         def run(self):
             make(*names)
             super().run()
