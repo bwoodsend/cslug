@@ -1,0 +1,6 @@
+recursive-include * *.c
+recursive-exclude * *.dll
+recursive-exclude * *.so
+recursive-exclude * *.dylib
+recursive-exclude * *.json
+include pyproject.toml
