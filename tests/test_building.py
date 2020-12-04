@@ -21,7 +21,6 @@ class CalledMake(Exception):
 
 
 class Nested:
-
     class NameSpace:
         slug = CSlug(anchor(name(), io.StringIO("")))
 

@@ -82,6 +82,7 @@ rst_epilog += """
 """
 
 import sys
+
 sys.path.insert(0, ".")
 import tooltips_gen
 
