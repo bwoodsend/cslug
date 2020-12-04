@@ -10,4 +10,5 @@ def make(*names):
     for name in names:
         import_, *attrs = name.split(":")
         assert len(attrs)
-        operator.attrgetter(*attrs)(importlib.import_module(import_)).make()
+        mod = importlib.import_module(import_)
+        operator.attrgetter(".".join(attrs))(mod).make()
