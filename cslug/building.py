@@ -84,13 +84,33 @@ else:
         """:mod:`wheel.bdist_wheel` with platform dependent but Python
         independent tags.
         """
+
+        # def finalize_options(self):
+        #     super().finalize_options()
+        #     self.root_is_pure = False
+
         def get_tag(self):
-            python, abi, plat = _bdist_wheel.get_tag(self)
-            # cslug packages contain binaries but they don't use
-            # `#include <Python.h>` like traditional Python extensions.
-            # This makes wheels dependent OS but not Python version dependent.
+            """Set platform dependent wheel tag.
+
+            |cslug| packages contain binaries but they don't use
+            ``#include <Python.h>`` like traditional Python extensions do.
+            This makes wheels dependent OS but not Python version dependent.
+            """
             from distutils.util import get_platform
-            return python, abi, get_platform().replace("-", "_")
+            import re
+            # According to PEP 425:
+            # https://www.python.org/dev/peps/pep-0425/#platform-tag
+            # the platform tag should just be ``distutils.util.get_platform()``
+            # with `.` and `-` replaced with `_`. However it also appears to
+            # also be case-lowered. I only see this on MSYS2 which is the only
+            # tested platform containing capital letters.
+            # TODO: If this mapping continues to be a pain, we can go the other
+            # way - i.e. uncomment `def finalize_options(self)` above to mark a
+            # package as containing Python extension modules, then propagate
+            # the platform but replace python/abi versions with generic ones.
+            python, abi, plat = _bdist_wheel.get_tag(self)
+            plat = re.sub(r"[.\-]", "_", get_platform()).lower()
+            return python, abi, plat
 
 
 def copy_requirements(path="pyproject.toml",
