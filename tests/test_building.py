@@ -13,13 +13,26 @@ from tests import name
 pytestmark = pytest.mark.order(-1)
 
 
+class CalledMake(Exception):
+    """
+    Not really an exception - just a signal to signify make() has been called.
+    """
+    pass
+
+
 class Nested:
 
     class NameSpace:
         slug = CSlug(anchor(name(), io.StringIO("")))
 
+        def make():
+            raise CalledMake
+
 
 def test_make():
+    if __name__ == "__main__":
+        pytest.xfail("This test won't work if run from main.")
+
     from cslug.building import make
 
     assert not Nested.NameSpace.slug.path.exists()
@@ -29,3 +42,9 @@ def test_make():
 
     assert Nested.NameSpace.slug.path.exists()
     assert Nested.NameSpace.slug.types_dict.json_path.exists()
+
+    with pytest.raises(CalledMake):
+        make("tests.test_building:Nested.NameSpace")
+
+    with pytest.raises(CalledMake):
+        make("tests.test_building:Nested:NameSpace")
