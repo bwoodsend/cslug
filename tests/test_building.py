@@ -48,3 +48,20 @@ def test_make():
 
     with pytest.raises(CalledMake):
         make("tests.test_building:Nested:NameSpace")
+
+
+def _pyproject_toml(source):
+    source = f"[build-system]\nrequires={source}\n"
+    return io.StringIO(source)
+
+
+def test_copy_requirements():
+    from cslug.building import copy_requirements
+    assert copy_requirements(_pyproject_toml(["miff",  "muffet", "moof"])) \
+           == ["miff", "muffet", "moof"]
+
+    assert copy_requirements(_pyproject_toml(["miff", "muffet", "moof"]),
+                             "miff") == ["muffet", "moof"]
+
+    assert copy_requirements(_pyproject_toml(["miff", "moof", "toml"])) \
+                             == ["miff", "moof"]

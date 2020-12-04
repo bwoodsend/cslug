@@ -27,7 +27,9 @@ setup(
         'Programming Language :: Python :: 3.9',
     ],
     description="Quick and painless wrapping C code into Python",
-    extras_require={"test": ['pytest>=3', 'pytest-order', 'pytest-timeout']},
+    extras_require={
+        "test": ['pytest>=3', 'pytest-order', 'pytest-timeout', 'toml']
+    },
     license="MIT license",
     long_description=readme + '\n\n' + history,
     include_package_data=True,
