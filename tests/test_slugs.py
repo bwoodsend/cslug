@@ -85,7 +85,7 @@ def test_build_error():
     assert getattr(self, "_dll", None) is None
 
 
-def test_no_gcc_error():
+def test_no_gcc_or_blocked_error():
 
     self = CSlug(*anchor(name(), io.StringIO("")))
 
@@ -95,6 +95,11 @@ def test_no_gcc_error():
             self.make()
     finally:
         os.environ["PATH"] = old
+
+    with pytest.raises(exceptions.BuildBlockedError):
+        with misc.block_compile():
+            self.make()
+    str(exceptions.BuildBlockedError())
 
     assert self.make()
 

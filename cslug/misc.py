@@ -6,6 +6,7 @@ import io
 import sys
 import re
 from pathlib import Path
+import contextlib as _contextlib
 
 
 def as_path_or_buffer(file):
@@ -85,3 +86,17 @@ def flatten(iterable, types=(tuple, list), initial=None):
     else:
         initial.append(iterable)
     return initial
+
+
+@_contextlib.contextmanager
+def block_compile():
+    import os
+    old = os.environ.get("CC")
+    os.environ["CC"] = "block"
+    try:
+        yield
+    finally:
+        if old is None:
+            del os.environ["CC"]
+        else:
+            os.environ["CC"] = old

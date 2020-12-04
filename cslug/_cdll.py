@@ -54,6 +54,8 @@ class CSlug(object):
         self.close()
         if shutil.which("gcc") is None:
             raise exceptions.NoGccError
+        if os.environ.get("CC") == "block":
+            raise exceptions.BuildBlockedError
 
         command, buffers = self.compile_command()
         p = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE,
