@@ -60,3 +60,6 @@ jobs:
 
       - name: Test
         run: pytest tests --timeout 30
+
+      - name: Test packaging
+        run: python packaging/test.py
