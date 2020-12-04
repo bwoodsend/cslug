@@ -10,7 +10,7 @@ import io
 import pytest
 
 import cslug
-from cslug.misc import read, as_path_or_readable_buffer
+from cslug.misc import read, as_path_or_readable_buffer, block_compile
 
 from tests import RESOURCES
 
@@ -101,3 +101,22 @@ def test_read_crlf(ending):
 
     BINARY = TEXT.replace("\n", ending).encode()
     assert read(io.BytesIO(BINARY), "rb") == (BINARY, None)
+
+
+def test_block_compile():
+    old = os.environ.get("CC")
+
+    os.environ["CC"] = "cake"
+    with block_compile():
+        assert os.environ.get("CC") == "block"
+    assert os.environ.get("CC") == "cake"
+
+    del os.environ["CC"]
+    with block_compile():
+        assert os.environ.get("CC") == "block"
+    assert "CC" not in os.environ
+
+    if old is not None:
+        os.environ["CC"] = old
+
+    assert os.environ.get("CC") == old

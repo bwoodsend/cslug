@@ -15,6 +15,12 @@ class BuildError(Exception):
         return "The build command:\n\n%s\n\nFailed with:\n\n%s\n" % self.args
 
 
+class BuildBlockedError(Exception):
+
+    def __str__(self):
+        return "The build was blocked by the environment variable `CC=block`."
+
+
 class BuildWarning(Warning):
     pass
 
