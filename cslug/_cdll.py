@@ -30,7 +30,6 @@ SUFFIX = "-{}-{}bit{}".format(OS, BIT_NESS, SUFFIX)
 
 
 class CSlug(object):
-
     def __init__(self, path, *sources, headers=()):
         path, *sources = misc.flatten(sources, initial=misc.flatten(path))
         path = misc.as_path_or_buffer(path)

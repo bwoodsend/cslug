@@ -54,7 +54,6 @@ def run(*args, cwd="."):
 
 
 class Env(object):
-
     def __init__(self, dir):
         self.dir = dir
 
@@ -79,6 +78,7 @@ def master_python(*args, cwd="."):
 
 # --- making a mess in the source code ---
 # This junk should be ignored.
+
 
 def add_junk():
     for path in ["junk.dll", "junk.so", "junk.dylib", "more-junk"]:
