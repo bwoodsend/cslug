@@ -53,8 +53,9 @@ def make(*names):
         mod = importlib.import_module(import_)
         operator.attrgetter(".".join(attrs))(mod).make()
 
+# Trying to properly coverage trace these is too much hassle.
 
-def build_slugs(*names, base=_build):
+def build_slugs(*names, base=_build):  # pragma: no cover
     """
     Overload the :func:`!run()` method of a distutils build class to
     additionally call :func:`cslug.building.make`.
@@ -74,7 +75,7 @@ def build_slugs(*names, base=_build):
 
 try:
     from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
-except ImportError:
+except ImportError:  # pragma: no cover
     bdist_wheel = None
 else:
 
@@ -87,7 +88,7 @@ else:
         #     super().finalize_options()
         #     self.root_is_pure = False
 
-        def get_tag(self):
+        def get_tag(self):  # pragma: no cover
             """Set platform dependent wheel tag.
 
             |cslug| packages contain binaries but they don't use
