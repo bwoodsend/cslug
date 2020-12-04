@@ -8,10 +8,11 @@ import io
 import ctypes
 import fnmatch
 import itertools
+import random
 
 import pytest
 
-from cslug import exceptions, anchor, CSlug, misc
+from cslug import exceptions, anchor, CSlug, misc, Header
 
 from tests import DUMP, name, DEMOS
 from tests.test_pointers import leaks
@@ -268,3 +269,35 @@ def test_bytes():
 
     assert decrypt(encrypted, key) == data
     leaks(lambda: encrypt(data, key), n=100, tol=len(data) * 10)
+
+
+def test_header_type_error():
+    with pytest.raises(TypeError):
+        CSlug("name", headers="not a header")
+
+
+def test_with_header():
+    header_name = "header-" + name().stem + ".h"
+    cake = random.randint(0, 256)
+    header = Header(DUMP / header_name, defines={"cake": cake})
+
+    source, = anchor(name().with_suffix(".c"))
+    source.write_text("""\
+    #include "%s"
+
+    int get_cake() {
+        return cake;
+    }
+    """ % header_name)
+
+    self = CSlug(*anchor(name()), source, headers=header)  # yapf: disable
+
+    try:
+        old = os.getcwd()
+        os.chdir(DUMP)
+        self.make()
+    finally:
+        os.chdir(old)
+
+    assert self.headers[0].path.exists()
+    assert self.dll.get_cake() == cake
