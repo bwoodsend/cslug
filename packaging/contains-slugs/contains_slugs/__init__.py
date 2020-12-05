@@ -1,14 +1,23 @@
-# -*- coding: utf-8 -*-
 """
+A very underwhelming package.
 """
 
 from cslug import CSlug, anchor
 
-slug = CSlug(anchor("c-code.c"))
+deep_thought = CSlug(anchor("deep-thought.c"))
 
 
-def test():
-    assert slug.path.exists()
-    assert slug.types_dict.json_path.exists()
-    assert not slug.sources[0].exists()
+def ultimate_answer():
+    """The ultimate answer to life, the universe and everything."""
+    return deep_thought.dll.ultimate_answer()
+
+def _test():
+    """Some sanity checks.
+
+    You shouldn't need this in your code but if you have it, it should pass.
+    """
+    assert deep_thought.path.exists()
+    assert deep_thought.types_dict.json_path.exists()
+    assert not deep_thought.sources[0].exists()
+    assert ultimate_answer() == 42
     print("ok")

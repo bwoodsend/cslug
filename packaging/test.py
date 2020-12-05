@@ -95,7 +95,7 @@ def inspect_sdist(sdist):
         contents = [Path(i) for i in tf.getnames()]
 
     # C code should be included.
-    assert any(i.name == "c-code.c" for i in contents)
+    assert any(i.name == "deep-thought.c" for i in contents)
 
     for path in contents:
         # Binaries and type jsons should be excluded.

@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-"""
-
 from setuptools import setup, find_packages
 from cslug.building import (build_slugs, bdist_wheel, CSLUG_SUFFIX,
                             copy_requirements)
@@ -19,7 +15,7 @@ setup(
         "contains_slugs": ["*" + CSLUG_SUFFIX, "*.json"],
     },
     cmdclass={
-        "build": build_slugs("contains_slugs:slug"),
+        "build": build_slugs("contains_slugs:deep_thought"),
         "bdist_wheel": bdist_wheel,
     },
 )
