@@ -6,16 +6,13 @@ Integration with :std:doc:`setuptools` is a somewhat messy affair. By putting a
 :class:`cslug.CSlug` in a package, we now have to coerce our package setup to do
 the following 5 things:
 
-#. (Re)build all :class:`cslug.CSlug`\ s on ``setup.py build``.
-#. Include C source code in sdists but exclude them from wheels.
-#. Include |cslug| type jsons and |binaries| of the correct OS in wheels but
+1. (Re)build all :class:`cslug.CSlug`\ s on ``setup.py build``.
+2. Include C source code in sdists but exclude them from wheels.
+3. Include |cslug| type jsons and |binaries| of the correct OS in wheels but
    exclude them from sdists.
-#. Mark |cslug| as a build-time dependency to be installed before trying to run
+4. Mark |cslug| as a build-time dependency to be installed before trying to run
    ``setup.py build``.
-#. Mark wheels as platform dependent but Python version independent.
-
-Wrappers around :std:doc:`setuptools` components to help build and include
-|cslug| binaries in sdists and wheels.
+5. Mark wheels as platform dependent but Python version independent.
 
  """
 
@@ -80,7 +77,7 @@ except ImportError:  # pragma: no cover
 else:
 
     class bdist_wheel(_bdist_wheel):
-        """:mod:`wheel.bdist_wheel` with platform dependent but Python
+        """:mod:`!wheel.bdist_wheel` with platform dependent but Python
         independent tags.
         """
 
