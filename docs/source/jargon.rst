@@ -70,3 +70,6 @@ Glossary
         Python or ``'\00'`` in C, not simply the character ``'0'`` (which is
         actually ``'\\30'`` or ``48`` in C).
 
+        See :ref:`Null terminated or not null terminated?` for when you may
+        assume null-termination.
+
