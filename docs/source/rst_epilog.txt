@@ -5,6 +5,7 @@
 .. |gcc| replace:: **gcc**
 .. _`ctypes types table`: https://docs.python.org/3/library/ctypes.html#fundamental-data-types
 .. _toml: https://github.com/uiri/toml
+.. _`Python packaging tutorial`: https://python-packaging.readthedocs.io/en/latest/index.html
 
 .. role:: tooltip(raw)
    :format: html

@@ -163,4 +163,5 @@ texinfo_documents = [
 intersphinx_mapping = {
     'python': ('http://docs.python.org/3', None),
     'numpy': ('https://numpy.org/doc/stable/', None),
+    'setuptools': ('https://setuptools.readthedocs.io/en/latest/', None),
 }
