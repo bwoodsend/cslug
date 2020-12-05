@@ -1,0 +1,11 @@
+
+Supporting MSVC without __declspec(dllexport)-ing everything requires generating a .def file.
+https://docs.microsoft.com/en-us/cpp/build/exporting-from-a-dll-using-def-files?view=msvc-160
+
+tcc can be supported with the -rdynamic flag!
+https://bellard.org/tcc/tcc-doc.html
+
+gcc also has -rdynamic. Appears to be very new. Only in msys2 v10.???
+Linker has --export-all-symbols option.
+https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html
+
