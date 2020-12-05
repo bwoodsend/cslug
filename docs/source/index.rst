@@ -8,6 +8,7 @@
     quickstart
     types
     strings-and-bytes
+    arrays-and-buffers
     headers
     oop-structs
     globals
