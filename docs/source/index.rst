@@ -11,6 +11,7 @@
     headers
     oop-structs
     globals
+    packaging
     cpp
     jargon
     stubs/cslug.rst
