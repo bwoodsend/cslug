@@ -26,3 +26,8 @@
 a {
   color: #297099
 }
+
+/* Inline literals. */
+.rst-content code.literal, .rst-content tt.literal {
+  color: #034040;
+}
