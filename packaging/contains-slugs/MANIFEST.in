@@ -1,6 +1,6 @@
-recursive-include * *.c
-recursive-exclude * *.dll
-recursive-exclude * *.so
-recursive-exclude * *.dylib
+# This manifest is for sdists only.
+# Wheels get their data list from setup.py.
+recursive-include * *.c *.h
+recursive-exclude * *.dll *.so *.dylib
 recursive-exclude * *.json
 include pyproject.toml
