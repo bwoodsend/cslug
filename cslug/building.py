@@ -112,8 +112,7 @@ else:
             return python, abi, plat
 
 
-def copy_requirements(path="pyproject.toml",
-                      ignore=("toml", "setuptools", "wheel")):
+def copy_requirements(path="pyproject.toml", ignore=()):
     """
     Parse the `build-system: requires` list from a :pep:`PEP518 pyproject.toml
     <0518#build-system-table>`.
@@ -122,7 +121,7 @@ def copy_requirements(path="pyproject.toml",
                  ``'pyproject.toml'``.
     :type path: Union[str, os.PathLike, io.TextIOBase]
     :param ignore: Requirements to ignore, use to remove build only
-                   requirements, defaults to ``('toml', 'setuptools', 'wheel')``.
+                   requirements.
     :type ignore: Iterable[str]
     :return:
     :rtype: list[str]
@@ -133,13 +132,20 @@ def copy_requirements(path="pyproject.toml",
         a build dependency, or if you use the ``--no-build-isolation`` option
         with pip, have toml_ installed.
 
+    .. note::
+
+        toml_ wheel and setuptools are always excluded. If you want to re-add
+        them then append them after::
+
+            copy_requirements() + ["toml"]
+
     """
 
     import re
     import toml
 
     from cslug.misc import read, flatten
-    ignore = flatten(ignore)
+    ignore = flatten(ignore) + ["wheel", "setuptools", "toml"]
 
     conf = toml.loads(read(path)[0])
     requirements = conf["build-system"]["requires"]
