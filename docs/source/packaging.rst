@@ -112,3 +112,75 @@ with:
 
     python setup.py build
 
+
+Specify build-time dependencies
+-------------------------------
+
+By putting a |cslug| import in our *setup.py* we've made |cslug| a build time
+dependency. And, because you need to import your project just to compile any
+|cslug| components, most or all of your run-time dependencies are now also build
+time dependencies.
+
+The ability to specify build time dependencies is introduced by :pep:`518`. You
+require a *pyproject.toml* (a *setup.cfg* is not accepted).
+
+If you don't like that your requirements are duplicated you may use
+:func:`~cslug.building.copy_requirements` to extract your build time
+requirements and pass them to the ``install_requires`` option in your
+*setup.py*::
+
+    from cslug.building import copy_requirements
+
+    setup(
+        ...
+        install_requires=copy_requirements(),
+        ...
+    )
+
+If you have build time requirements that aren't runtime requirements you can
+exclude them with::
+
+    install_requires=copy_requirements(exclude=["build-time", "only", "packages"]),
+
+setuptools, wheel and toml are excluded. If you want to include them or have
+other runtime-only dependencies then append them::
+
+    install_requires=copy_requirements() + ["toml", "some-other-library"],
+
+
+.. warning::
+
+    pip builds packages in an isolated environment which ignores your currently
+    installed packages. If you forget a build requirement in the toml file, but
+    you will still a :class:`ModuleNotFoundError` even if have it installed
+    anyway.
+
+.. note::
+
+    If you find the isolated build environment is maddeningly slow you can skip
+    it in pip using the ``--no-build-isolation``. But only once your sure it
+    works without it.
+
+When the build dependencies get noticed
+.......................................
+
+Build dependencies, being new, has a few holes in it. They are ignored (usually
+resulting in :class:`ModuleNotFoundError`\ s) with any of the:
+
+.. code-block:: shell
+
+    python setup.py [bdist_wheel or install or anything else]
+
+Using pip finds the build dependencies correctly so the solution is to the above
+is to:
+
+.. code-block:: shell
+
+    pip install -e .
+
+Or manually install the build dependencies before invoking any ``setup.py``
+commands.
+
+You also require modern versions of pip, setuptools and wheel. If you get
+:class:`ModuleNotFoundError`\ s for packages which are in your toml, trying
+upgrading those.
