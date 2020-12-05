@@ -184,3 +184,21 @@ commands.
 You also require modern versions of pip, setuptools and wheel. If you get
 :class:`ModuleNotFoundError`\ s for packages which are in your toml, trying
 upgrading those.
+
+For sdists to work the *pyproject.toml* must be included in the sdist. See
+:ref:`Data for sdists`.
+
+
+Data files for source distributions (sdists)
+--------------------------------------------
+
+An sdist should include source code but exclude anything |cslug|-generated. It's
+also crucial that *pyproject.toml* is included or build time dependencies don't
+get propagated.
+
+This all happens in the :ref:`MANIFEST.in <Packaging Demo: MANIFEST.in>`. You
+can just copy/paste this file directly into your project's root:
+
+.. literalinclude:: ../../packaging/contains-slugs/MANIFEST.in
+    :caption: MANIFEST.in
+
