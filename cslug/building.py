@@ -112,7 +112,7 @@ else:
             return python, abi, plat
 
 
-def copy_requirements(path="pyproject.toml", ignore=()):
+def copy_requirements(path="pyproject.toml", exclude=()):
     """
     Parse the `build-system: requires` list from a :pep:`PEP518 pyproject.toml
     <0518#build-system-table>`.
@@ -120,9 +120,9 @@ def copy_requirements(path="pyproject.toml", ignore=()):
     :param path: Specify an alternative toml file to parse from, defaults to
                  ``'pyproject.toml'``.
     :type path: Union[str, os.PathLike, io.TextIOBase]
-    :param ignore: Requirements to ignore, use to remove build only
+    :param exclude: Requirements to exclude, use to remove build only
                    requirements.
-    :type ignore: Iterable[str]
+    :type exclude: Iterable[str]
     :return:
     :rtype: list[str]
 
@@ -145,10 +145,10 @@ def copy_requirements(path="pyproject.toml", ignore=()):
     import toml
 
     from cslug.misc import read, flatten
-    ignore = flatten(ignore) + ["wheel", "setuptools", "toml"]
+    exclude = flatten(exclude) + ["wheel", "setuptools", "toml"]
 
     conf = toml.loads(read(path)[0])
     requirements = conf["build-system"]["requires"]
 
     sep_re = re.compile(r"[<>=|&!\s]")
-    return [i for i in requirements if sep_re.split(i)[0] not in ignore]
+    return [i for i in requirements if sep_re.split(i)[0] not in exclude]
