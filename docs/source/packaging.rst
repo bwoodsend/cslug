@@ -71,3 +71,44 @@ packaging tutorial`_.)
 .. literalinclude:: ../../packaging/contains-slugs/setup.py
     :end-at: packages=
 
+
+Compile on ``setup.py build``.
+------------------------------
+
+Whilst you rarely use it directly, ``setup.py build`` is called implicitly
+whenever you:
+
+* ``pip install .`` or ``pip install -e .``.
+* ``python setup.py bdist_wheel`` or ``pip wheel .`` but not
+  ``python setup.py sdist``.
+* ``pip install /path/to/source/distribution.tar.gz`` but not
+  ``pip install /path/to/binary/distribution.whl``.
+
+You should hook ``setup.py build`` to also call :func:`cslug.CSlug.make` on
+every :class:`cslug.CSlug`. We will do this by indirectly calling
+:func:`cslug.building.make`. To attach our own code to the ``setup.py build``
+command we must overload the ``run()`` method of
+:class:`!distutils.command.build.build`. :func:`cslug.building.build_slugs` does
+exactly this. i.e. creates a subclass adding :func:`~cslug.building.make` to the
+``run()`` method.
+
+So finally, to create and register this custom build class, add the following
+option::
+
+    setup(
+        ...
+        cmdclass={
+            "build": build_slugs("contains_slugs:deep_thought"),
+        },
+    )
+
+See :func:`~cslug.building.make` for how the argument(s) to
+:class:`~cslug.building.build_slugs` should be formatted.
+
+With this set up, you can now (re)compile all |cslug| components in a project
+with:
+
+.. code-block:: shell
+
+    python setup.py build
+
