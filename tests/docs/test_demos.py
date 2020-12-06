@@ -30,3 +30,7 @@ def test_globals():
 
 def test_multi_output():
     _test_demo(DEMOS / "multi-output" / "multi-output.py")
+
+
+def test_errors():
+    _test_demo(DEMOS / "errors" / "errors.py")
