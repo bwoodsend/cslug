@@ -8,9 +8,6 @@ import runpy
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
-
 setup(
     author="Brénainn Woodsend",
     author_email='bwoodsend@gmail.com',
@@ -31,8 +28,8 @@ setup(
         "test": ['pytest>=3', 'pytest-order', 'pytest-timeout', 'toml']
     },
     license="MIT license",
-    long_description=readme + '\n\n' + history,
     include_package_data=True,
+    long_description=readme,
     keywords='cslug',
     name='cslug',
     packages=find_packages(include=['cslug', 'cslug.*']),
