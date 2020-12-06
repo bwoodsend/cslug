@@ -28,7 +28,6 @@ setup(
         "test": ['pytest>=3', 'pytest-order', 'pytest-timeout', 'toml']
     },
     license="MIT license",
-    include_package_data=True,
     long_description=readme,
     keywords='cslug',
     name='cslug',
