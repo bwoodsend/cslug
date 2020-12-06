@@ -11,6 +11,7 @@
     headers
     oop-structs
     globals
+    error-handling
     packaging
     cpp
     tips
