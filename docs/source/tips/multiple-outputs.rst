@@ -20,13 +20,13 @@ To use it we the usual setup:
     :start-at: import ctypes
     :end-at: slug =
 
-We do have to do some leg-work to interact with this function. Lets give ourselves
-an input array of the correct type we'd like to use::
+We do have to do some leg-work to interact with this function. Lets give
+ourselves an input array of the correct type we'd like to use::
 
     values = array.array("d", range(20))
 
-Now to finally run our C code. The :func:`ctype.byref` calls are where the magic
-is happening.
+Now to finally run our C code. The :func:`ctypes.byref` calls are where the
+magic is happening.
 
 .. literalinclude:: ../../demos/multi-output/multi-output.py
     :start-at: # Create uninitialised
