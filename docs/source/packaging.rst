@@ -186,7 +186,7 @@ You also require modern versions of pip, setuptools and wheel. If you get
 upgrading those.
 
 For sdists to work the *pyproject.toml* must be included in the sdist. See
-:ref:`Data for sdists`.
+:ref:`Data files for source distributions (sdists)`.
 
 
 Data files for source distributions (sdists)
@@ -201,4 +201,93 @@ can just copy/paste this file directly into your project's root:
 
 .. literalinclude:: ../../packaging/contains-slugs/MANIFEST.in
     :caption: MANIFEST.in
+
+
+Data files for binary distributions (wheels)
+--------------------------------------------
+
+A binary distribution is already compiled meaning that it doesn't need source
+code anymore. But it does need the compiled |binaries| and type jsons.
+
+We're back to the *setup.py* again, this time using the ``package_data``
+argument.
+
+.. code-block:: python
+
+    from cslug.building import CSLUG_SUFFIX
+
+    setup(
+        ...,
+        include_package_data=False,
+        package_data={
+            "contains_slugs": ["*" + CSLUG_SUFFIX, "*.json"],
+        },
+    )
+
+Make sure that you do not use ``include_package_data=True``. Using it causes
+all files to be collected, including source and junk files, rather than only
+those which are appropriate.
+
+.. note::
+
+    The above filter would prevent binaries for the wrong platform from being
+    collected but for some unfortunate caching. If you compile for multiple
+    platforms which share a filesystem, run ``python setup.py clean`` between
+    each switch.
+
+
+Platform specific wheel tag
+---------------------------
+
+Because a |cslug| package contains |binaries| but those binaries do not use the
+Python ABI (i.e. don't include the line ``#include <Python.h>`` anywhere in the
+C code), a package is platform specific but independent of Python/ABI version.
+i.e. You can't compile on Linux and run on Windows but you can compile using
+Python 3.8 and run on Python 3.6.
+
+We need to tell setuptools this, otherwise it incorrectly assumes our packages
+our Pure Python which confuses the hell out of pip. Unfortunately setuptools is
+heavily geared towards Python extension modules and this is surprisingly fiddly.
+But :class:`cslug.building.bdist_wheel` wraps it up for you. Just add it as
+another command class in your *setup.py*::
+
+    from cslug.building import bdist_wheel
+
+    setup(
+        ...
+        cmdclass={
+            "bdist_wheel": bdist_wheel,
+        },
+    )
+
+Now on running:
+
+.. code-block:: shell
+
+    python setup.py bdist_wheel
+
+you should notice that the wheel produced has the name of your operating system
+in its filename.
+
+.. note::
+
+    Building wheels requires the wheel_ package. If you get an error saying
+    wheel_ isn't installed then just ``pip install wheel``.
+
+PyPA are pushing (albeit half-heartedly) away from direct ``python setup.py
+command`` usage. To conform to this instead use
+
+.. code-block:: shell
+
+    pip wheel .
+
+to build wheels.
+
+The above is slightly different in that it builds wheels for all your
+dependencies too and places them in your current working directory rather than a
+dedicated *dist* folder. For true equivalence use:
+
+.. code-block:: shell
+
+    pip wheel --wheel-dir dist --no-deps .
 
