@@ -13,12 +13,17 @@ pytestmark = pytest.mark.order(-2)
 from tests import DEMOS
 
 
-def test():
+def _test_demo(demo_path):
     old_cwd = os.getcwd()
     try:
         # The os.PathLike needs to be str() molly coddled when running with
         # coverage because there's a `filename.endswith()` somewhere in
         # coverage's code tracer.
-        runpy.run_path(str(DEMOS / "globals" / "globals.py"))
+        runpy.run_path(str(demo_path))
     finally:
         os.chdir(old_cwd)
+
+
+def test_globals():
+    _test_demo(DEMOS / "globals" / "globals.py")
+
