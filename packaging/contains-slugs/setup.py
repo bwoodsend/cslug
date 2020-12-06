@@ -9,7 +9,6 @@ setup(
     author_email="sluggy989@seaslugmail.com",
     url="www.toomanyslugs.com",
     packages=find_packages(),
-    include_package_data=False,
     install_requires=copy_requirements(),
     package_data={
         "contains_slugs": ["*" + CSLUG_SUFFIX, "*.json"],
