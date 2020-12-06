@@ -27,3 +27,6 @@ def _test_demo(demo_path):
 def test_globals():
     _test_demo(DEMOS / "globals" / "globals.py")
 
+
+def test_multi_output():
+    _test_demo(DEMOS / "multi-output" / "multi-output.py")
