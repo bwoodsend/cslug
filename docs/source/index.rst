@@ -13,6 +13,7 @@
     globals
     packaging
     cpp
+    tips
     jargon
     stubs/cslug.rst
 
