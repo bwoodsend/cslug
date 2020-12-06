@@ -50,7 +50,9 @@ def make(*names):
         mod = importlib.import_module(import_)
         operator.attrgetter(".".join(attrs))(mod).make()
 
+
 # Trying to properly coverage trace these is too much hassle.
+
 
 def build_slugs(*names, base=_build):  # pragma: no cover
     """
@@ -72,8 +74,25 @@ def build_slugs(*names, base=_build):  # pragma: no cover
 
 try:
     from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
+
 except ImportError:  # pragma: no cover
-    bdist_wheel = None
+    # Provide a self-explanatory error message on `setup.py bdist_wheel` if the
+    # user doesn't have wheel installed.
+    from distutils.cmd import Command
+
+    class bdist_wheel(Command):
+        user_options = []
+
+        def finalize_options(self) -> None:
+            pass
+
+        def initialize_options(self) -> None:
+            pass
+
+        def run(self):
+            raise SystemExit(
+                "ERROR: The bdist_wheel command requires the wheel package. "
+                "Please `pip install wheel` then try again.")
 else:
 
     class bdist_wheel(_bdist_wheel):
