@@ -7,6 +7,7 @@
 .. _toml: https://github.com/uiri/toml
 .. _`Python packaging tutorial`: https://python-packaging.readthedocs.io/en/latest/index.html
 .. _wheel: https://wheel.readthedocs.io/en/stable/
+.. _`raise an issue on Github`: https://github.com/bwoodsend/cslug/issues/new
 
 .. role:: tooltip(raw)
    :format: html
