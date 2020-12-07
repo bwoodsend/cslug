@@ -31,3 +31,11 @@ a {
 .rst-content code.literal, .rst-content tt.literal {
   color: #034040;
 }
+
+/* Use different color code-blocks for C and Python. */
+div[class*="highlight-C"] .highlight{
+  background: #e6f0f9;
+}
+div[class*="highlight-py"] .highlight, div[class*="highlight-default"] .highlight{
+  background: #f3ffd9;
+}
