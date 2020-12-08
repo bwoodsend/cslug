@@ -24,9 +24,13 @@ item_head_re = re.compile(item_head_re, re.VERBOSE)  # yapf: disable
 def tooltip(title, body, path=""):
     # I hate string normalisation.
     text_name = uncapitalise(title)
-    hyperlink_title = title.replace(" ", "-")
+    hyperlink = title.replace(" ", "-")
     rst_sub_name = title.lower()
+    return _tooltip(rst_sub_name, text_name, hyperlink, body, path) + \
+        _tooltip(rst_sub_name + "s", text_name + "s", hyperlink, body, path)
 
+
+def _tooltip(rst_sub_name, text_name, hyperlink_title, body, path=""):
     return '.. |{}{}| replace:: :tooltip:`'.format(path, rst_sub_name) + \
             '<a href="{}jargon.html#term-{}">'.format(path, hyperlink_title) + \
             text_name + \

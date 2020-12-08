@@ -72,7 +72,7 @@ Glossary
         A Null terminated string has an additional zero character on the end to
         signify the end of the string.
 
-        Strings in C, which are just arrays (which are just |pointer|\ s to the
+        Strings in C, which are just arrays (which are just |pointers| to the
         first element) of characters, don't know their own length. As a somewhat
         lazy alternative to having to keep track of string lengths separately, a
         string can instead use zero (which isn't a type-able character) to mark
