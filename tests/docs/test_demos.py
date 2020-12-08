@@ -10,6 +10,7 @@ import pytest
 
 pytestmark = pytest.mark.order(-2)
 
+from cslug import CSlug
 from tests import DEMOS
 
 
@@ -34,3 +35,22 @@ def test_multi_output():
 
 def test_errors():
     _test_demo(DEMOS / "errors" / "errors.py")
+
+
+string_count: CSlug = None
+
+
+def test_string_count_make():
+    slug = CSlug(DEMOS / "strings" / "strings-demo.c")
+    slug.make()
+    global string_count
+    string_count = slug
+
+
+@pytest.mark.parametrize("count", ["count", "count_"])
+@pytest.mark.parametrize(("text", "char"), [("", "a"), ("hello", "l"),
+                                            ("Мин печенье", "и")])
+def test_count(count, text, char):
+    if string_count is None:
+        pytest.skip("Building strings-demo.c failed.")
+    assert getattr(string_count.dll, count)(text, char) == text.count(char)
