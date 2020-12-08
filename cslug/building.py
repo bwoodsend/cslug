@@ -8,7 +8,7 @@ the following 5 things:
 
 1. (Re)build all :class:`cslug.CSlug`\ s on ``setup.py build``.
 2. Include C source code in sdists but exclude them from wheels.
-3. Include |cslug| type jsons and |binaries| of the correct OS in wheels but
+3. Include |cslug| type jsons and |../binaries| of the correct OS in wheels but
    exclude them from sdists.
 4. Mark |cslug| as a build-time dependency to be installed before trying to run
    ``setup.py build``.
