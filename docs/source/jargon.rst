@@ -5,11 +5,11 @@ Glossary
 
 .. glossary::
 
-    pointer
+    Pointer
 
         The memory address of an object stored in another variable.
 
-    dangling pointer
+    Dangling Pointer
 
         A pointer whose target object has been deleted leaving it pointing to
         trash memory.
@@ -18,14 +18,14 @@ Glossary
         yield incorrect results, raise an :class:`OSError` or cause a
         |seg-fault|.
 
-    shared library
+    Shared Library
 
         An executable file containing definitions (function/variables/...) but
         no main method.
 
         Shared libraries are analogous to Python libraries.
 
-    binaries
+    Binaries
 
         Nick-name for |shared library|.
 
@@ -35,7 +35,7 @@ Glossary
 
         Stands for *dynamically linked library*.
 
-    memory leak
+    Memory Leak
 
         Memory allocated but never freed.
 
@@ -44,7 +44,7 @@ Glossary
         program will eventually run into MemoryErrors.
 
 
-    seg-fault
+    Seg-fault
 
         A fatal error raised when trying to read/write memory that isn't owned
         by Python.
@@ -57,7 +57,7 @@ Glossary
         Windows is slightly nicer than Unix in that you usually get
         :class:`OSError`\ s (which are catchable) instead of seg-faults.
 
-    null terminated
+    NULL Terminated
 
         Ends with a zero byte to signify end of string.
 
