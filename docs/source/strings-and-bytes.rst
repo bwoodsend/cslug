@@ -9,7 +9,7 @@ There are two ways to work with text.
    conversion - although :ref:`this can be cached<Caching the conversion
    overhead>`) but more straight forward.
 
-2. Treat your text as an array, passing raw |pointer|\ s to C. This is harder
+2. Treat your text as an array, passing raw |pointers| to C. This is harder
    but much more efficient.
 
 This page focuses on option :math:`1`. For option :math:`2` see :ref:`Buffers,

@@ -169,7 +169,7 @@ struct:
 Warning for Structs Containing Pointers
 ---------------------------------------
 
-Be vary careful for |dangling pointer|\ s if you're struct contains pointers.
+Be vary careful for |dangling pointers| if you're struct contains pointers.
 This harmless looking structure, containing a string pointer, is deceptively
 dangerous:
 

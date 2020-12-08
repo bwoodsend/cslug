@@ -74,7 +74,7 @@ To see what it's like without the safety net, remove the type information from
 Pointer Types
 ~~~~~~~~~~~~~
 
-Type checking for |pointer|\ s on the other hand is very minimal. A ``wchar_t
+Type checking for |pointers| on the other hand is very minimal. A ``wchar_t
 *`` correlates to :class:`str` in Python (and is type-checked accordingly) and a
 ``char *`` correlates to :class:`bytes` (including :class:`bytearray` and
 :class:`memoryview`). See :ref:`Strings and Bytes` for working with string
