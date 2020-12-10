@@ -232,7 +232,7 @@ def test_str():
 
     def reverse_test(text):
         out = ctypes.create_unicode_buffer(len(text) + 1)
-        assert self.dll.reverse(text, out, len(text)) == text[::-1]
+        self.dll.reverse(text, out, len(text)) is None
         assert out.value == text[::-1]
         assert out[:] == text[::-1] + "\x00"
 
