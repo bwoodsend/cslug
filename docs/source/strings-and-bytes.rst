@@ -98,6 +98,71 @@ Whereas this performs only one conversion::
     slug.dll.count(a_buffer, "y")
 
 
+Writing to strings
+------------------
+
+We can write to strings inplace or to new strings in C, but it's not so
+streamlined.
+
+* In order to avoid the cacophony of memory issues that is creating and sharing
+  buffers in C, strings should only be created in Python. To write a string in
+  C, create an empty one of the right length then give it to C to populate.
+  This unfortunately means that you must know how long your string will be
+  before you write it.
+
+* As we've seen above, strings are converted to :mod:`ctypes` character arrays
+  when passed to a C function, which then gets discarded immediately, losing any
+  changes the function made. To avoid this we must must do the conversion
+  explicitly like in :ref:`Caching the conversion overhead`.
+
+We'll show these in our next example: A C function which outputs the reverse of
+a :class:`str`:
+
+.. literalinclude:: ../demos/strings/reverse.c
+    :language: C
+    :caption: reverse.c
+
+Notice that output string is an argument rather than a ``return`` value. This is
+in accordance with complication one above. Let us compile our C code:
+
+.. literalinclude:: ../demos/strings/reverse.py
+    :start-at: import ctypes
+    :end-at: slug =
+
+And give ourselves something to reverse:
+
+.. literalinclude:: ../demos/strings/reverse.py
+    :start-at: in_ =
+    :end-at: in_ =
+
+Before using our C function, we need to make it an output to populate. Because
+of complication two, this must be a :class:`ctypes.Array` instead of a generic
+Python :class:`str` (although you can always try it anyway to see what happens).
+
+.. literalinclude:: ../demos/strings/reverse.py
+    :start-at: out =
+    :end-at: slug.dll.reverse
+
+::
+
+    >>> out.value
+    '.gnirts siht esreveR'
+    >>> out.value == in_[::-1]
+    True
+
+Whenever you write a C function which requires weird handling in Python you
+should write a wrapper function to keep the weirdness out the way.
+
+.. literalinclude:: ../demos/strings/reverse.py
+    :pyobject: reverse
+
+::
+
+    >>> reverse(".esu ot reisae hcum si noitcnuf sihT")
+    'This function is much easier to use.'
+
+
+
 Null terminated or not null terminated?
 ---------------------------------------
 

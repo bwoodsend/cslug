@@ -54,3 +54,7 @@ def test_count(count, text, char):
     if string_count is None:
         pytest.skip("Building strings-demo.c failed.")
     assert getattr(string_count.dll, count)(text, char) == text.count(char)
+
+
+def test_str_reverse():
+    _test_demo(DEMOS / "strings" / "reverse.py")
