@@ -139,7 +139,7 @@ def test_no_anchor():
 
 
 def test_printf_warns():
-    from cslug._cdll import check_printfs
+    from cslug._cslug import check_printfs
 
     assert not check_printfs("//printf(stuff)")
     assert not check_printfs("  //  \tprintf(stuff)")
@@ -196,7 +196,7 @@ def test_names_not_in_dll():
 def test_bit_ness():
     """Check 32/64b-bits behaves as expected by looking at integer overflow.
     """
-    from cslug._cdll import BIT_NESS
+    from cslug._cslug import BIT_NESS
 
     self = CSlug(*anchor(name(), io.StringIO("""
 

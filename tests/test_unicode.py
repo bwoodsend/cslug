@@ -8,7 +8,7 @@ import pytest
 
 from cslug import CSlug
 
-from cslug._cdll import gcc_version
+from cslug._cslug import gcc_version
 
 pytestmark = [
     pytest.mark.skipif(gcc_version() < (10, 0, 0),

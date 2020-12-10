@@ -17,7 +17,7 @@ the following 5 things:
  """
 
 from distutils.command.build import build as _build
-from cslug._cdll import SUFFIX as CSLUG_SUFFIX
+from cslug._cslug import SUFFIX as CSLUG_SUFFIX
 
 
 def make(*names):
