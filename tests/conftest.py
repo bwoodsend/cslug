@@ -11,7 +11,7 @@ def pytest_report_header(config):
     https://docs.pytest.org/en/2.0.3/example/simple.html#adding-info-to-test-report-header
     """
     try:
-        from cslug._cdll import gcc_version, SUFFIX
+        from cslug._cslug import gcc_version, SUFFIX
         v = gcc_version()
     except Exception as ex:
         v = repr(ex)
