@@ -122,8 +122,8 @@ class CSlug(object):
         # Output filename
         output = ["-o", str(self.path)]
 
-        # Create a library, in a format Windows will accept, optimize for speed.
-        flags = "-shared -fPIC".split()
+        # Create a library, exporting all symbols.
+        flags = ["-shared", "-rdynamic" if cc_name == "tcc" else "-fPIC"]
 
         if cc_name == "gcc" and version >= (4, 6, 0):
             # Optimize for speed.
