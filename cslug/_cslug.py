@@ -14,6 +14,7 @@ import shutil
 from cslug._types_file import Types
 from cslug import misc, exceptions, c_parse
 from cslug._headers import Header
+from cslug._cc import cc, cc_version
 
 # TODO: maybe try utilising this. Probably not worth it...
 # https://stackoverflow.com/questions/17942874/stdout-redirection-with-ctypes
@@ -51,10 +52,6 @@ class CSlug(object):
 
     def compile(self):
         self.close()
-        if shutil.which("gcc") is None:
-            raise exceptions.NoGccError
-        if os.environ.get("CC") == "block":
-            raise exceptions.BuildBlockedError
 
         command, buffers = self.compile_command()
         p = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE,
@@ -64,6 +61,7 @@ class CSlug(object):
         p.stdin.close()
         p.wait()
         msg = p.stderr.read()
+        p.stderr.close(), p.stdout.close()
 
         # If all just whitespace.
         if not re.search(r"\S", msg):
@@ -73,7 +71,7 @@ class CSlug(object):
             raise exceptions.BuildError(command, msg)
 
         if msg:
-            # Propagate any gcc compile warnings.
+            # Propagate any compiler warnings.
             warnings.warn(msg, category=exceptions.BuildWarning)
         return True
 
@@ -117,8 +115,10 @@ class CSlug(object):
             except:
                 pass
 
-    def compile_command(self):
+    def compile_command(self, _cc=None):
         """Gets the compile command invoked by :meth:`compile`."""
+        _cc = cc(_cc)
+        cc_name, version = cc_version(_cc)
 
         # Output filename
         output = ["-o", str(self.path)]
@@ -126,11 +126,12 @@ class CSlug(object):
         # Create a library, in a format Windows will accept, optimize for speed.
         flags = "-shared -fPIC".split()
 
-        if gcc_version() >= (4, 6, 0):
+        if cc_name == "gcc" and version >= (4, 6, 0):  # pragma: no cover
+            # Optimize for speed.
             flags.append("-Ofast")
 
         # Compile for older versions of macOS.
-        if OS == "Darwin":  # pragma: Darwin
+        if cc_name == "gcc" and OS == "Darwin":  # pragma: Darwin
             flags += ["-mmacosx-version-min=10.5"]
 
         # Set 32/64 bit.
@@ -140,13 +141,13 @@ class CSlug(object):
         warning_flags = "-Wall -Wextra".split()
 
         # Compile all .c files into 1 combined library.
-        # Note that you don't pass header files to gcc.
+        # Note that you don't pass header files to compilers.
         true_files = [str(i) for i in self.sources if isinstance(i, Path)]
         buffers = [i for i in self.sources if not isinstance(i, Path)]
 
         stdin_flags = "-x c -".split() if buffers else []
 
-        return (["gcc"] + output + flags + warning_flags + true_files +
+        return ([_cc] + output + flags + warning_flags + true_files +
                 stdin_flags, buffers)
 
     def _check_printfs(self):
@@ -207,9 +208,3 @@ def check_printfs(text, name=None):
             out = True
         i += 1
     return out
-
-
-def gcc_version():
-    p = Popen(["gcc", "-dumpversion"], stdout=PIPE)
-    p.wait()
-    return tuple(map(int, p.stdout.read().strip().split(b".")))
