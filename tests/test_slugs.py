@@ -62,10 +62,8 @@ def test_basic(true_file):
 
 def test_propagate_build_warnings():
 
-    self = CSlug(*anchor(
-        name(), io.StringIO("""
-        int foo() { return 1 / 0; }
-        """)))
+    self = CSlug(
+        *anchor(name(), io.StringIO("int foo() { return printf(1 / 0); }")))
 
     with pytest.warns(exceptions.BuildWarning):
         self.make()

@@ -15,6 +15,7 @@ cc, version = cc_version()
 pytestmark = [
     pytest.mark.skipif(cc == "gcc" and version < (10, 0, 0),
                        reason="Unicode identifiers requires gcc 10."),
+    pytest.mark.skipif(cc == "tcc", reason="tcc doesn't support unicode."),
     pytest.mark.order(-2),
 ]
 
