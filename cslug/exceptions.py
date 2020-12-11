@@ -5,7 +5,21 @@
 
 class NoGccError(Exception):
     def __str__(self):
-        return "Building requires gcc to be installed and in your PATH."
+        return "Building requires gcc to be installed and in your PATH. " \
+               "Alternatively, set the CC environment variable to the " \
+               "filename of any supported compiler."
+
+
+class CCNotFoundError(Exception):
+    def __str__(self):
+        from os.path import dirname
+        path, = self.args
+        if dirname(path):
+            return "The CC variable specifies the compiler {} which does not " \
+                   "exist.".format(path)
+        return "The CC variable specifies the compiler {} which could not be " \
+               "found in PATH. Try adding your compiler's location to PATH or" \
+               " setting CC to a full path to your compiler.".format(path)
 
 
 class BuildError(Exception):
