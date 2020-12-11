@@ -191,8 +191,8 @@ def test():
     wheel = next((contains_slugs / "dist").glob("*"))
     inspect_wheel(wheel)
 
-    # Install the `contains-slugs` wheel whilst blocking `gcc`. The end user
-    # should not need a C compiler to install a wheel.
+    # Install the `contains-slugs` wheel whilst blocking the compiler. The end
+    # user should not need a C compiler to install a wheel.
     # Using `--find-links folder` instead of passing the `wheel` filename
     # directly verifies the platform tags (wheel's filename suffix) work.
     with block_compile():

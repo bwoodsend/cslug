@@ -8,10 +8,12 @@ import pytest
 
 from cslug import CSlug
 
-from cslug._cslug import gcc_version
+from cslug._cc import cc_version
+
+cc, version = cc_version()
 
 pytestmark = [
-    pytest.mark.skipif(gcc_version() < (10, 0, 0),
+    pytest.mark.skipif(cc == "gcc" and version < (10, 0, 0),
                        reason="Unicode identifiers requires gcc 10."),
     pytest.mark.order(-2),
 ]
