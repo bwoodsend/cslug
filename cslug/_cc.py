@@ -11,8 +11,6 @@ import platform
 
 from cslug import exceptions
 
-executable_suffixes = os.environ.get("pathext", "").split(os.pathsep)
-
 
 def which(name):
     if not os.path.dirname(name):
@@ -22,10 +20,7 @@ def which(name):
     if path.is_file():
         return name
 
-    for suffix in executable_suffixes:
-        _path = path.with_suffix(suffix)
-        if _path.is_file():
-            return str(_path)
+    return shutil.which(path.name, path=str(path.parent))
 
 
 def cc(cc=None):
