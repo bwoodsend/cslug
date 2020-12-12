@@ -3,6 +3,7 @@
 """
 
 from pathlib import Path
+from uuid import uuid1 as uuid
 
 HERE = Path(__file__).parent
 RESOURCES = HERE / "resources"
@@ -18,5 +19,4 @@ assert DUMP.is_dir()
 
 
 def name():
-    import uuid
-    return Path("dump", str(uuid.uuid1()))
+    return Path("dump", str(uuid()))
