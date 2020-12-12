@@ -91,7 +91,7 @@ def test_no_cc_or_blocked_error():
     old = os.environ.copy()
     try:
         misc.hide_from_PATH("gcc")
-        os.environ.pop("cc", None)
+        os.environ.pop("CC", None)
         with pytest.raises(exceptions.NoGccError):
             self.make()
     finally:
