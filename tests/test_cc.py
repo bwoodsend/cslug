@@ -3,25 +3,40 @@
 """
 
 import os, sys
-from fnmatch import fnmatch
-from pathlib import Path
+import platform
 import re
 
 import pytest
 
-from cslug._cc import cc, cc_version, which, executable_suffixes
+from cslug._cc import cc, cc_version, which
 from cslug import exceptions, misc
 
 from tests import DUMP, uuid
 
 pytestmark = pytest.mark.order(-4)
 
+if platform.system() == "Windows":
+    executable_suffixes = os.environ["PATHEXT"].strip(";").split(";")
+elif re.search("msys", platform.system(), re.IGNORECASE):
+    executable_suffixes = [".exe"]
+else:
+    executable_suffixes = [""]
+
+
+def eq(x, y):
+    assert x is not None
+    # Strictly no PathLikes here.
+    assert isinstance(x, str)
+    # Windows needs is case folded. msys2 like to strip executable suffix.
+    assert os.path.splitext(os.path.normcase(x))[0] \
+           == os.path.splitext(os.path.normcase(str(y)))[0]
+
 
 @pytest.mark.parametrize("suffix", executable_suffixes)
 def test_which(suffix):
     DIR = DUMP / str(uuid())
     DIR.mkdir()
-    path = (DIR / str(uuid())).with_suffix(suffix)
+    path = (DIR / "sausage-cc").with_suffix(suffix)
     if path.exists():
         os.remove(path)
 
@@ -34,14 +49,15 @@ def test_which(suffix):
         cc(str(path))
 
     # Make `path` exist.
-    path.write_bytes(b"")
+    path.write_bytes(b"#!/usr/bin/bash")
+    path.chmod(0o755)
 
     # Full path which does exist - return that path.
     assert which(str(path)) == str(path)
     assert cc(str(path)) == str(path)
     # Stripping the suffix should still work.
-    assert fnmatch(which(str(path.with_suffix(""))), str(path))
-    assert fnmatch(cc(str(path.with_suffix(""))), str(path))
+    eq(which(str(path.with_suffix(""))), path)
+    eq(cc(str(path.with_suffix(""))), path)
 
     # This file is not in PATH so shouldn't be findable by name only - raise
     # error saying to add to PATH.
@@ -57,11 +73,14 @@ def test_which(suffix):
     old = os.environ["PATH"]
     try:
         os.environ["PATH"] += os.pathsep + str(DIR)
+        print(os.environ["PATH"])
+        import shutil
+        assert shutil.which(path.name)
 
-        assert fnmatch(which(path.name), str(path))
-        assert fnmatch(which(path.stem), str(path))
-        assert fnmatch(cc(path.name), str(path))
-        assert fnmatch(cc(path.stem), str(path))
+        eq(which(path.name), path)
+        eq(which(path.stem), path)
+        eq(cc(path.name), path)
+        eq(cc(path.stem), path)
 
     finally:
         os.environ["PATH"] = old
