@@ -162,6 +162,13 @@ should write a wrapper function to keep the weirdness out the way.
     'This function is much easier to use.'
 
 
+A bytes example
+---------------
+
+.. literalinclude:: ../demos/bytes/encrypt.c
+    :language: C
+
+
 
 Null terminated or not null terminated?
 ---------------------------------------
