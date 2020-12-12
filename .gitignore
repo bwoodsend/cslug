@@ -107,7 +107,8 @@ ENV/
 
 # IDE settings
 .vscode/
-.idea
+.idea/*
+!.idea/fileTemplates
 
 # CSLug build artifacts
 *.dll
