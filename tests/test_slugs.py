@@ -62,10 +62,12 @@ def test_basic(true_file):
 
 def test_propagate_build_warnings():
 
-    self = CSlug(
-        *anchor(name(), io.StringIO("int foo() { return printf(1 / 0); }")))
+    self = CSlug(*anchor(name(), io.StringIO("""
+        #warning "Not a good idea."
+        void foo() {  }
+    """))) # yapf: disable
 
-    with pytest.warns(exceptions.BuildWarning):
+    with pytest.warns(exceptions.BuildWarning, match="Not a good idea."):
         self.make()
 
     assert hasattr(self.dll, "foo")
