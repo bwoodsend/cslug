@@ -54,7 +54,8 @@ jobs:
 
       - name: Install
         run: |
-          pip install --cache-dir=pip-cache wheel psutil
+          pip install --cache-dir=pip-cache wheel
+          pip install --cache-dir=pip-cache psutil
           pip install --cache-dir=pip-cache .[test]
 
       - name: Test
