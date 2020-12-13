@@ -63,3 +63,12 @@ jobs:
 
       - name: Test packaging
         run: python packaging/test.py
+
+      # gcc is currently just an alias for Clang on modern macOSs so this test
+      # is pointless.
+      - name: Test Clang
+        if: ${{ runner.os == 'macOS' }}
+        env:
+          CC: clang
+        run: |
+          pytest tests --timeout 30 && pytest packaging/test.py
