@@ -62,7 +62,7 @@ jobs:
         run: pytest tests --timeout 30
 
       - name: Test packaging
-        run: python packaging/test.py
+        run: pytest packaging/test.py
 
       # gcc is currently just an alias for Clang on modern macOSs so this test
       # is pointless.
