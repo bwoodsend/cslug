@@ -58,6 +58,9 @@ jobs:
           pip install --cache-dir=pip-cache psutil
           pip install --cache-dir=pip-cache .[test]
 
+      - name: Show gcc
+        run: gcc -v
+
       - name: Test
         run: pytest tests --timeout 30
 
