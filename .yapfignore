@@ -2,3 +2,4 @@ packaging/venv-dir
 build
 dist
 .idea
+tests/dump
