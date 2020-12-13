@@ -45,5 +45,6 @@ def cc_version(_cc=None):
               universal_newlines=True)
     p.wait()
     stdout = p.stdout.read() + p.stderr.read()
+    p.stdout.close(), p.stderr.close()
     name, version = re.search(r"(\S+) version (\S+)", stdout).groups()
     return name, tuple(map(int, version.split(".")))
