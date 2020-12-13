@@ -14,7 +14,7 @@ import pytest
 
 from cslug import exceptions, anchor, CSlug, misc, Header
 
-from tests import DUMP, name, DEMOS
+from tests import DUMP, name, DEMOS, RESOURCES
 from tests.test_pointers import leaks
 
 pytestmark = pytest.mark.order(-3)
@@ -23,15 +23,11 @@ pytestmark = pytest.mark.order(-3)
 @pytest.mark.order(0)
 @pytest.mark.parametrize("true_file", [True, False])
 def test_basic(true_file):
-    SOURCE = """
-    int add_1(int x) { return x + 1; }
-    float times_2(float y) { return y * 2.0; }
-    """
+    SOURCE = RESOURCES / "basic.c"
     if true_file:
-        file = DUMP / "basic.c"
-        file.write_text(SOURCE)
+        file = SOURCE
     else:
-        file = io.StringIO(SOURCE)
+        file = io.StringIO(SOURCE.read_text())
     self = CSlug(*anchor(name(), file)) # yapf: disable
 
     assert not self.path.exists()
