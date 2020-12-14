@@ -75,3 +75,21 @@ jobs:
           CC: clang
         run: |
           pytest tests --timeout 30 && pytest packaging/test.py
+
+      - name: Install TinyCC
+        if: ${{ runner.os != 'macOS' }}
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            sudo apt-get install tcc
+          fi
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            choco install tinycc
+          fi
+        shell: bash
+
+      - name: Test TinyCC
+        if: ${{ runner.os != 'macOS' }}
+        run: |
+          pytest tests --timeout 30 && pytest packaging/test.py
+        env:
+          CC: tcc
