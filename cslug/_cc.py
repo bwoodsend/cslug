@@ -6,8 +6,7 @@ import os
 import shutil
 from pathlib import Path
 import re
-from subprocess import Popen, PIPE, check_output
-import platform
+from subprocess import run, PIPE
 
 from cslug import exceptions
 
@@ -41,12 +40,16 @@ def cc(cc=None):
 
 
 def cc_version(_cc=None):
-    p = Popen([cc(_cc), "-v"], stdout=PIPE, stderr=PIPE,
-              universal_newlines=True)
-    p.wait()
-    stdout = p.stdout.read() + p.stderr.read()
-    p.stdout.close(), p.stderr.close()
-    m = re.search(r"(\S+) version (\S+)", stdout) \
-        or re.search(r"(pcc) (\S+) for \S+", stdout)
-    name, version = m.groups()
-    return name, tuple(map(int, version.split(".")))
+    from textwrap import indent
+    cmd = [cc(_cc), "-v"]
+    p = run(cmd, stdout=PIPE, stderr=PIPE)
+    stdout = p.stdout + p.stderr
+    m = re.search(rb"(\S+) version (\S+)", stdout) \
+        or re.search(rb"(pcc) (\S+) for \S+", stdout)
+    try:
+        name, version = m.groups()
+        return name.decode(), tuple(map(int, version.split(b".")))
+    except:  # pragma: no cover
+        raise RuntimeError(
+            f"Failed to get CC version from the output of\n    {cmd}\n::\n"
+            f"{indent(stdout.decode(errors='replace'), '    ')}") from None
