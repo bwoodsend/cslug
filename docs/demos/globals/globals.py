@@ -9,7 +9,7 @@ import os
 os.chdir(os.path.dirname(__file__))
 
 import ctypes
-from cslug import CSlug
+from cslug import CSlug, _cc
 
 slug = CSlug("globals.c")
 
@@ -33,7 +33,11 @@ a_bytes_array = ctypes.cast(slug.dll.a_bytes_array, ctypes.c_char_p)
 a_string = ctypes.cast(slug.dll.a_string, ctypes.c_wchar_p)
 
 assert a_bytes_array.value == b"Hello, my name is Ned."
-assert a_string.value == "Сәлам. Минем исемем Нед."
+if a_string.value != "Сәлам. Минем исемем Нед.":
+    if _cc.cc_version()[0] != "tcc":
+        raise AssertionError(
+            f"{repr(a_string.value)} != \"Сәлам. Минем исемем Нед.\"")
+
 
 contains_null = ctypes.cast(slug.dll.contains_null, ctypes.c_char_p)
 
