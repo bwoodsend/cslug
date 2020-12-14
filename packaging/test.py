@@ -19,7 +19,7 @@ source code.
 """
 
 import os
-from subprocess import PIPE, Popen, CompletedProcess
+
 import re
 from pathlib import Path
 import venv
@@ -41,14 +41,11 @@ contains_slugs = HERE / "contains-slugs"
 
 
 def run(*args, cwd="."):
+    from subprocess import PIPE, run
     old = os.getcwd()
     try:
         os.chdir(cwd)
-        # This can be replaced by subprocess.run() when Python3.6 is ditched.
-        p = Popen(list(map(str, args)), stdout=PIPE, stderr=PIPE)
-        p.wait()
-        return CompletedProcess(p.args, p.returncode, p.stdout.read(),
-                                p.stderr.read())
+        return run(list(map(str, args)), stdout=PIPE, stderr=PIPE)
     finally:
         os.chdir(old)
 

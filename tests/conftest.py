@@ -20,4 +20,4 @@ def pytest_report_header(config):
             f"cc_version(): {cc_version()}", "SUFFIX: " + SUFFIX
         ]
     except Exception as ex:
-        return [f"Header failed with {repr(ex)}"]
+        return [f"Header failed with {ex}"]
