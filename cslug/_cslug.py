@@ -124,7 +124,9 @@ class CSlug(object):
         output = ["-o", str(self.path)]
 
         # Create a library, exporting all symbols.
-        flags = ["-shared", "-rdynamic" if cc_name == "tcc" else "-fPIC"]
+        flags = [
+            "-shared", "-rdynamic" if cc_name in ("tcc", "pcc") else "-fPIC"
+        ]
 
         if cc_name == "gcc" and version >= (4, 6, 0):  # pragma: no cover
             # Optimize for speed.
