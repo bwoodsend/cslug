@@ -25,7 +25,10 @@ setup(
     ],
     description="Quick and painless wrapping C code into Python",
     extras_require={
-        "test": ['pytest>=3', 'pytest-order', 'pytest-timeout', 'toml']
+        "test": [
+            'pytest>=3', 'pytest-order', 'pytest-timeout', 'toml', 'coverage',
+            'coverage-conditional-plugin', 'pytest-cov'
+        ]
     },
     license="MIT license",
     long_description=readme,
