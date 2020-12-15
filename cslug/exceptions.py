@@ -32,6 +32,14 @@ class BuildBlockedError(Exception):
         return "The build was blocked by the environment variable `CC=block`."
 
 
+class LibraryOpenElsewhereError(BuildError):
+    def __str__(self):
+        path, = self.args
+        return f"Writing to {path} failed because it is open in another " \
+               f"program. cslug closed any open handles in this instance of " \
+               f"Python. Are you running cslug in another Python console?"
+
+
 class BuildWarning(Warning):
     pass
 
