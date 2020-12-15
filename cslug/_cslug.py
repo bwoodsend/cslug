@@ -15,6 +15,7 @@ from cslug._types_file import Types
 from cslug import misc, exceptions, c_parse
 from cslug._headers import Header
 from cslug._cc import cc, cc_version
+from cslug._stdlib import dlclose
 
 # TODO: maybe try utilising this. Probably not worth it...
 # https://stackoverflow.com/questions/17942874/stdout-redirection-with-ctypes
@@ -77,7 +78,7 @@ class CSlug(object):
 
     def close(self):
         if self._dll is not None:
-            free_dll_handle(ctypes.c_void_p(self._dll._handle))
+            dlclose(ctypes.c_void_p(self._dll._handle))
             self._dll = None
 
     @property
@@ -154,32 +155,6 @@ class CSlug(object):
 
     def _check_printfs(self):
         return any(check_printfs(*misc.read(i)) for i in self.sources)
-
-
-if OS == "Windows":  # pragma: Windows
-    free_dll_handle = ctypes.windll.kernel32.FreeLibrary
-elif OS == "Darwin":  # pragma: Darwin
-    try:
-        lib_system = ctypes.CDLL("libSystem")
-    except OSError:
-        # Older macOSs. Not only is the name inconsistent but it's
-        # not even in PATH.
-        _lib_system = "/usr/lib/system/libsystem_c.dylib"
-        if os.path.exists(_lib_system):
-            lib_system = ctypes.CDLL(_lib_system)
-        else:
-            lib_system = None
-    if lib_system is not None:
-        free_dll_handle = lib_system.dlclose
-    else:
-        # I hope this never happens.
-        free_dll_handle = lambda *spam: None
-elif OS == "Linux":  # pragma: Linux
-    free_dll_handle = ctypes.CDLL("").dlclose
-else:  # pragma: no cover
-    # XXX: This is for msys2. PR wanted from anyone who knows how to unload a
-    #      DLL under such an environment.
-    free_dll_handle = lambda x: None
 
 
 def check_printfs(text, name=None):
