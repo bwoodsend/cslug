@@ -107,6 +107,7 @@ def test_no_cc_or_blocked_error():
 def test_exception_str():
     str(exceptions.BuildError("foo", "bar"))
     str(exceptions.NoGccError())
+    assert "/a/file" in str(exceptions.LibraryOpenElsewhereError("/a/file"))
 
 
 def test_io_dll():
@@ -300,3 +301,25 @@ def test_with_header():
 
     assert self.headers[0].path.exists()
     assert self.dll.get_cake() == cake
+
+
+def test_remake():
+    from cslug._stdlib import dlclose, null_free_dll
+    if dlclose is null_free_dll:
+        pytest.skip("Need to be able to close DLLs.")
+
+    slug = CSlug(anchor(name(), RESOURCES / "basic.c"))
+    path = slug.dll._name
+
+    # Having the DLL open should block writing to it on Windows.
+    ref = ctypes.CDLL(path)
+
+    try:
+        slug.make()
+    except exceptions.LibraryOpenElsewhereError as ex:
+        # This will happen only on Windows.
+        assert path in str(ex)
+
+    assert dlclose(ctypes.c_void_p(ref._handle))
+    # With the DLL closed make() should work.
+    slug.make()
