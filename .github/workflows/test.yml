@@ -56,13 +56,13 @@ jobs:
         run: |
           pip install --cache-dir=pip-cache wheel
           pip install --cache-dir=pip-cache psutil
-          pip install --cache-dir=pip-cache .[test]
+          pip install --cache-dir=pip-cache -e .[test]
 
       - name: Show gcc
         run: gcc -v
 
       - name: Test
-        run: pytest tests --timeout 30
+        run: pytest tests
 
       - name: Test packaging
         run: pytest packaging/test.py
@@ -74,7 +74,7 @@ jobs:
         env:
           CC: clang
         run: |
-          pytest tests --timeout 30 && pytest packaging/test.py
+          pytest tests && pytest packaging/test.py
 
       - name: Install TinyCC
         if: ${{ runner.os != 'macOS' }}
@@ -90,6 +90,6 @@ jobs:
       - name: Test TinyCC
         if: ${{ runner.os != 'macOS' }}
         run: |
-          pytest tests --timeout 30 && pytest packaging/test.py
+          pytest tests && pytest packaging/test.py
         env:
           CC: tcc

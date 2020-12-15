@@ -28,6 +28,8 @@ import shutil
 import zipfile
 import tarfile
 
+import pytest
+
 from cslug.building import CSLUG_SUFFIX
 from cslug.misc import block_compile
 
@@ -128,6 +130,8 @@ def inspect_wheel(wheel):
 # --- The test itself ---
 
 
+@pytest.mark.order(-1)
+@pytest.mark.timeout(200)
 def test():
     # Create a virtual environment.
     target = Env(HERE / "venv-dir")
