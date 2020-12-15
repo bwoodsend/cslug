@@ -2,7 +2,7 @@
 """
 """
 
-import os
+import os, sys
 from pathlib import Path
 import ctypes
 from subprocess import Popen, PIPE, run
@@ -110,7 +110,7 @@ class CSlug(object):
         # At Python exit, the DLL may have been closed and deleted already. If
         # we try to re-close on Linux we get a seg-fault. On Windows we get
         # some kind of AttributeError or occasionally an OSError.
-        if OS == "Windows":  # pragma: no branch
+        if OS == "Windows" or sys.platform == "msys":  # pragma: no branch
             try:
                 self.close()
             except:

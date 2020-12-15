@@ -37,7 +37,11 @@ elif OS == "Linux":  # pragma: Linux
     stdlib = ctypes.CDLL("")
     dlclose = stdlib.dlclose
 
+elif sys.platform == "msys":  # pragma: msys
+    # msys just uses the same DLL as Windows.
+    stdlib = ctypes.CDLL("kernel32.dll")
+    dlclose = stdlib.FreeLibrary
+
 else:  # pragma: no cover
-    # XXX: This is for msys2. PR wanted from anyone who knows how to unload a
-    #      DLL under such an environment.
+    # Default to do nothing.
     dlclose = null_free_dll
