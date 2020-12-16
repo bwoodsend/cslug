@@ -38,6 +38,7 @@ class CSlug(object):
         if not isinstance(path, Path):
             raise TypeError("The path to a CSlug's DLL must be a true path, not"
                             "a {}.".format(type(path)))
+        self.name = path
         self.path = path.with_name(path.stem + SUFFIX)
         if len(sources) == 0 and path.suffix == ".c":
             sources = (path,)
