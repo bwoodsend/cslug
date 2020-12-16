@@ -151,7 +151,7 @@ class CSlug(object):
             flags.append("-Ofast")
 
         # Compile for older versions of macOS.
-        if cc_name == "gcc" and OS == "Darwin":  # pragma: Darwin
+        if cc_name in ("gcc", "clang") and OS == "Darwin":  # pragma: no cover
             flags += ["-mmacosx-version-min=10.5"]
 
         # Set 32/64 bit.
