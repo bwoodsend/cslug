@@ -305,8 +305,9 @@ def test_with_header():
 
 def test_remake():
     from cslug._stdlib import dlclose, null_free_dll
-    if dlclose is null_free_dll:
-        pytest.skip("Need to be able to close DLLs.")
+    assert dlclose is not null_free_dll, \
+        "A `dlclose()` function hasn't been found for this platform. It "\
+        "should be added to `_cslug._stdlib.py`."
 
     slug = CSlug(anchor(name(), RESOURCES / "basic.c"))
     path = slug.dll._name
@@ -320,7 +321,7 @@ def test_remake():
         # This will happen only on Windows.
         assert path in str(ex)
 
-    assert dlclose(ctypes.c_void_p(ref._handle))
+    assert dlclose(ctypes.c_void_p(ref._handle)) == 0
     # With the DLL closed make() should work.
     slug.make()
 
