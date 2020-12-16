@@ -80,18 +80,24 @@ jobs:
         run: pytest
 
       - name: Install TinyCC
-        if: ${{ runner.os != 'macOS' }}
+        if: ${{ runner.os == 'Linux' }}
+        run: sudo apt-get install tcc
+
+      - name: Install TinyCC
+        if: ${{ runner.os == 'Windows' }}
         run: |
-          if [ "$RUNNER_OS" == "Linux" ]; then
-            sudo apt-get install tcc
-          fi
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            choco install tinycc
-          fi
-        shell: bash
+          curl -L https://download.savannah.gnu.org/releases/tinycc/tcc-0.9.27-win64-bin.zip --create-dirs -o ./tcc.zip
+          unzip -d "%ProgramFiles%/tcc" ./tcc.zip
+        shell: cmd
 
       - name: Test TinyCC
-        if: ${{ runner.os != 'macOS' }}
+        if: ${{ runner.os == 'linux' }}
         env:
           CC: tcc
         run: pytest
+
+      - name: Test TinyCC
+        if: ${{ runner.os == 'windows' && matrix.architecture == 'x64' }}
+        run: set CC=%ProgramFiles%/tcc/tcc/tcc && pytest
+        shell: cmd
+
