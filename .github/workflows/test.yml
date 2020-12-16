@@ -62,10 +62,7 @@ jobs:
         run: gcc -v
 
       - name: Test
-        run: pytest tests
-
-      - name: Test packaging
-        run: pytest packaging/test.py
+        run: pytest
 
       # gcc is currently just an alias for Clang on modern macOSs so this test
       # is pointless.
@@ -73,8 +70,7 @@ jobs:
         if: ${{ runner.os == 'macOS' }}
         env:
           CC: clang
-        run: |
-          pytest tests && pytest packaging/test.py
+        run: pytest
 
       - name: Install TinyCC
         if: ${{ runner.os != 'macOS' }}
@@ -89,7 +85,6 @@ jobs:
 
       - name: Test TinyCC
         if: ${{ runner.os != 'macOS' }}
-        run: |
-          pytest tests && pytest packaging/test.py
         env:
           CC: tcc
+        run: pytest
