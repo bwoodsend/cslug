@@ -61,15 +61,22 @@ jobs:
       - name: Show gcc
         run: gcc -v
 
-      - name: Test
+      - name: Test gcc
+        if: ${{ runner.os != 'macOS' }}
         run: pytest
 
-      # gcc is currently just an alias for Clang on modern macOSs so this test
-      # is pointless.
       - name: Test Clang
         if: ${{ runner.os == 'macOS' }}
         env:
           CC: clang
+        run: pytest
+
+      # Just gcc is an alias for clang on modern macOSs. Use gcc-[version] to
+      # get a genuine gcc.
+      - name: Test gcc macOS
+        if: ${{ runner.os == 'macOS' }}
+        env:
+          CC: gcc-9
         run: pytest
 
       - name: Install TinyCC
