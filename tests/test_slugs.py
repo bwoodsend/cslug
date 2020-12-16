@@ -323,3 +323,38 @@ def test_remake():
     assert dlclose(ctypes.c_void_p(ref._handle))
     # With the DLL closed make() should work.
     slug.make()
+
+    # Each slug gets registered in `_slug_refs`. Check that this has happened.
+    # `slug` should be the only one registered under this filename.
+    from cslug._cslug import _slug_refs
+    assert slug.path in _slug_refs
+    assert len(_slug_refs[slug.path]) == 1
+    assert _slug_refs[slug.path][0]() is slug
+
+    # Create another slug with the same filename. It should join the 1st in the
+    # register.
+    other = CSlug(slug.name, *slug.sources)
+    assert other.path == slug.path
+    assert len(_slug_refs[slug.path]) == 2
+    assert _slug_refs[slug.path][1]() is other
+
+    # Get `other` to open its DLL.
+    other_dll = other.dll
+    assert other_dll.add_1(2) == 3
+    # Make `slug` try to rebuild the DLL which is already opened by `other`.
+    # This would normally cause mayhem but doesn't because `slug.make()`
+    # implicitly calls`other.close()` so that it doesn't try to overwrite an
+    # open file.
+    slug.make()
+    # `other.dll` should re-open automatically.
+    assert other.dll is not other_dll
+
+    # `other` is weakref-ed and should still be garbage-collectable despite
+    # being in `_slug_refs`.
+    del other_dll, other
+    # Test the link in `_slug_refs` is dead.
+    assert _slug_refs[slug.path][1]() is None
+
+    # `_slug_refs` should be cleared of dead links on calling `close()`.
+    slug.close()
+    assert len(_slug_refs[slug.path]) == 1
