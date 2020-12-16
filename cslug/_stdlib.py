@@ -14,7 +14,8 @@ def null_free_dll(*spam):  # pragma: no cover
 
 
 if OS == "Windows":  # pragma: Windows
-    dlclose = ctypes.windll.kernel32.FreeLibrary
+    _dlclose = ctypes.windll.kernel32.FreeLibrary
+    dlclose = lambda handle: 0 if _dlclose(handle) else 1
 
 elif OS == "Darwin":  # pragma: Darwin
     try:
@@ -38,9 +39,10 @@ elif OS == "Linux":  # pragma: Linux
     dlclose = stdlib.dlclose
 
 elif sys.platform == "msys":  # pragma: msys
-    # msys just uses the same DLL as Windows.
-    stdlib = ctypes.CDLL("kernel32.dll")
-    dlclose = stdlib.FreeLibrary
+    # msys can also use `ctypes.CDLL("kernel32.dll").FreeLibrary()`. Not sure
+    # if or what the difference is.
+    stdlib = ctypes.CDLL("msys-2.0.dll")
+    dlclose = stdlib.dlclose
 
 else:  # pragma: no cover
     # Default to do nothing.
