@@ -20,7 +20,7 @@ if OS == "Windows":  # pragma: Windows
 elif OS == "Darwin":  # pragma: Darwin
     try:
         stdlib = ctypes.CDLL("libSystem")
-    except OSError:
+    except OSError:  # pragma: no cover
         # Older macOSs. Not only is the name inconsistent but it's
         # not even in PATH.
         _stdlib = "/usr/lib/system/libsystem_c.dylib"
@@ -28,9 +28,9 @@ elif OS == "Darwin":  # pragma: Darwin
             stdlib = ctypes.CDLL(_stdlib)
         else:
             stdlib = None
-    if stdlib is not None:
+    if stdlib is not None:  # pragma: no branch
         dlclose = stdlib.dlclose
-    else:
+    else:  # pragma: no cover
         # I hope this never happens.
         dlclose = null_free_dll
 

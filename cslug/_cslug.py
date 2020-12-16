@@ -127,7 +127,7 @@ class CSlug(object):
         # At Python exit, the DLL may have been closed and deleted already. If
         # we try to re-close on Linux we get a seg-fault. On Windows we get
         # some kind of AttributeError or occasionally an OSError.
-        if OS == "Windows" or sys.platform == "msys":  # pragma: no branch
+        if OS == "Windows" or sys.platform == "msys":  # pragma: Windows
             try:
                 self.close()
             except:
