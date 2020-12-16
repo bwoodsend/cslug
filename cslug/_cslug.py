@@ -9,7 +9,8 @@ from subprocess import Popen, PIPE, run
 import re
 import warnings
 import platform
-import shutil
+import collections
+import weakref
 
 from cslug._types_file import Types
 from cslug import misc, exceptions, c_parse
@@ -40,6 +41,7 @@ class CSlug(object):
                             "a {}.".format(type(path)))
         self.name = path
         self.path = path.with_name(path.stem + SUFFIX)
+        _slug_refs[self.path].append(weakref.ref(self))
         if len(sources) == 0 and path.suffix == ".c":
             sources = (path,)
         self.sources = [misc.as_path_or_readable_buffer(i) for i in sources]
@@ -80,7 +82,18 @@ class CSlug(object):
             warnings.warn(msg, category=exceptions.BuildWarning)
         return True
 
-    def close(self):
+    def close(self, all=True):
+        if all:
+            new = []
+            for slug in _slug_refs[self.path]:
+                # Close any other CSlugs that use the same DLL. This prevents a
+                # lot of PermissionErrors or seg-faults if the user create a
+                # CSlug twice (usually whilst console-bashing).
+                if slug() is not None:
+                    slug().close(all=False)
+                    new.append(slug)
+            _slug_refs[self.path] = new
+            return
         if self._dll is not None:
             dlclose(ctypes.c_void_p(self._dll._handle))
             self._dll = None
@@ -159,6 +172,14 @@ class CSlug(object):
 
     def _check_printfs(self):
         return any(check_printfs(*misc.read(i)) for i in self.sources)
+
+
+# Create a global register of CSlugs grouped by DLL filename. This will be used
+# by CSlug.close(all=True)
+try:
+    _slug_refs
+except NameError:
+    _slug_refs = collections.defaultdict(list)
 
 
 def check_printfs(text, name=None):
