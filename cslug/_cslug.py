@@ -152,7 +152,7 @@ class CSlug(object):
 
         # Compile for older versions of macOS.
         if cc_name in ("gcc", "clang") and OS == "Darwin":  # pragma: no cover
-            flags += ["-mmacosx-version-min=10.5"]
+            flags += [f"-mmacosx-version-min={os.environ.get('MIN_OSX', 10.5)}"]
 
         # Set 32/64 bit.
         flags += ["-m" + str(BIT_NESS)]
