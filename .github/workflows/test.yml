@@ -77,6 +77,7 @@ jobs:
         if: ${{ runner.os == 'macOS' }}
         env:
           CC: gcc-9
+          MIN_OSX: '10.10'
         run: pytest
 
       - name: Install TinyCC
