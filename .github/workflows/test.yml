@@ -19,14 +19,10 @@ jobs:
             os: windows-latest
             python-version: 3.9
             architecture: 'x64'
-            # I'd like to test 32-bit too but the gcc on Github actions appears
-            # to be missing something it needs to compile 32-bit binaries. See:
-            # https://github.com/bwoodsend/cslug/runs/1387759265
-            # It works perfectly locally.
-#          - name: Windows 32-bit
-#            os: windows-latest
-#            python-version: 3.9
-#            architecture: 'x86'
+          - name: Windows 32-bit
+            os: windows-latest
+            python-version: 3.9
+            architecture: 'x86'
 
       fail-fast: false
 
@@ -62,7 +58,7 @@ jobs:
         run: gcc -v
 
       - name: Test gcc
-        if: ${{ runner.os != 'macOS' }}
+        if: ${{ runner.os != 'macOS' && matrix.architecture == 'x64' }}
         run: pytest
 
       - name: Test Clang
@@ -102,3 +98,7 @@ jobs:
         run: set CC=%ProgramFiles%/tcc/tcc/tcc && pytest
         shell: cmd
 
+      - name: Test TinyCC
+        if: ${{ runner.os == 'windows' && matrix.architecture == 'x86' }}
+        run: set CC=%ProgramFiles%/tcc/tcc/i386-win32-tcc && pytest
+        shell: cmd
