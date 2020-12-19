@@ -19,7 +19,11 @@ if OS == "Windows":  # pragma: Windows
 
 elif OS == "Darwin":  # pragma: Darwin
     try:
-        stdlib = ctypes.CDLL("libSystem")
+        try:
+            # macOS 11 (Big Sur). Possibly also later macOS 10s.
+            stdlib = ctypes.CDLL("libc.dylib")
+        except OSError:  # pragma: no cover
+            stdlib = ctypes.CDLL("libSystem")
     except OSError:  # pragma: no cover
         # Older macOSs. Not only is the name inconsistent but it's
         # not even in PATH.
