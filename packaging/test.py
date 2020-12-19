@@ -27,6 +27,7 @@ import sys
 import shutil
 import zipfile
 import tarfile
+import warnings
 
 import pytest
 
@@ -42,14 +43,31 @@ contains_slugs = HERE / "contains-slugs"
 # This whole test is ran via subprocess calls.
 
 
-def run(*args, cwd="."):
+def run(*args, cwd=".", check=True):
     from subprocess import PIPE, run
     old = os.getcwd()
     try:
         os.chdir(cwd)
-        return run(list(map(str, args)), stdout=PIPE, stderr=PIPE)
+        p = run(list(map(str, args)), stdout=PIPE, stderr=PIPE)
     finally:
         os.chdir(old)
+    if check:
+        # Raise any errors.
+        assert not p.returncode, p.stdout.decode() + p.stderr.decode()
+        # Propagate any warnings.
+        for line in p.stderr.decode().split("\n"):
+            if re.search(r"\S", line):
+                # These warnings are harmless and I can't find any way to
+                # silence them.
+                if re.search(
+                        "no previously-included files matching .* found "
+                        "under directory .*", line):
+                    continue
+                if re.search(r"no files found matching .* under directory .*",
+                             line):
+                    continue
+                warnings.warn(line)
+    return p
 
 
 class Env(object):
@@ -63,16 +81,16 @@ class Env(object):
         assert Path(self.context.env_exe).exists()
         self.pip("install", "-U", "pip", "setuptools")
 
-    def python(self, *args, cwd="."):
-        return run(self.context.env_exe, *args, cwd=cwd)
+    def python(self, *args, cwd=".", check=True):
+        return run(self.context.env_exe, *args, cwd=cwd, check=check)
 
-    def pip(self, *args, cwd="."):
+    def pip(self, *args, cwd=".", check=True):
         return self.python("-m", "pip", "--disable-pip-version-check", "-q",
-                           *args, cwd=cwd)
+                           *args, cwd=cwd, check=check)
 
 
-def master_python(*args, cwd="."):
-    return run(sys.executable, *args, cwd=cwd)
+def master_python(*args, cwd=".", check=True):
+    return run(sys.executable, *args, cwd=cwd, check=check)
 
 
 # --- making a mess in the source code ---
@@ -137,14 +155,13 @@ def test():
     target = Env(HERE / "venv-dir")
 
     # Sanity check that `contains-slugs` isn't accessible via cwd or PYTHONPATH.
-    p = target.python("-m", "contains_slugs")
+    p = target.python("-m", "contains_slugs", check=False)
     assert p.returncode
     assert re.search(b"No module named contains_slugs", p.stderr), p.stderr
 
     # Build a wheel for cslug using the master environment. This will be needed
     # later.
     p = master_python("setup.py", "-q", "bdist_wheel", cwd=CSLUG_ROOT)
-    assert not p.returncode, p.stderr.decode()
 
     # Put some rubbish files into `contains-slugs`. These should not get
     # collected by either sdist or wheel.
@@ -154,7 +171,6 @@ def test():
     # environment.
     shutil.rmtree(contains_slugs / "dist", ignore_errors=True)
     p = master_python("setup.py", "-q", "sdist", cwd=contains_slugs)
-    assert not p.returncode, p.stdout.decode() + p.stderr.decode()
     # Locate it.
     sdist = next((contains_slugs / "dist").glob("*"))
     # It should contain all source code and no cslug generated/binary artifacts.
@@ -166,16 +182,13 @@ def test():
     # our `contains-slugs` sdist and our wheel for `cslug`.
     p = target.pip("install", "contains-slugs", "--find-links",
                    contains_slugs / "dist", "--find-links", CSLUG_ROOT / "dist")
-    assert not p.returncode, p.stderr.decode()
 
     # Test the contains slugs installation. `contains_slugs.__main__` contains
     # its own validations of which files it should and shouldn't have.
     p = target.python("-m", "contains_slugs")
-    assert not p.returncode, p.stderr.decode()
 
     # Uninstall `contains-slugs`.
     p = target.pip("uninstall", "--yes", "contains-slugs")
-    assert not p.returncode, p.stderr.decode()
 
     # bdist_wheel appears to lazily just copy `build/lib` which it really
     # shouldn't. If you `setup.py build` with two platforms which share a file
@@ -187,7 +200,6 @@ def test():
     # Build a wheel for `contains-slugs` using the master environment.
     shutil.rmtree(contains_slugs / "dist", ignore_errors=True)
     p = master_python("setup.py", "bdist_wheel", cwd=contains_slugs)
-    assert not p.returncode, p.stderr.decode()
     # Again, locate and test its contents.
     wheel = next((contains_slugs / "dist").glob("*"))
     inspect_wheel(wheel)
@@ -199,11 +211,9 @@ def test():
     with block_compile():
         p = target.pip("install", "contains-slugs", "--find-links",
                        contains_slugs / "dist")
-        assert not p.returncode, p.stderr.decode()
 
     # Test installation again.
     p = target.python("-m", "contains_slugs")
-    assert not p.returncode, p.stderr.decode()
 
 
 if __name__ == '__main__':
