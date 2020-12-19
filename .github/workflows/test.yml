@@ -12,7 +12,13 @@ jobs:
         python-version: [3.9, 3.6, 3.7, 3.8]
         architecture: ['x64']
         include:
-          - os: macos-latest
+          - os: macos-10.15
+            python-version: 3.9
+            architecture: 'x64'
+          - os: macos-10.13
+            python-version: 3.9
+            architecture: 'x64'
+          - os: macos-11.0
             python-version: 3.9
             architecture: 'x64'
           - name: Windows
