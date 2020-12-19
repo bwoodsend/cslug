@@ -34,7 +34,7 @@ a_string = ctypes.cast(slug.dll.a_string, ctypes.c_wchar_p)
 
 assert a_bytes_array.value == b"Hello, my name is Ned."
 if a_string.value != "Сәлам. Минем исемем Нед.":
-    if _cc.cc_version()[0] != "tcc":
+    if _cc.cc_version()[0] not in ("tcc", "pcc"):
         raise AssertionError(
             f"{repr(a_string.value)} != \"Сәлам. Минем исемем Нед.\"")
 
