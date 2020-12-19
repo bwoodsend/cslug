@@ -27,7 +27,7 @@ def delayed_skip_if_unsupported():
 
     if cc == "gcc" and version < (10, 0, 0):
         pytest.skip("Unicode identifiers requires gcc 10.")
-    if cc == "tcc":
+    if cc in ("tcc", "pcc"):
         pytest.skip("tcc doesn't support unicode.")
 
 

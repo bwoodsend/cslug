@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 """
+import pytest
 
 
 def pytest_report_header(config):
@@ -15,6 +16,22 @@ def pytest_report_header(config):
         from cslug._cc import cc_version, cc
         import os
         v = cc_version()
+
+        # If using the `pcc` compiler, hackily monkey-patch the
+        # `CSlug.compile_command()` to skip any test using stdin-piped source
+        # code. (Gross, I know.)
+        if v[0] == "pcc":
+            from cslug import CSlug
+            old = CSlug.compile_command
+
+            def compile_command(self, _cc=None):
+                cmd, buffers = old(self, _cc)
+                if buffers:
+                    pytest.xfail("pcc doesn't support piped sources.")
+                return cmd, buffers
+
+            CSlug.compile_command = compile_command
+
         return [
             f"env CC: '{os.environ.get('CC')}'", f"cc(): '{cc()}' ",
             f"cc_version(): {cc_version()}", "SUFFIX: " + SUFFIX
