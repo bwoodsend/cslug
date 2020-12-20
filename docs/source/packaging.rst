@@ -84,7 +84,7 @@ whenever you:
 * ``pip install /path/to/source/distribution.tar.gz`` but not
   ``pip install /path/to/binary/distribution.whl``.
 
-You should hook ``setup.py build`` to also call :func:`cslug.CSlug.make` on
+You should hook ``setup.py build`` to also call :func:`cslug.CSlug._make_` on
 every :class:`cslug.CSlug`. We will do this by indirectly calling
 :func:`cslug.building.make`. To attach our own code to the ``setup.py build``
 command we must overload the ``run()`` method of

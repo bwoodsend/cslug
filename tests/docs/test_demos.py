@@ -42,7 +42,7 @@ string_count: CSlug = None
 
 def test_string_count_make():
     slug = CSlug(DEMOS / "strings" / "strings-demo.c")
-    slug.make()
+    slug._make_()
     global string_count
     string_count = slug
 
@@ -53,7 +53,7 @@ def test_string_count_make():
 def test_count(count, text, char):
     if string_count is None:
         pytest.skip("Building strings-demo.c failed.")
-    assert getattr(string_count.dll, count)(text, char) == text.count(char)
+    assert getattr(string_count._dll_, count)(text, char) == text.count(char)
 
 
 def test_str_reverse():

@@ -11,6 +11,7 @@ import warnings
 import platform
 import collections
 import weakref
+from typing import List, Any, Union
 
 from cslug._types_file import Types
 from cslug import misc, exceptions, c_parse
@@ -39,25 +40,25 @@ class CSlug(object):
         if not isinstance(path, Path):
             raise TypeError("The path to a CSlug's DLL must be a true path, not"
                             "a {}.".format(type(path)))
-        self.name = path
-        self.path = path.with_name(path.stem + SUFFIX)
-        _slug_refs[self.path].append(weakref.ref(self))
+        self._name_ = path
+        self._path_ = path.with_name(path.stem + SUFFIX)
+        _slug_refs[self._path_].append(weakref.ref(self))
         if len(sources) == 0 and path.suffix == ".c":
             sources = (path,)
-        self.sources = [misc.as_path_or_readable_buffer(i) for i in sources]
-        self.headers = misc.flatten(headers)
-        for h in self.headers:
+        self._sources_ = [misc.as_path_or_readable_buffer(i) for i in sources]
+        self._headers_ = misc.flatten(headers)
+        for h in self._headers_:
             if not isinstance(h, Header):
                 raise TypeError(
                     "The `headers` argument must be of `cslug.Header()` type, "
                     "not {}.".format(type(h)))
-        self.types_dict = Types(path.with_suffix(".json"), *self.sources)
-        self._dll = None
+        self._type_map_ = Types(path.with_suffix(".json"), *self._sources_)
+        self.__dll_ = None
 
-    def compile(self):
-        self.close()
+    def _compile_(self):
+        self._close_()
 
-        command, buffers = self.compile_command()
+        command, buffers = self._compile_command_()
         p = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE,
                   universal_newlines=True)
         for buffer in buffers:
@@ -74,7 +75,7 @@ class CSlug(object):
         if p.returncode:
             if re.search("(?:open output|write).*permission denied", msg,
                          re.DOTALL | re.IGNORECASE):  # pragma: Windows
-                raise exceptions.LibraryOpenElsewhereError(self.path)
+                raise exceptions.LibraryOpenElsewhereError(self._path_)
             raise exceptions.BuildError(command, msg)
 
         if msg:
@@ -82,42 +83,42 @@ class CSlug(object):
             warnings.warn(msg, category=exceptions.BuildWarning)
         return True
 
-    def close(self, all=True):
+    def _close_(self, all=True):
         if all:
             new = []
-            for slug in _slug_refs[self.path]:
+            for slug in _slug_refs[self._path_]:
                 # Close any other CSlugs that use the same DLL. This prevents a
                 # lot of PermissionErrors or seg-faults if the user create a
                 # CSlug twice (usually whilst console-bashing).
                 if slug() is not None:
-                    slug().close(all=False)
+                    slug()._close_(all=False)
                     new.append(slug)
-            _slug_refs[self.path] = new
+            _slug_refs[self._path_] = new
             return
-        if self._dll is not None:
-            dlclose(ctypes.c_void_p(self._dll._handle))
-            self._dll = None
+        if self.__dll_ is not None:
+            dlclose(ctypes.c_void_p(self.__dll_._handle))
+            self.__dll_ = None
 
     @property
-    def dll(self):
-        if self._dll is None:
-            path = str(self.path)
-            if not self.path.is_absolute():
+    def _dll_(self):
+        if self.__dll_ is None:
+            path = str(self._path_)
+            if not self._path_.is_absolute():
                 path = os.path.join(".", str(path))
-            if not (self.path.exists() and self.types_dict.json_path.exists()):
-                self.make()
+            if not (self._path_.exists() and self._type_map_.json_path.exists()):
+                self._make_()
             dll = ctypes.CDLL(path)
-            self.types_dict.init_from_json()
-            self.types_dict.apply(dll)
-            self._dll = dll
-        return self._dll
+            self._type_map_.init_from_json()
+            self._type_map_.apply(dll)
+            self.__dll_ = dll
+        return self.__dll_
 
-    def make(self):
-        self.close()
-        for header in self.headers:
+    def _make_(self):
+        self._close_()
+        for header in self._headers_:
             header.make()
-        ok = self.compile()
-        self.types_dict.make()
+        ok = self._compile_()
+        self._type_map_.make()
         self._check_printfs()
         return ok
 
@@ -129,17 +130,17 @@ class CSlug(object):
         # some kind of AttributeError or occasionally an OSError.
         if OS == "Windows" or sys.platform == "msys":  # pragma: Windows
             try:
-                self.close()
+                self._close_()
             except:
                 pass
 
-    def compile_command(self, _cc=None):
-        """Gets the compile command invoked by :meth:`compile`."""
+    def _compile_command_(self, _cc=None):
+        """Gets the _compile_ command invoked by :meth:`_compile_`."""
         _cc = cc(_cc)
         cc_name, version = cc_version(_cc)
 
         # Output filename
-        output = ["-o", str(self.path)]
+        output = ["-o", str(self._path_)]
 
         # Create a library, exporting all symbols.
         flags = [
@@ -162,8 +163,8 @@ class CSlug(object):
 
         # Compile all .c files into 1 combined library.
         # Note that you don't pass header files to compilers.
-        true_files = [str(i) for i in self.sources if isinstance(i, Path)]
-        buffers = [i for i in self.sources if not isinstance(i, Path)]
+        true_files = [str(i) for i in self._sources_ if isinstance(i, Path)]
+        buffers = [i for i in self._sources_ if not isinstance(i, Path)]
 
         stdin_flags = "-x c -".split() if buffers else []
 
@@ -171,11 +172,11 @@ class CSlug(object):
                 stdin_flags, buffers)
 
     def _check_printfs(self):
-        return any(check_printfs(*misc.read(i)) for i in self.sources)
+        return any(check_printfs(*misc.read(i)) for i in self._sources_)
 
 
 # Create a global register of CSlugs grouped by DLL filename. This will be used
-# by CSlug.close(all=True)
+# by CSlug._close_(all=True)
 try:
     _slug_refs
 except NameError:

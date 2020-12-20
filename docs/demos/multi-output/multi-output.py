@@ -11,8 +11,8 @@ slug = CSlug("multi-output.c")
 values = array.array("d", range(20))
 
 min_, max_ = ctypes.c_double(), ctypes.c_double()
-slug.dll.range_of(ptr(values), len(values), ctypes.byref(min_),
-                  ctypes.byref(max_))
+slug._dll_.range_of(ptr(values), len(values), ctypes.byref(min_),
+                    ctypes.byref(max_))
 
 assert min_.value == 0, max_.value == 19
 
@@ -28,8 +28,8 @@ def range_of(values):
     # Create uninitialised `min_` and `max_` values to be written to.
     min_, max_ = ctypes.c_double(), ctypes.c_double()
     # Use `ctypes.byref()` to pass them to C as writable pointers.
-    slug.dll.range_of(ptr(values), len(values), ctypes.byref(min_),
-                      ctypes.byref(max_))
+    slug._dll_.range_of(ptr(values), len(values), ctypes.byref(min_),
+                        ctypes.byref(max_))
 
     # Return the contents of `min_` and `max_` as native Python floats.
     return min_.value, max_.value

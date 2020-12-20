@@ -27,8 +27,8 @@ Constants defined using ``const`` are readable with the same method as global
 variables but are obviously not writable. Anything defined using ``#define`` is
 preprocessor only, meaning that it gets refactored out early in the C
 compilation process and doesn't exist in a shared library. To reset all globals
-back to their defaults just close the library with :func:`slug.close
-<cslug.CSlug.close>`.
+back to their defaults just close the library with :func:`slug._close_
+<cslug.CSlug._close_>`.
 
 An integer
 ----------
@@ -40,11 +40,11 @@ We'll start with ``an_int`` which is defined in C as:
     :start-at: int an_int
     :end-at: int
 
-Variables are available as attributes of :attr:`slug.dll <cslug.CSlug.dll>` just
+Variables are available as attributes of :attr:`slug._dll_ <cslug.CSlug._dll_>` just
 like functions are. Unfortunately, :mod:`ctypes` assumes everything it finds is
 a function (calling this supposed function is a |seg-fault|)::
 
-    >>> slug.dll.an_int
+    >>> slug._dll_.an_int
     <_FuncPtr object at 0x0000003084046E10>
 
 We need to cast this function pointer into an int pointer (because ``an_int`` is
@@ -70,14 +70,14 @@ And if the variable isn't declared ``const`` then you can write to it::
     they originated from. Attempting to access the contents of a pointer after
     it's shared library has been either closed or reloaded is an instant crash::
 
-        >>> slug.make()  # or `slug.close()`
+        >>> slug._make_()  # or `slug._close_()`
         >>> print(an_int)
         Process finished with exit code -1073741819 (0xC0000005)
 
     To avoid this you may use lengthy one-liners::
 
-        >>> slug.make()
-        >>> ctypes.cast(slug.dll.an_int, ctypes.POINTER(ctypes.c_int)).contents.value
+        >>> slug._make_()
+        >>> ctypes.cast(slug._dll_.an_int, ctypes.POINTER(ctypes.c_int)).contents.value
         42
 
 
@@ -138,7 +138,7 @@ be terminated prematurely.
 Because the above byte array contains a NULL character, it gets mistakenly
 shortened::
 
-    >>> ctypes.cast(slug.dll.contains_null, ctypes.c_char_p).value
+    >>> ctypes.cast(slug._dll_.contains_null, ctypes.c_char_p).value
     b'This sentence has a '
 
 A better, albeit much longer, way is to mark it as an array of a specified

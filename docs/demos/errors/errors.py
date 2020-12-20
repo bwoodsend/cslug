@@ -21,7 +21,7 @@ def log(x):
     """Fussy natural logarithm which raises exceptions for invalid inputs."""
 
     out = ctypes.c_double()
-    status = Status(slug.dll.pedantic_log(x, ctypes.byref(out)))
+    status = Status(slug._dll_.pedantic_log(x, ctypes.byref(out)))
 
     if status is not Status.OK:
         # If you're feeling especially motivated you can write proper error

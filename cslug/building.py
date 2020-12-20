@@ -21,7 +21,7 @@ from cslug._cslug import SUFFIX as CSLUG_SUFFIX
 
 
 def make(*names):
-    r"""Import and call :func:`slug.make <cslug.CSlug.make>`.
+    r"""Import and call :func:`slug._make_ <cslug.CSlug._make_>`.
 
     :param names: Names of :class:`~cslug.CSlug`\ s.
     :type names: str
@@ -30,7 +30,7 @@ def make(*names):
     For example, ``make("foo.bar:pop.my_slug")`` is equivalent to::
 
         from foo.bar import pop
-        pop.my_slug.make()
+        pop.my_slug._make_()
 
     Of course, ``foo.bar`` must be importable for this to work.
 
@@ -48,7 +48,7 @@ def make(*names):
         import_, *attrs = name.split(":")
         assert len(attrs)
         mod = importlib.import_module(import_)
-        operator.attrgetter(".".join(attrs))(mod).make()
+        operator.attrgetter(".".join(attrs))(mod)._make_()
 
 
 # Trying to properly coverage trace these is too much hassle.

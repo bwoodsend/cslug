@@ -15,7 +15,7 @@ pytestmark = pytest.mark.order(-1)
 
 class CalledMake(Exception):
     """
-    Not really an exception - just a signal to signify make() has been called.
+    Not really an exception - just a signal to signify _make_() has been called.
     """
     pass
 
@@ -24,7 +24,7 @@ class Nested:
     class NameSpace:
         slug = CSlug(anchor(name(), io.StringIO("")))
 
-        def make():
+        def _make_():
             raise CalledMake
 
 
@@ -34,13 +34,13 @@ def test_make():
 
     from cslug.building import make
 
-    assert not Nested.NameSpace.slug.path.exists()
-    assert not Nested.NameSpace.slug.types_dict.json_path.exists()
+    assert not Nested.NameSpace.slug._path_.exists()
+    assert not Nested.NameSpace.slug._type_map_.json_path.exists()
 
     make("tests.test_building:Nested.NameSpace.slug")
 
-    assert Nested.NameSpace.slug.path.exists()
-    assert Nested.NameSpace.slug.types_dict.json_path.exists()
+    assert Nested.NameSpace.slug._path_.exists()
+    assert Nested.NameSpace.slug._type_map_.json_path.exists()
 
     with pytest.raises(CalledMake):
         make("tests.test_building:Nested.NameSpace")

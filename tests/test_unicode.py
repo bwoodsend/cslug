@@ -37,5 +37,5 @@ def test_from_file(source):
     delayed_skip_if_unsupported()
 
     slug = CSlug(DUMP / ("㟐㟐㟐" + name().name), source)
-    slug.make()
-    assert slug.dll.㟐(5) == 4
+    slug._make_()
+    assert slug._dll_.㟐(5) == 4

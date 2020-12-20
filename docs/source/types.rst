@@ -14,7 +14,7 @@ both mind-numbing and error-prone).
 function definitions, dumping the information into a json file with the same
 name as your shared library (first argument to :meth:`~cslug.CSlug`) then
 setting the type information for each function on loading the library (invoked
-by accessing ``slug.dll``). This provides some degree of implicit type safety
+by accessing ``slug._dll_``). This provides some degree of implicit type safety
 and casting for the basic types:
 
 ===============================   ====================================================================================
@@ -44,31 +44,31 @@ Now, to compile it::
 
 And run it. Floats pass in and out of C as we'd expect them to::
 
-    >>> slug.dll.reciprocal(2.0)
+    >>> slug._dll_.reciprocal(2.0)
     0.5
 
 Integers and any other type which can be safely converted to float are
 automatically converted without complaint like they are in Python::
 
-    >>> slug.dll.reciprocal(4)
+    >>> slug._dll_.reciprocal(4)
     .25
     >>> from fractions import Fraction
-    >>> slug.dll.reciprocal(Fraction(1, 3))
+    >>> slug._dll_.reciprocal(Fraction(1, 3))
     3.0
 
 But anything else gives a :class:`TypeError` as we'd expect::
 
-    >>> slug.dll.reciprocal("hello")
+    >>> slug._dll_.reciprocal("hello")
     ctypes.ArgumentError: argument 1: <class 'TypeError'>: wrong type
 
-    >>> slug.dll.reciprocal()
+    >>> slug._dll_.reciprocal()
     TypeError: this function takes at least 1 argument (0 given)
 
 To see what it's like without the safety net, remove the type information from
-:meth:`!slug.dll.reciprocal` and try calling it again::
+:meth:`!slug._dll_.reciprocal` and try calling it again::
 
-    slug.dll.reciprocal.restype = int  # The default return type.
-    slug.dll.reciprocal.argtypes = None  # Unknown arguments.
+    slug._dll_.reciprocal.restype = int  # The default return type.
+    slug._dll_.reciprocal.argtypes = None  # Unknown arguments.
 
 
 Pointer Types

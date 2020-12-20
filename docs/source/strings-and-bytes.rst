@@ -42,7 +42,7 @@ The Python end is very no-nonsense. Let's compile the above::
 
 And run it::
 
-    >>> slug.dll.count("hello", "l")
+    >>> slug._dll_.count("hello", "l")
     2
 
 OK, now that we've got it going, let's talk about the C code a bit.
@@ -53,7 +53,7 @@ character :class:`str`. We could have used pointers for both arguments, but
 using just ``wchar_t`` adds an implicit check that our single character argument
 is indeed singular::
 
-    >>> slug.dll.count("This will break", "will")
+    >>> slug._dll_.count("This will break", "will")
     ctypes.ArgumentError: argument 2: <class 'TypeError'>: wrong type
 
 You may also notice that we've avoided having to specify the string's length
@@ -64,7 +64,7 @@ terminated|, so to find the end of a string we simply need to find the *NULL*
 contained nulls in it then this function would exit prematurely. By default,
 Python won't allow us to make this mistake::
 
-    >>> slug.dll.count("This sentence \x00 contains \x00 Nulls.", "a")
+    >>> slug._dll_.count("This sentence \x00 contains \x00 Nulls.", "a")
     ctypes.ArgumentError: argument 1: <class 'ValueError'>: embedded null character
 
 However if we force our way through...
@@ -87,15 +87,15 @@ same string to C multiple times then this conversion is repeated redundantly. To
 avoid this, do the conversion yourself. i.e. This performs a conversion twice::
 
     a = "Imagine that this string is a lot longer than it actually is."
-    slug.dll.count(a, "x")
-    slug.dll.count(a, "y")
+    slug._dll_.count(a, "x")
+    slug._dll_.count(a, "y")
 
 Whereas this performs only one conversion::
 
     a = "Imagine that this string is a lot longer than it actually is."
     a_buffer = ctypes.create_unicode_buffer(a)
-    slug.dll.count(a_buffer, "x")
-    slug.dll.count(a_buffer, "y")
+    slug._dll_.count(a_buffer, "x")
+    slug._dll_.count(a_buffer, "y")
 
 
 Writing to strings
@@ -141,7 +141,7 @@ Python :class:`str` (although you can always try it anyway to see what happens).
 
 .. literalinclude:: ../demos/strings/reverse.py
     :start-at: out =
-    :end-at: slug.dll.reverse
+    :end-at: slug._dll_.reverse
 
 ::
 

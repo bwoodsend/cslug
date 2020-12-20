@@ -57,7 +57,7 @@ def test_struct_io():
 
     with warnings.catch_warnings():
         warnings.filterwarnings("error")
-        lib = slug.dll
+        lib = slug._dll_
 
     assert hasattr(lib, "Thing")
 
@@ -93,14 +93,14 @@ def test_long_repr():
 
     """))
 
-    thing = slug.dll.LongNamedThing(*(range(4)))
+    thing = slug._dll_.LongNamedThing(*(range(4)))
 
     assert repr(thing) == """
 LongNamedThing(very_long_name_1=0, very_long_name_2=1,
                very_long_name_3=2, very_long_name_4=3)
 """.lstrip()
 
-    thing = slug.dll.LongNamedThing(*(1 << 30 << i for i in range(4)))
+    thing = slug._dll_.LongNamedThing(*(1 << 30 << i for i in range(4)))
 
     assert repr(thing) == """
 LongNamedThing(very_long_name_1=1073741824,
@@ -113,6 +113,6 @@ LongNamedThing(very_long_name_1=1073741824,
 def test_empty():
     slug = CSlug(anchor(name()), io.StringIO("typedef struct Empty {} Empty;"))
 
-    thing = slug.dll.Empty()
+    thing = slug._dll_.Empty()
 
     assert repr(thing) == "Empty()"

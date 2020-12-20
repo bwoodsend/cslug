@@ -44,17 +44,17 @@ Let's compile the above code and play with it.
 Structs are available as attributes in exactly the same way as functions. The
 structure class forms a neat bucket class in Python::
 
-    >>> slug.dll.Card(6, 2)
+    >>> slug._dll_.Card(6, 2)
     Card(face=6, suit=2)
 
 With sensible (albeit non-configurable) defaults::
 
-    >>> slug.dll.Card(suit=1)
+    >>> slug._dll_.Card(suit=1)
     Card(face=0, suit=1)
 
 And writeable, type-checked attributes corresponding to struct fields::
 
-    >>> slug.dll.Card(4).face
+    >>> slug._dll_.Card(4).face
     4
 
 
@@ -73,7 +73,7 @@ following adds a function for each case.
 
 To pass by value you can just pass the struct as-is to a C function::
 
-    >>> slug.dll.get_card_face(slug.dll.Card(face=6))
+    >>> slug._dll_.get_card_face(slug._dll_.Card(face=6))
     6
 
 To pass by pointer you need its memory address which is kept for convenience in
@@ -81,12 +81,28 @@ a ``_ptr`` attribute. Its value is just the output of
 :func:`ctypes.addressof(card)<ctypes.addressof>`.
 
     >>> card = slug.dll.Card(face=7)
+    >>> slug._dll_.get_card_ptr_face(card._ptr)
+    7
+
+    >>> card = slug.dll.Card(face=7)
+    >>> slug._dll_.get_card_ptr_face(card._ptr)
+    7
+
+    >>> card = slug._dll_.Card(face=7)
+    >>> slug._dll_.get_card_ptr_face(card._ptr)
+    7
+
+    >>> card = slug._dll_.Card(face=7)
+    >>> slug._dll_.get_card_ptr_face(card._ptr)
+    7
+
+    >>> card = slug.dll.Card(face=7)
     >>> slug.dll.get_card_ptr_face(card._ptr)
     7
 
 .. warning::
 
-    Using ``slug.dll.Card(face=6)._ptr`` causes the card itself to be
+    Using ``slug._dll_.Card(face=6)._ptr`` causes the card itself to be
     immediately deleted, leaving a |dangling pointer|. You must retain a
     reference to the original object until after you no longer need the pointer.
 
@@ -131,12 +147,12 @@ the scope of this function call:
 
 This has two problems. First |cslug| doesn't implicitly dereference pointers::
 
-    >>> slug.dll.make_card_ptr_safer(1, 2)
+    >>> slug._dll_.make_card_ptr_safer(1, 2)
     90846685936
 
 But this is easily solved::
 
-    >>> slug.dll.Card.from_address(slug.dll.make_card_ptr_safer(1, 2))
+    >>> slug._dll_.Card.from_address(slug._dll_.make_card_ptr_safer(1, 2))
     Card(face=1, suit=2)
 
 Secondly, this is a |memory leak| because we allocate structs but never free
@@ -146,7 +162,7 @@ them again:
 
     # Watch Python's memory usage go up and up...
     while True:
-        slug.dll.make_card_ptr_safer(1, 2)
+        slug._dll_.make_card_ptr_safer(1, 2)
 
 To deallocate, use ``free()`` to get the memory back once we no longer need the
 struct:
@@ -160,10 +176,10 @@ struct:
 
     # This doesn't leak memory.
     while True:
-        card = slug.dll.Card.from_address(slug.dll.make_card_ptr_safer(1, 2))
+        card = slug._dll_.Card.from_address(slug._dll_.make_card_ptr_safer(1, 2))
         # Do something with the card.
         # Then delete it safely:
-        slug.dll.delete_card(card._ptr)
+        slug._dll_.delete_card(card._ptr)
 
 
 Warning for Structs Containing Pointers
@@ -181,7 +197,7 @@ dangerous:
 
 Creating a :class:`!Person` in Python is Ok::
 
-    >>> slug.dll.Person("Bill")
+    >>> slug._dll_.Person("Bill")
     Person(name='Bill')
 
 But creating a :class:`!Person` in a C function isn't.
@@ -196,12 +212,12 @@ around this by maintaining a reference to the buffer in Python::
 
     >>> import ctypes
     >>> name = ctypes.create_unicode_buffer("Bill")
-    >>> slug.dll.make_person(name)
+    >>> slug._dll_.make_person(name)
     Person(name='Bill')
 
 But bear in mind that this reference is mutable::
 
-    >>> person = slug.dll.make_person(name)
+    >>> person = slug._dll_.make_person(name)
     >>> person
     Person(name='Bill')
     >>> name.value = "Bob"  # Must be no longer than 'Bill' (<= 4 characters)
@@ -219,5 +235,5 @@ end of functions in Python::
 
     def make_person(name):
         name = ctypes.create_unicode_buffer(name)
-        return slug.dll.make_person(name)  # `name` is automatically deleted here.
+        return slug._dll_.make_person(name)  # `name` is automatically deleted here.
 

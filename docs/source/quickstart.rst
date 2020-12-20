@@ -29,7 +29,7 @@ getting started we'll lazily embed the C source into our Python code using
 
 ::
 
-    >>> slug.dll.add_1(10)
+    >>> slug._dll_.add_1(10)
     11
 
 Ta-da! If instead of 11 you got a :class:`cslug.exceptions.NoGccError` then
@@ -38,16 +38,16 @@ compiler.
 
 Let's talk through what just happened. |cslug| should have:
 
-* Compiled a |shared library| called **my-first-dll-[...]** in your current
+* Compiled a |shared library| called **my-first-_dll_-[...]** in your current
   working directory (where `[...]` depends on your OS). This library contains a
   single function called ``add_1()``.
 * Extracted type information from our C source code. Namely: ``add_1()`` takes
   one ``int`` input and returns an ``int`` output.
-* Loaded said shared library using :mod:`ctypes` (accessible via :attr:`slug.dll
-  <cslug.CSlug.dll>`) and set the type information for the functions it
+* Loaded said shared library using :mod:`ctypes` (accessible via :attr:`slug._dll_
+  <cslug.CSlug._dll_>`) and set the type information for the functions it
   contains.
 
-Finally, ``print(slug.dll.add_1(10))`` will call our C function ``add_1()``
+Finally, ``print(slug._dll_.add_1(10))`` will call our C function ``add_1()``
 on ``10`` and print the answer.
 
 .. note::
@@ -93,11 +93,11 @@ Compiling and Recompiling
 -------------------------
 
 |cslug| compiles implicitly only if any of its output files don't already exist.
-To invoke a recompile use :meth:`slug.make() <cslug.CSlug.make>`.
+To invoke a recompile use :meth:`slug._make_() <cslug.CSlug._make_>`.
 
 .. code-block:: python
 
-    slug.make()
+    slug._make_()
 
 If your source code is C file then just modify it, save it and call make - no
 need to create a new :class:`~cslug.CSlug`. If you're using

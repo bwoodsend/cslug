@@ -54,10 +54,10 @@ containing prototypes for every function from :ref:`file1.c` and :ref:`file2.c`.
     slug = CSlug("lib_nothing", "file1.c", "file2.c", headers=header)
 
 Passing the header to :class:`~cslug.CSlug` means that calling
-:func:`slug.make() <cslug.CSlug.make>` will implicitly call :func:`header.make()
-<cslug.Header.make>` so that you still only have one `make()` command (although
-you may use :func:`header.make() <cslug.Header.make>` directly or
-:func:`header.write() <cslug.Header.write>` to experiment with
+:func:`slug._make_() <cslug.CSlug._make_>` will implicitly call
+:func:`header.make() <cslug.Header.make>` so that you still only have one
+`make()` command (although you may use :func:`header.make() <cslug.Header.make>`
+directly or :func:`header.write() <cslug.Header.write>` to experiment with
 :class:`~cslug.Header`\ s without going through a :class:`~cslug.CSlug`).
 
 The resulting header file looks something like:

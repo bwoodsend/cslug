@@ -12,6 +12,7 @@ Module contents
 .. autoclass:: CSlug
     :members:
     :undoc-members:
+    :private-members:
 
 .. autofunction:: anchor
 

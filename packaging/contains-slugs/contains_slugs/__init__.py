@@ -9,7 +9,7 @@ deep_thought = CSlug(anchor("deep-thought.c"))
 
 def ultimate_answer():
     """The ultimate answer to life, the universe and everything."""
-    return deep_thought.dll.ultimate_answer()
+    return deep_thought._dll_.ultimate_answer()
 
 
 def _test():
@@ -17,8 +17,8 @@ def _test():
 
     You shouldn't need this in your code but if you have it, it should pass.
     """
-    assert deep_thought.path.exists()
-    assert deep_thought.types_dict.json_path.exists()
-    assert not deep_thought.sources[0].exists()
+    assert deep_thought._path_.exists()
+    assert deep_thought._type_map_.json_path.exists()
+    assert not deep_thought._sources_[0].exists()
     assert ultimate_answer() == 42
     print("ok")

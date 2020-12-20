@@ -18,11 +18,11 @@ def pytest_report_header(config):
         v = cc_version()
 
         # If using the `pcc` compiler, hackily monkey-patch the
-        # `CSlug.compile_command()` to skip any test using stdin-piped source
+        # `CSlug._compile_command_()` to skip any test using stdin-piped source
         # code. (Gross, I know.)
         if v[0] == "pcc":
             from cslug import CSlug
-            old = CSlug.compile_command
+            old = CSlug._compile_command_
 
             def compile_command(self, _cc=None):
                 cmd, buffers = old(self, _cc)
@@ -30,7 +30,7 @@ def pytest_report_header(config):
                     pytest.xfail("pcc doesn't support piped sources.")
                 return cmd, buffers
 
-            CSlug.compile_command = compile_command
+            CSlug._compile_command_ = compile_command
 
         return [
             f"env CC: '{os.environ.get('CC')}'", f"cc(): '{cc()}' ",
