@@ -1,5 +1,8 @@
 .. _mingw: http://mingw-w64.org/doku.php/download
 .. _gcc: https://gcc.gnu.org/
+.. _TinyCC: https://bellard.org/tcc/
+.. _clang: https://clang.llvm.org/
+.. _`Portable C Compiler`: http://pcc.ludd.ltu.se/
 .. _pycparser: https://github.com/eliben/pycparser
 .. |cslug| replace:: **cslug**
 .. |gcc| replace:: **gcc**
