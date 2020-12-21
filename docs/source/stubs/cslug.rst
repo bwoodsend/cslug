@@ -27,6 +27,10 @@ Module contents
 
 .. autofunction:: nc_ptr
 
+.. autofunction:: cc
+
+.. autofunction:: cc_version
+
 Submodules
 ----------
 
