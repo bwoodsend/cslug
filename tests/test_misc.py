@@ -108,12 +108,12 @@ def test_block_compile():
 
     os.environ["CC"] = "cake"
     with block_compile():
-        assert os.environ.get("CC") == "block"
+        assert os.environ.get("CC") == "!block"
     assert os.environ.get("CC") == "cake"
 
     del os.environ["CC"]
     with block_compile():
-        assert os.environ.get("CC") == "block"
+        assert os.environ.get("CC") == "!block"
     assert "CC" not in os.environ
 
     if old is not None:
