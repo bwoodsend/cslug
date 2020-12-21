@@ -44,7 +44,7 @@ def cc(CC=None):
         exceptions.NoGccError: If **CC** is unset and |gcc| was not found in
             ``PATH``.
         exceptions.CCNotFoundError: If **CC** is set but couldn't be found.
-        exceptions.BuildBlockedError: If **CC** is set to ``block``.
+        exceptions.BuildBlockedError: If **CC** is set to ``!block``.
 
     The C compiler is chosen by the **CC** environment variable.
 
@@ -53,14 +53,14 @@ def cc(CC=None):
       in ``PATH`` (respecting ``PATHEXT`` on Windows).
     * If **CC** is a relative path, such as ``./gcc``, then it is made absolute.
     * If **CC** is an absolute path then it is returned as is.
-    * If **CC** is ``block`` then an error is raised. This can be used to test
+    * If **CC** is ``!block`` then an error is raised. This can be used to test
       your pre-built package works without a compiler.
 
     .. note:: The value of **CC** should never be wrapped in quotes.
 
     """
     CC = CC or os.environ.get("CC", "").strip()
-    if CC == "block":
+    if CC == "!block":
         raise exceptions.BuildBlockedError
 
     if CC:

@@ -92,7 +92,7 @@ def flatten(iterable, types=(tuple, list), initial=None):
 def block_compile():
     import os
     old = os.environ.get("CC")
-    os.environ["CC"] = "block"
+    os.environ["CC"] = "!block"
     try:
         yield
     finally:
