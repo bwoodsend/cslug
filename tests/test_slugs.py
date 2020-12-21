@@ -20,7 +20,7 @@ from tests.test_pointers import leaks
 pytestmark = pytest.mark.order(-3)
 
 
-@pytest.mark.order(0)
+@pytest.mark.order(-4)
 @pytest.mark.parametrize("true_file", [True, False])
 def test_basic(true_file):
     SOURCE = RESOURCES / "basic.c"
