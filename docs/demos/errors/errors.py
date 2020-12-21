@@ -24,10 +24,11 @@ def log(x):
     status = Status(slug.dll.pedantic_log(x, ctypes.byref(out)))
 
     if status is not Status.OK:
-        # If you're feeling especially motivated you can write proper error
-        # messages for each outcome. I am not feeling such a motivation.
-        raise ValueError("log({}) triggered a {}."
-                         .format(x,status.name.replace("_", " ").lower()))
+        # If you're feeling especially motivated you could write a custom error
+        # message for each outcome - I am not feeling such a motivation...
+        error = status.name.replace("_", " ").lower()
+        raise ValueError(f"log({x}) triggered a {error}.")
+
     return out.value
 
 
