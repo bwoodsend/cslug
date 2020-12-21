@@ -9,6 +9,6 @@
 int do_nothing(int x);
 
 // file2.c
-int do_nothing_again(int x);
+int uses_do_nothing(int x);
 
 #endif

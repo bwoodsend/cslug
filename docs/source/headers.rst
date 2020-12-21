@@ -2,29 +2,30 @@
 Headers -- Working with Multiple Files
 ======================================
 
-What are headers for?
----------------------
+Pre-waffle: What headers are for
+--------------------------------
 
 Multiple source files can included in one |shared library| just by passing
 more than one source file to :class:`cslug.CSlug`. The namespace for each source
 file will be merged (clashes cause a build error). If you want to be able to use
 functions from one file in another file then you need a header file.
 
-Yet another uninspired example:
+To demonstrate how to do this we'll be using the following uninspired example:
 
 .. literalinclude:: ../demos/headers/file1.c
     :caption: file1.c
     :name: file1.c
+    :language: C
 
 .. literalinclude:: ../demos/headers/file2.c
     :caption: file2.c
     :name: file2.c
-    :start-at: int do_nothing_again(int x) {
-
+    :start-at: int uses_do_nothing(int x) {
+    :language: C
 
 This refuses to compile because there is a reference to ``do_nothing()`` from
-`file1.c` in `file2.c` (although sometimes |gcc| lets you off with just a
-warning):
+`file1.c` inside `file2.c` (although some compiler versions let you off with
+just a warning):
 
 .. code-block:: python
 
@@ -32,12 +33,12 @@ warning):
     slug = CSlug("lib_nothing", "file1.c", "file2.c")
     slug.make()
 
-To keep |gcc| happy we need to put a function prototype for ``do_nothing()``
-somewhere visible to `file2.c`. In this simple case it's enough to just put
-``int do_nothing(int x);`` at the  top of `file2.c` but if a third file also
-needed ``do_nothing()`` then this would require duplicating the prototype. The
-more general solution is to put function prototypes in a header file which any
-other file can ``#include``.
+To keep the compiler happy we need to put a function prototype for
+``do_nothing()`` somewhere visible to `file2.c`. In this simple case it's enough
+to just put ``int do_nothing(int x);`` at the  top of `file2.c` but if a third
+file also needed ``do_nothing()`` then this would require duplicating the
+prototype. The more general solution is to put function prototypes in a header
+file which any other file can ``#include``.
 
 
 Auto-generating header files
@@ -76,7 +77,7 @@ The resulting header file looks something like:
     int do_nothing(int x);
 
     // file2.c
-    int do_nothing_again(int x);
+    int uses_do_nothing(int x);
 
     #endif
 
