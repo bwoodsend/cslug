@@ -14,10 +14,10 @@ tested for. Before we do that, however, we need to communicate back to Python
 that something has gone wrong. This can be easy or very fiddly.
 
 If your function currently returns nothing then you can just get it to return an
-*is ok* boolean. If you have more than one way a function can go wrong then use
-`Sharing constants between Python and C` to define a series of error codes and
-return those. It does already return something then use :ref:`Return multiple
-values from a function` to give it a second return variable.
+is ok* boolean. If you have more than one way a function can go wrong then use
+:ref:`Sharing constants between Python and C` to define a series of error codes
+and return those. It does already return something then use :ref:`Return
+multiple values from a function` to give it a second return variable.
 
 The following is an example that incorporates all the above, using an
 automatically generated :class:`header <cslug.Header>` file to share status
