@@ -10,3 +10,4 @@ from ._cslug import CSlug
 from ._pointers import ptr, nc_ptr
 from ._types_file import Types
 from .misc import anchor
+from ._cc import cc, cc_version
