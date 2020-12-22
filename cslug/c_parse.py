@@ -73,7 +73,6 @@ RESERVED = {
     "goto", "return", "continue", "enum"
 }
 
-
 # Matches a function declaration such as ``void foo(int x)``
 _function_re = _re.compile(r"""
 # Return type:
@@ -85,22 +84,22 @@ _function_re = _re.compile(r"""
 # Possible whitespace:
 \s*
 # Parameters. Lazily, just look for brackets. Detailed subparsing happens later.
-\([^=;+)]*\)
+\([^=;+{]*\)
+# Either a ; for a prototype or a { for a true definition.
+(?=\s*([;{]))
 """, flags=_re.MULTILINE | _re.VERBOSE) # yapf: disable
 
 
-def search_function_declarations(text):
+def search_functions(text, definitions=True, prototypes=False):
     text = filter(text, TokenType.CODE)
     for match in _function_re.finditer(text):
 
         if match.group(1) in RESERVED:
             continue
 
-        # Search for a following `{` to be sure this isn't just a prototype.
-        # This should be combinable into the ``_function_re`` regex but it
-        # causes it to become indefinitely slow so we stick to old-school
-        # checking in Python.
-        if _re.match(r"\s*{", text[match.end():]):
+        if definitions and match.group(2) == "{":
+            yield match.group()
+        if prototypes and match.group(2) == ";":
             yield match.group()
 
 
@@ -109,7 +108,7 @@ def search_function_declarations(text):
 _parameter_re = _re.compile(r"([^(]*)\(([^)]*)\)\s*")
 
 
-def parse_function_declaration(string, typedefs=None):
+def parse_function(string, typedefs=None):
     """Parse a function declaration into its name, its return type and its
     arguments."""
     res, args = _parameter_re.fullmatch(string).groups()
@@ -119,6 +118,13 @@ def parse_function_declaration(string, typedefs=None):
     res = _choose_ctype(a, b, name)
     args = [_choose_ctype(*parse_parameter(i, typedefs=typedefs)) for i in args]
     return name, res, args
+
+
+def parse_functions(text, typedefs=None, definitions=True, prototypes=False):
+    for func in search_functions(text, definitions=definitions,
+                                 prototypes=prototypes):
+        name, *args = parse_function(func, typedefs=typedefs)
+        yield name, args
 
 
 # --- Some weird Windows-only typedefs ---

@@ -7,15 +7,17 @@ import io
 from pathlib import Path
 import json
 import ctypes
+import itertools
 
-from cslug.c_parse import search_function_declarations, parse_function_declaration, parse_structs
+from cslug.c_parse import parse_functions, parse_structs
 from cslug import misc
 from cslug._struct import make_struct
 
 
 class Types(object):
-    def __init__(self, path, *sources):
+    def __init__(self, path, *sources, headers=()):
         self.sources = [misc.as_path_or_buffer(i) for i in sources]
+        self.headers = list(map(misc.as_path_or_buffer, misc.flatten(headers)))
         self.json_path = misc.as_path_or_buffer(path)
 
     def init_from_source(self):
@@ -31,13 +33,16 @@ class Types(object):
         """
         functions = {}
         structs = {}
-        for source in self.sources:
+        for source in itertools.chain(self.sources, self.headers):
             structs.update(parse_structs(misc.read(source)[0]))
 
         for source in self.sources:
-            for func in search_function_declarations(misc.read(source)[0]):
-                name, *args = parse_function_declaration(func, typedefs=structs)
-                functions[name] = args
+            functions.update(
+                parse_functions(misc.read(source)[0], typedefs=structs))
+        for source in self.headers:
+            functions.update(
+                parse_functions(
+                    misc.read(source)[0], typedefs=structs, prototypes=True))
 
         return {"functions": functions, "structs": structs}
 
