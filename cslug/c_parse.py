@@ -68,6 +68,12 @@ def filter(text, token_types):
     return "".join(keep)
 
 
+RESERVED = {
+    "if", "else", "switch", "case", "default", "break", "for", "while", "do",
+    "goto", "return", "continue", "enum"
+}
+
+
 # Matches a function declaration such as ``void foo(int x)``
 _function_re = _re.compile(r"""
 # Return type:
@@ -87,7 +93,7 @@ def search_function_declarations(text):
     text = filter(text, TokenType.CODE)
     for match in _function_re.finditer(text):
 
-        if match.group(1) == "else":
+        if match.group(1) in RESERVED:
             continue
 
         # Search for a following `{` to be sure this isn't just a prototype.
