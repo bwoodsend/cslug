@@ -9,7 +9,7 @@ import io
 import re
 from enum import EnumMeta
 
-from cslug.c_parse import search_function_declarations
+from cslug.c_parse import search_functions
 from cslug import misc
 
 
@@ -30,7 +30,7 @@ class Header(object):
         for source in self.sources:
             code, name = misc.read(source)
             name = "<string>" if name is None else name.name
-            functions[name] += search_function_declarations(code)
+            functions[name] += search_functions(code)
         return functions
 
     def generate(self):

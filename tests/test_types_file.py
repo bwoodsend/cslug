@@ -8,6 +8,7 @@ import warnings
 import pytest
 
 import cslug
+from tests import filter_warnings
 
 SOURCE = """
 // Something simple.
@@ -129,5 +130,38 @@ PARSED_STRUCT_METHODS = {
 def test_struct():
     self = cslug.Types(io.StringIO(), io.StringIO(STRUCT_TEXT + STRUCT_METHODS))
     self.make()
+    assert self.types["structs"] == PARSED_STRUCTS
+    assert self.types["functions"] == PARSED_STRUCT_METHODS
+
+
+@filter_warnings("ignore", category=cslug.exceptions.TypeParseWarning)
+def test_prototypes():
+    prototype_source = io.StringIO(SOURCE.replace("{}", ";"))
+
+    # Prototypes should be ignored by default.
+    self = cslug.Types(io.StringIO(), prototype_source)
+    assert self._types_from_source()["functions"] == {}
+
+    # Unless they are passed as headers to intentionally include prototypes.
+    self = cslug.Types(io.StringIO(), headers=prototype_source)
+    assert self._types_from_source()["functions"] == PARSED_FUNCTIONS
+
+
+def test_struct_prototypes():
+    # Check structs are correctly linked.
+    struct_prototypes = io.StringIO(STRUCT_METHODS.replace("{}", ";"))
+    self = cslug.Types(io.StringIO(),
+                       headers=[struct_prototypes,
+                                io.StringIO(STRUCT_TEXT)])
+    self.init_from_source()
+    assert self.types["structs"] == PARSED_STRUCTS
+    assert self.types["functions"] == PARSED_STRUCT_METHODS
+
+    # The same test but pass the struct definition as a true source.
+    # Should make no difference.
+    struct_prototypes = io.StringIO(STRUCT_METHODS.replace("{}", ";"))
+    self = cslug.Types(io.StringIO(), io.StringIO(STRUCT_TEXT),
+                       headers=struct_prototypes)
+    self.init_from_source()
     assert self.types["structs"] == PARSED_STRUCTS
     assert self.types["functions"] == PARSED_STRUCT_METHODS
