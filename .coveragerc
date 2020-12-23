@@ -27,3 +27,4 @@ rules =
   "platform_system != 'Darwin'": Darwin
   "platform_system != 'Linux'": Linux
   "sys_platform != 'msys'": msys
+  "platform_system != 'FreeBSD'": FreeBSD
