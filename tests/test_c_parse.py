@@ -4,6 +4,7 @@
 
 import os, sys
 from pathlib import Path
+import re
 
 import pytest
 
@@ -102,3 +103,9 @@ def test_parse_type_name_aliases(sources, target):
     assert a[0] == target
     for b in parsed:
         assert a == b
+
+
+def test_gobbledegook():
+    function = "int incomprehensible(;, float x);"
+    with pytest.raises(ValueError, match=re.escape(function)):
+        cslug.c_parse.parse_function(function)
