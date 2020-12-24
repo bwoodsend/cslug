@@ -16,6 +16,13 @@ def null_free_dll(*spam):  # pragma: no cover
 if OS == "Windows":  # pragma: Windows
     _dlclose = ctypes.windll.kernel32.FreeLibrary
     dlclose = lambda handle: 0 if _dlclose(handle) else 1
+    # There's some controversy as to whether this DLL is guaranteed to exist.
+    # It always has so far but isn't documented. However, MinGW assumes that it
+    # is so, should this DLL be removed, then we have much bigger problems than
+    # just this line. There is also vcruntime140.dll which isn't a standard part
+    # of the OS but is always shipped with Python so we can guarantee its
+    # presence. But vcruntime140 contains only a tiny strict-subset of msvcrt.
+    stdlib = ctypes.CDLL("msvcrt")
 
 elif OS == "Darwin":  # pragma: Darwin
     try:
