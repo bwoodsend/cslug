@@ -111,7 +111,10 @@ _parameter_re = _re.compile(r"([^(]*)\(([^)]*)\)\s*")
 def parse_function(string, typedefs=None):
     """Parse a function declaration into its name, its return type and its
     arguments."""
-    res, args = _parameter_re.fullmatch(string).groups()
+    try:
+        res, args = _parameter_re.fullmatch(string).groups()
+    except AttributeError:
+        raise ValueError("Function '{}' not understood.".format(string))
     args = list(_filter(None, _re.split(r"\s*,\s*", args)))
     args = [i for i in args if not _re.fullmatch(r"\s*void\s*", i)]
     a, b, name = parse_parameter(res, typedefs=typedefs)
