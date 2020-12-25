@@ -183,7 +183,7 @@ except NameError:
 
 
 def check_printfs(text, name=None):
-    """Test and warn for ``printf()``\\ s in C code.
+    """Test and warn for :c:`printf()`\\ s in C code.
 
     :return: True is there were any found.
     """

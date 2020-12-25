@@ -23,8 +23,8 @@ Throughout this page we'll use the following C code and Python setup:
     :end-at: slug =
 
 
-Constants defined using ``const`` are readable with the same method as global
-variables but are obviously not writable. Anything defined using ``#define`` is
+Constants defined using :c:`const` are readable with the same method as global
+variables but are obviously not writable. Anything defined using :c:`#define` is
 preprocessor only, meaning that it gets refactored out early in the C
 compilation process and doesn't exist in a shared library. To reset all globals
 back to their defaults just close the library with :func:`slug.close
@@ -59,7 +59,7 @@ This gives a :class:`ctypes.c_int`. Convert the to a Python :class:`int` with::
     >>> an_int.value
     42
 
-And if the variable isn't declared ``const`` then you can write to it::
+And if the variable isn't declared :c:`const` then you can write to it::
 
     an_int.value = 13
 
@@ -125,7 +125,7 @@ To access them you can use:
 
 But be careful with this form. It doesn't know the lengths of these strings - it
 guesses, assuming they are |null terminated| (which in this case they are
-because, on defining them with ``char x[] = "literal"``, C appends a NULL
+because, on defining them with :c:`char x[] = "literal"`, C appends a NULL
 character). If a string isn't null terminated, memory trash characters will be
 appended until a 0 is found and if a string contains other NULLs then it will
 be terminated prematurely.

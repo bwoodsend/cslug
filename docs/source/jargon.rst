@@ -9,12 +9,12 @@ Glossary
 
         The memory address of an object stored in another variable.
 
-        Pointers are also used in C to reference arrays. An array  ``a``  is
-        simply a pointer to its first element ``&a[0]``. ``*a`` and ``a[0]`` are
+        Pointers are also used in C to reference arrays. An array  :c:`a`  is
+        simply a pointer to its first element :c:`&a[0]`. :c:`*a` and :c:`a[0]` are
         thereby also interchangeable.
 
         Pointers to arrays may be used with arithmetic to get other elements.
-        ``*(a + 3)`` is the same as ``a[3]`` (even if the item size of ``a``\ s
+        :c:`*(a + 3)` is the same as :c:`a[3]` (even if the item size of :c:`a`\ s
         elements is not one).
 
     Dangling Pointer
@@ -48,8 +48,8 @@ Glossary
 
         Memory allocated but never freed.
 
-        In C this equates to a call to ``malloc()`` (or one of its siblings)
-        without a later call to ``free()``. If enough memory is *leaked*, your
+        In C this equates to a call to :c:`malloc()` (or one of its siblings)
+        without a later call to :c:`free()`. If enough memory is *leaked*, your
         program will eventually run into MemoryErrors.
 
 
@@ -80,8 +80,8 @@ Glossary
         this is not an option.
 
         Note that *zero* in this context is ascii/unicode zero, denoted by
-        ``'\x00'`` or ``chr(0)`` in Python, or ``'\00'`` or ``0`` in C, not
-        simply the character ``'0'`` (which is actually ``'\\30'`` or ``48`` in
+        ``'\x00'`` or ``chr(0)`` in Python, or :c:`'\00'` or :c:`0` in C, not
+        simply the character ``'0'`` (which is actually :c:`'\\30'` or :c:`48` in
         C).
 
         See :ref:`Null terminated or not null terminated?` for when it safe to

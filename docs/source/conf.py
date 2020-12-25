@@ -80,6 +80,7 @@ rst_epilog = cslug.anchor("rst_epilog.txt")[0].read_text()
 rst_epilog += """
 .. role:: tooltip(raw)
    :format: html
+
 """
 
 import sys
@@ -88,6 +89,14 @@ sys.path.insert(0, ".")
 import tooltips_gen
 
 rst_epilog += tooltips_gen.epilog
+
+# Needed to use :c:`inline C code markup`.
+rst_prolog = """
+.. role:: c(code)
+   :language: c
+   :class: highlight
+
+"""
 
 # -- Options for HTML output -------------------------------------------
 

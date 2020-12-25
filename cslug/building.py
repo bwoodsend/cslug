@@ -103,7 +103,7 @@ else:
             """Set platform dependent wheel tag.
 
             |cslug| packages contain binaries but they don't use
-            ``#include <Python.h>`` like traditional Python extensions do.
+            :c:`#include <Python.h>` like traditional Python extensions do.
             This makes wheels dependent OS but not Python version dependent.
             """
             # Tag setting is done by ``bdist_wheel.get_tag()`` later in the
