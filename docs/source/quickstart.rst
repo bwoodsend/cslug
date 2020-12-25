@@ -40,14 +40,14 @@ Let's talk through what just happened. |cslug| should have:
 
 * Compiled a |shared library| called **my-first-dll-[...]** in your current
   working directory (where `[...]` depends on your OS). This library contains a
-  single function called ``add_1()``.
-* Extracted type information from our C source code. Namely: ``add_1()`` takes
-  one ``int`` input and returns an ``int`` output.
+  single function called :c:`add_1()`.
+* Extracted type information from our C source code. Namely: :c:`add_1()` takes
+  one :c:`int` input and returns an :c:`int` output.
 * Loaded said shared library using :mod:`ctypes` (accessible via :attr:`slug.dll
   <cslug.CSlug.dll>`) and set the type information for the functions it
   contains.
 
-Finally, ``print(slug.dll.add_1(10))`` will call our C function ``add_1()``
+Finally, ``print(slug.dll.add_1(10))`` will call our C function :c:`add_1()`
 on ``10`` and print the answer.
 
 .. note::

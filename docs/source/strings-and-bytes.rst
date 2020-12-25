@@ -5,8 +5,8 @@ There are two ways to work with text.
 
 1. Let :mod:`ctypes` implicitly convert your :class:`str` or :class:`bytes` to a
    |null terminated| char or wide char array before passing it a C function
-   which takes ``char *`` or ``wchar_t *`` arguments. This is slower (due to the
-   conversion - although :ref:`this can be cached<Caching the conversion
+   which takes :c:`char *` or :c:`wchar_t *` arguments. This is slower (due to
+   the conversion - although :ref:`this can be cached<Caching the conversion
    overhead>`) but more straight forward.
 
 2. Treat your text as an array, passing raw |pointers| to C. This is harder
@@ -22,7 +22,7 @@ Reading strings
 Passing strings from Python is easy. We demonstrate it with an equivalent to
 Python's :meth:`str.count`, with the simplification that the sub-string we are
 counting is only one character. If you want to work with :class:`bytes`
-instead, simply replace ``wchar_t`` with ``char``.
+instead, simply replace :c:`wchar_t` with :c:`char`.
 
 .. literalinclude:: ../demos/strings/strings-demo.c
     :language: C
@@ -47,17 +47,17 @@ And run it::
 
 OK, now that we've got it going, let's talk about the C code a bit.
 
-Notice the types of the inputs: ``wchar_t *`` and ``wchar_t``. The former
+Notice the types of the inputs: :c:`wchar_t *` and :c:`wchar_t`. The former
 accepts a :class:`str` of arbitrary length but the latter accepts only a single
 character :class:`str`. We could have used pointers for both arguments, but
-using just ``wchar_t`` adds an implicit check that our single character argument
+using just :c:`wchar_t` adds an implicit check that our single character argument
 is indeed singular::
 
     >>> slug.dll.count("This will break", "will")
     ctypes.ArgumentError: argument 2: <class 'TypeError'>: wrong type
 
 You may also notice that we've avoided having to specify the string's length
-anywhere. Instead we just use ``text[i] != 0;`` to tell us when to stop the for
+anywhere. Instead we just use :c:`text[i] != 0;` to tell us when to stop the for
 loop. Here we are taking advantage of the fact that Python strings are |null
 terminated|, so to find the end of a string we simply need to find the *NULL*
 (integer 0) at the end. There is a catch to doing this though. If our string
@@ -74,7 +74,7 @@ However if we force our way through...
     1
 
 If your string is likely to contains NULLs then pass the string length as a
-separate parameter and use that to define your ``for`` loops.
+separate parameter and use that to define your :c:`for` loops.
 
 
 Caching the conversion overhead
@@ -122,7 +122,7 @@ a :class:`str`:
     :language: C
     :caption: reverse.c
 
-Notice that output string is an argument rather than a ``return`` value. This is
+Notice that output string is an argument rather than a :c:`return` value. This is
 in accordance with complication one above. Let us compile our C code:
 
 .. literalinclude:: ../demos/strings/reverse.py

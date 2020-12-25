@@ -23,7 +23,7 @@ To demonstrate how to do this we'll be using the following uninspired example:
     :start-at: int uses_do_nothing(int x) {
     :language: C
 
-This refuses to compile because there is a reference to ``do_nothing()`` from
+This refuses to compile because there is a reference to :c:`do_nothing()` from
 `file1.c` inside `file2.c` (although some compiler versions let you off with
 just a warning):
 
@@ -34,11 +34,11 @@ just a warning):
     slug.make()
 
 To keep the compiler happy we need to put a function prototype for
-``do_nothing()`` somewhere visible to `file2.c`. In this simple case it's enough
-to just put ``int do_nothing(int x);`` at the  top of `file2.c` but if a third
-file also needed ``do_nothing()`` then this would require duplicating the
+:c:`do_nothing()` somewhere visible to `file2.c`. In this simple case it's enough
+to just put :c:`int do_nothing(int x);` at the  top of `file2.c` but if a third
+file also needed :c:`do_nothing()` then this would require duplicating the
 prototype. The more general solution is to put function prototypes in a header
-file which any other file can ``#include``.
+file which any other file can :c:`#include`.
 
 
 Auto-generating header files
@@ -82,7 +82,7 @@ The resulting header file looks something like:
     #endif
 
 Now any file which references anything from either `file1.c` or `file2.c` need
-only ``#include "my-header.h"``.
+only :c:`#include "my-header.h"`.
 
 .. note::
 
@@ -126,7 +126,7 @@ Quickly inspect using::
     #endif
 
 Now any Python code can access the ``APOCALYPSE`` constant via
-``ErrorCode.APOCALYPSE`` and any C code can ``#include "constants.h"`` and use
+``ErrorCode.APOCALYPSE`` and any C code can :c:`#include "constants.h"` and use
 ``APOCALYPSE`` directly.
 
 Other relatives of :class:`enum.Enum` such as :class:`enum.IntEnum` and
@@ -139,11 +139,11 @@ what you want then you may need to pass a dictionary comprehension based on the
 instead.
 
 
-Add ``#include``\s to generated headers
----------------------------------------
+Add :c:`#include`\s to generated headers
+----------------------------------------
 
-If you use types which are defined in other header files such as ``wchar_t``
-then you need to ``#include`` those headers to the generated header. For local
+If you use types which are defined in other header files such as :c:`wchar_t`
+then you need to :c:`#include` those headers to the generated header. For local
 headers wrap the name in double quotes::
 
     Header(..., includes='"some-header.h"')

@@ -17,17 +17,17 @@ setting the type information for each function on loading the library (invoked
 by accessing ``slug.dll``). This provides some degree of implicit type safety
 and casting for the basic types:
 
-===============================   ====================================================================================
+===============================   ======================================================================================
 Python Type                       Equivalent C Type(s)
-===============================   ====================================================================================
-:class:`int`                      `int`, `short`, `long`, `unsigned`, `int16_t` (requires ``#include <stdint.h>``, etc
+===============================   ======================================================================================
+:class:`int`                      `int`, `short`, `long`, `unsigned`, `int16_t` (requires :c:`#include <stdint.h>`), etc
 :class:`float`                    `float` or `double`
-Single character :class:`str`     `wchar_t` (requires ``#include <stddef.h>``)
+Single character :class:`str`     `wchar_t` (requires :c:`#include <stddef.h>`)
 Arbitrary length :class:`str`     `wchar_t *`
 Single character :class:`bytes`   `char`
 Arbitrary length :class:`bytes`   `char *`
-:class:`bool`                     `bool` (requires ``#include <stdbool.h>``
-===============================   ====================================================================================
+:class:`bool`                     `bool` (requires :c:`#include <stdbool.h>`)
+===============================   ======================================================================================
 
 
 Type Checking
@@ -74,8 +74,8 @@ To see what it's like without the safety net, remove the type information from
 Pointer Types
 ~~~~~~~~~~~~~
 
-Type checking for |pointers| on the other hand is very minimal. A ``wchar_t
-*`` correlates to :class:`str` in Python (and is type-checked accordingly) and a
-``char *`` correlates to :class:`bytes` (including :class:`bytearray` and
+Type checking for |pointers| on the other hand is very minimal. A :c:`wchar_t
+*` correlates to :class:`str` in Python (and is type-checked accordingly) and a
+:c:`char *` correlates to :class:`bytes` (including :class:`bytearray` and
 :class:`memoryview`). See :ref:`Strings and Bytes` for working with string
-types. All other pointer types are reduced to ``void *``.
+types. All other pointer types are reduced to :c:`void *`.

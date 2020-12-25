@@ -27,8 +27,8 @@ We'll start by writing a simple C file containing a struct definition:
     :caption: cards.c
     :end-before: /* ---
 
-Note that the simpler ``struct Person {...};`` form of a struct definition is
-intentionally not supported. You must use the above ``typedef`` form.
+Note that the simpler :c:`struct Person {...};` form of a struct definition is
+intentionally not supported. You must use the above :c:`typedef` form.
 
 
 Using a Struct in Python
@@ -121,7 +121,7 @@ address. But the card is deleted at the end of the function leaving another
     :start-at: Card * make_card_ptr(
     :end-at: }
 
-We can improve the situation by using ``malloc()``, to reserve memory beyond
+We can improve the situation by using :c:`malloc()`, to reserve memory beyond
 the scope of this function call:
 
 .. literalinclude:: ../demos/structs/cards.c
@@ -148,7 +148,7 @@ them again:
     while True:
         slug.dll.make_card_ptr_safer(1, 2)
 
-To deallocate, use ``free()`` to get the memory back once we no longer need the
+To deallocate, use :c:`free()` to get the memory back once we no longer need the
 struct:
 
 .. literalinclude:: ../demos/structs/cards.c
