@@ -41,4 +41,4 @@ Submodules
    cslug.c_parse
    cslug.exceptions
    cslug.misc
-
+   cslug.stdlib <../stdlib>

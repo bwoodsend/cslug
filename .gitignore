@@ -122,5 +122,8 @@ tests/dump
 # Junk from Apple
 .DS_Store
 
+# Automatically generate files
+docs/source/stdlib.rst
+
 # To avoid having to bootstrap package building, this file is checked in.
 !cslug/stdlib.json

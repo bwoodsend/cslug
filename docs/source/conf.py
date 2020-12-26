@@ -12,6 +12,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+import os
 import cslug
 
 # -- General configuration ---------------------------------------------
@@ -96,7 +97,24 @@ rst_prolog = """
    :language: c
    :class: highlight
 
+.. role:: py(code)
+   :language: python
+   :class: highlight
+
 """
+
+import runpy
+
+stdlib = runpy.run_path("../../stdlib/docs.py")["epilog"]
+
+if os.path.exists("stdlib.rst"):
+    with open("stdlib.rst", "r") as f:
+        needs_reloading = stdlib != f.read()
+else:
+    needs_reloading = True
+if needs_reloading:
+    with open("stdlib.rst", "w") as f:
+        f.write(stdlib)
 
 # -- Options for HTML output -------------------------------------------
 

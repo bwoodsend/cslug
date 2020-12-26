@@ -1,6 +1,36 @@
 # -*- coding: utf-8 -*-
-"""
+r"""
 Standard library C functions exposed to Python.
+
+Most of the functions in the C standard library are included in a single |shared
+library| which is part of your operating system (see the table below). The
+:mod:`cslug.stdlib` module loads and exposes the contents of this library to be
+directly called from Python.
+
+========  ======================================================================================================================
+Platform  Library/location
+========  ======================================================================================================================
+Linux     The anonymous, non-existent :py:`ctypes.CDLL("")`. Don't ask me what it is - I haven't a clue.
+Windows   The somewhat barren ``C:\Windows\system32\msvcrt.dll``.
+macOS     Either ``libc.dylib`` (for new OSXs), ``libSystem`` (for older) or ``/usr/lib/system/libsystem_c.dylib`` (really old).
+MSYS2     Good old ``msys-2.0.dll``.
+FreeBSD   Tentative ``libc.so.7`` (which also doesn't exist - only tested on one version of FreeBSD).
+========  ======================================================================================================================
+
+
+Not every function is made available. A function is excluded if:
+
+* It is not available on every supported platform so that you don't have to
+  worry about cross-platform compatibility.
+* It uses types which are unavailable to :mod:`ctypes`.
+* It's a macro, meaning that it's refactored away at compile time and doesn't
+  exist in any |binaries| format.
+
+
+.. note::
+
+    These functions are tested to check that they exist but not that they work
+    in Python. I don't even know what half of them do...
 
 """
 
