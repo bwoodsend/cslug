@@ -4,7 +4,7 @@
 import re
 from pathlib import Path
 
-jargon = Path(__file__, "..", "jargon.rst").read_text("utf-8")
+jargon = Path(__file__, "..", "jargon.rst").resolve().read_text("utf-8")
 
 
 def uncapitalise(x):
