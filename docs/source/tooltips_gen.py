@@ -11,6 +11,14 @@ def uncapitalise(x):
     return " ".join(i if i.isupper() else i.lower() for i in x.split(" "))
 
 
+def pluralise(x):
+    if x[-1] == "s":
+        return x + "es"
+    if x[-1] == "y":
+        return x[:-1] + "ies"
+    return x + "s"
+
+
 item_head_re = r"""
 \n
 [ ]{4}(?![ ])(.+)\n
@@ -27,7 +35,7 @@ def tooltip(title, body, path=""):
     hyperlink = title.replace(" ", "-")
     rst_sub_name = title.lower()
     return _tooltip(rst_sub_name, text_name, hyperlink, body, path) + \
-        _tooltip(rst_sub_name + "s", text_name + "s", hyperlink, body, path)
+        _tooltip(pluralise(rst_sub_name), pluralise(text_name), hyperlink, body, path)
 
 
 def _tooltip(rst_sub_name, text_name, hyperlink_title, body, path=""):
