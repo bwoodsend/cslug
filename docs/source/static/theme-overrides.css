@@ -44,3 +44,8 @@ div[class*="highlight-C"] .highlight{
 div[class*="highlight-py"] .highlight, div[class*="highlight-default"] .highlight{
   background: #f3ffd9;
 }
+
+/* Enable text wrapping in tables. */
+.wy-table-responsive table td, .wy-table-responsive table th {
+    white-space: normal;
+}
