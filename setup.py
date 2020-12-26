@@ -27,7 +27,7 @@ setup(
     extras_require={
         "test": [
             'pytest>=3', 'pytest-order', 'pytest-timeout', 'toml', 'coverage',
-            'coverage-conditional-plugin', 'pytest-cov'
+            'coverage-conditional-plugin', 'pytest-cov', 'wheel'
         ]
     },
     license="MIT license",
