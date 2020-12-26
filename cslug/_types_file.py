@@ -62,13 +62,29 @@ class Types(object):
     #         self.init()
     #     return super().__getattribute__(item)
 
-    def apply(self, dll):
-        """
+    def apply(self, dll, strict=False):
+        """Set the type information for the contents of **dll**.
 
-        :param dll:
-        :type dll: :class:`ctypes.CDLL`
+        Args:
+            dll (ctypes.CDLL):
+                The opened |shared library| to apply type information to.
+            strict (bool):
+                Raise an :class:`AttributeError` if a symbol wasn't found.
+
+        For every structure in ``self.types["structs"]``, turn it into a
+        :class:`ctypes.Structure` and set it as an attribute of **dll**.
+        For every function in ``self.types["functions"]``, get it from **dll**
+        then set its ``argtypes`` and ``restype`` attributes.
+
+        .. note::
+
+            Structures don't normally go in |../shared libraries| but |cslug| lobs
+            them in there for simplicity.
+
         """
         structs = {}
+        if strict:
+            errors = []
 
         for (name, params) in self.types["structs"].items():
             fields = [(name, getattr(ctypes, type), *bits)
@@ -88,7 +104,13 @@ class Types(object):
                 #   - CSlug screwed up (not that unlikely).
                 #
                 # Don't crash if this is the case.
-                continue
+                if strict:
+                    errors.append(name)
+                # The continue below gets ignored by coverage. Add this useless
+                # statement to ensure it's being ran.
+                else:
+                    pass
+                continue  # pragma: no cover
 
             # Set function return type. Default to no return value.
             func.restype = structs.get(return_type) \
@@ -100,6 +122,9 @@ class Types(object):
                 structs.get(i) or getattr(ctypes, i, ctypes.c_int)
                 for i in arg_types
             ]
+
+        if strict and len(errors):
+            raise AttributeError(f"Symbols {errors} not found in {dll}.")
 
 
 if __name__ == "__main__":

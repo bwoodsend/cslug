@@ -4,6 +4,7 @@
 import io
 import json
 import warnings
+import ctypes
 
 import pytest
 
@@ -165,3 +166,34 @@ def test_struct_prototypes():
     self.init_from_source()
     assert self.types["structs"] == PARSED_STRUCTS
     assert self.types["functions"] == PARSED_STRUCT_METHODS
+
+
+@pytest.mark.parametrize("strict", [0, 1])
+def test_strict(strict):
+    class FakeDLL(object):
+        exists = ctypes.PYFUNCTYPE(int)()
+
+    self = cslug.Types(
+        io.StringIO(), headers=io.StringIO("""
+        float exists(int x);
+        float doesnt_exist(int x);
+        double also_doesnt_exist(float y);
+    """))
+
+    self.init_from_source()
+    dll = FakeDLL()
+
+    if not strict:
+        # Should skip over non-existent functions without complaint.
+        self.apply(dll)
+    else:
+        # Should raise an error.
+        with pytest.raises(
+                AttributeError,
+                match=r".* \['doesnt_exist', 'also_doesnt_exist'] .*"):
+            self.apply(dll, strict=True)
+
+    assert dll.exists.argtypes == [ctypes.c_int]
+    assert dll.exists.restype == ctypes.c_float
+    assert not hasattr(dll, "doesnt_exist")
+    assert not hasattr(dll, "also_doesnt_exist")
