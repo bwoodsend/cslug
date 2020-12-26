@@ -35,6 +35,7 @@ setup(
     keywords='cslug',
     name='cslug',
     packages=find_packages(include=['cslug', 'cslug.*']),
+    package_data={"cslug": ["stdlib.json"]},
     test_suite='tests',
     url='https://github.com/bwoodsend/cslug',
     version=runpy.run_path("cslug/_version.py")["__version__"],

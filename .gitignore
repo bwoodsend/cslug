@@ -121,3 +121,6 @@ tests/dump
 
 # Junk from Apple
 .DS_Store
+
+# To avoid having to bootstrap package building, this file is checked in.
+!cslug/stdlib.json
