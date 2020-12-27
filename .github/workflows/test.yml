@@ -105,3 +105,7 @@ jobs:
         if: ${{ runner.os == 'windows' && matrix.architecture == 'x86' }}
         run: set CC=%ProgramFiles%/tcc/tcc/i386-win32-tcc && pytest
         shell: cmd
+
+      - name: Show wheel suffix
+        run: ls packaging/contains-slugs/dist/
+        shell: bash
