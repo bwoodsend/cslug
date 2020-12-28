@@ -154,6 +154,10 @@ class CSlug(object):
         if cc_name in ("gcc", "clang") and OS == "Darwin":  # pragma: no cover
             flags += [f"-mmacosx-version-min={os.environ.get('MIN_OSX', 10.5)}"]
 
+        if cc_name == "gcc":  # pragma: no cover
+            # I've only seen this needed on manylinux docker images.
+            flags.append("--std=c99")
+
         # Set 32/64 bit.
         flags += ["-m" + str(BIT_NESS)]
 
