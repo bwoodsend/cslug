@@ -29,7 +29,7 @@ class BuildError(Exception):
 
 class BuildBlockedError(Exception):
     def __str__(self):
-        return "The build was blocked by the environment variable `CC=block`."
+        return "The build was blocked by the environment variable `CC=!block`."
 
 
 class LibraryOpenElsewhereError(BuildError):

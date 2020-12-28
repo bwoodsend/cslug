@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-"""
+"""The miff-muffet-moof module."""
 
 import io
 import sys
@@ -10,10 +9,22 @@ import contextlib as _contextlib
 
 
 def as_path_or_buffer(file):
+    """Normalise filenames to :class:`pathlib.Path`, leaving streams untouched.
+    """
     return file if isinstance(file, io.IOBase) else Path(file)
 
 
 def as_path_or_readable_buffer(file):
+    """Normalise filenames to :class:`pathlib.Path`, and streams to
+    :class:`io.StringIO`.
+
+    Streams need to be re-readable in |cslug|. An :class:`io.StringIO` is via
+    ``file.getvalue()`` - everything else generally isn't. The goal of using
+    :mod:`io` streams is only to prevent strings of source code from being
+    confused for string filenames - not, as is the more normal usage, to avoid
+    holding large files in memory.
+
+    """
     if isinstance(file, io.IOBase):
         if hasattr(file, "getvalue"):
             return file
@@ -31,6 +42,12 @@ def _read(path, mode="r"):
 
 
 def read(path, mode="r"):
+    r"""Read a path or a stream.
+
+    Line endings are normalised to Unix ``'\n'`` if :py:`mode == 'r'` so as to
+    be consistent with :func:`open`.
+
+    """
     text, path = _read(path, mode)
     if mode == "r":
         text = re.sub("\r\n?", "\n", text)
@@ -38,6 +55,25 @@ def read(path, mode="r"):
 
 
 def write(path, *data, mode="w"):
+    """Write to a path or a stream.
+
+    Args:
+        path (str, os.PathLike, io.IOBase):
+            File to write to.
+        *data (str, bytes):
+            Data to write.
+        mode (str):
+            A mode to be passed to :func:`open`, ignored if **path** is a
+            stream.
+
+    Returns:
+        int: The number of characters written.
+
+    If **path** is a stream it is simply written to without closing it
+    afterwards. If **path** is a filename then it is opened, written to, then
+    closed.
+
+    """
     if isinstance(path, io.IOBase):
         return path.writelines(data)
     with open(path, mode, encoding="utf-8") as f:
@@ -68,6 +104,15 @@ def anchor(*paths):
 
 
 def hide_from_PATH(name):
+    """Modify ``PATH`` from :data:`os.environ` so that **name** can't be found.
+
+    Args:
+        name (str): The executable name to hide.
+
+    Returns:
+        str: The original value of :py:`os.environ['PATH']`.
+
+    """
     import os
     import shutil
     old = os.environ["PATH"]
@@ -78,6 +123,35 @@ def hide_from_PATH(name):
 
 
 def flatten(iterable, types=(tuple, list), initial=None):
+    """Collapse nested iterables into one flat :class:`list`.
+
+    Args:
+        iterable:
+            Nested container.
+        types:
+            Type(s) to be collapsed. This argument is passed directly to
+            :func:`isinstance`.
+        initial:
+            A pre-existing :class:`list` to append to. An empty list is created
+            if one is not supplied.
+
+    Returns:
+        list: The flattened output.
+
+    ::
+
+        >>> flatten([[1, 2], 3, [4, [5]]])
+        [1, 2, 3, 4, 5]
+        >>> flatten(1.0)
+        [1.0]
+        >>> flatten([(1, 2), 3, (4, 5)])
+        [1, 2, 3, 4, 5]
+        >>> flatten([(1, 2), 3, (4, 5)], types=list)
+        [(1, 2), 3, (4, 5)]
+        >>> flatten([(1, 2), 3, (4, 5)], initial=[6, 7])
+        [6, 7, 1, 2, 3, 4, 5]
+
+    """
     if initial is None:
         initial = []
     if isinstance(iterable, types):
@@ -90,6 +164,25 @@ def flatten(iterable, types=(tuple, list), initial=None):
 
 @_contextlib.contextmanager
 def block_compile():
+    """Temporarily block |cslug| compilation.
+
+    A context manager to temporarly set the ``CC`` environment variable to
+    ``!block`` which is a signal to |cslug| that it is not allowed to use any
+    C compiler.
+
+    ::
+
+        >>> from cslug import cc, misc
+        >>> cc()
+        'c:\\MinGW\\bin\\gcc.EXE'
+        >>> with misc.block_compile():
+        ...     cc()
+        cslug.exceptions.BuildBlockedError: The build was blocked by the
+        environment variable `CC=block`.
+
+    This is only meant for testing.
+
+    """
     import os
     old = os.environ.get("CC")
     os.environ["CC"] = "!block"
