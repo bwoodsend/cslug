@@ -124,6 +124,12 @@ def inspect_sdist(sdist):
 
 def inspect_wheel(wheel):
     """Inspect the contents of a ``contains-slugs`` wheel."""
+    # Test `MIN_OSX` has been propagated into the filename.
+    if "macos" in wheel.stem:
+        min_osx = os.environ.get('MIN_OSX', "10.5")
+        # The '.' gets normalised to a '_'.
+        assert re.search(min_osx.replace(".", r"\D"), wheel.stem)
+
     # Get a list of filenames contents.
     with zipfile.ZipFile(str(wheel), "r") as zf:
         contents = [Path(i) for i in zf.namelist()]
