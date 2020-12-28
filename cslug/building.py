@@ -112,8 +112,18 @@ else:
             # before the normalisation, ensures that it gets normalised.
             # Setting ``plat_name`` is equivalent to using the ``--plat`` CLI
             # option.
+            import re, os
             from wheel.bdist_wheel import get_platform
             self.plat_name = get_platform(self.bdist_dir)
+
+            # `wheel` assumes that the macOS target version is the same as the
+            # target version of Python. This is completely irrelevent to cslug.
+            # The correct version is whatever cslug passed to gcc's 
+            # --mmacosx-version-min parameter.
+            min_osx = os.environ.get('MIN_OSX', 10.5)
+            self.plat_name = re.sub(r"macosx-\d+[.]\d+-",
+                                    f"macosx-{min_osx}-", self.plat_name)
+
             super().finalize_options()
 
 
