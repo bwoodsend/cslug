@@ -81,7 +81,7 @@ def test_functions(modifier):
 
         self = cslug.Types(io.StringIO(), io.StringIO(modifier(SOURCE)))
         self.make()
-        assert self.types["functions"] == PARSED_FUNCTIONS
+        assert self.functions == PARSED_FUNCTIONS
         assert json.loads(
             self.json_path.getvalue())["functions"] == PARSED_FUNCTIONS
         from_json = cslug.Types(io.StringIO(self.json_path.getvalue()))
@@ -95,7 +95,7 @@ def test_functions(modifier):
 def test_ignores_prototypes(modifier):
     self = cslug.Types(io.StringIO(), io.StringIO(modifier(SOURCE)))
     self.init_from_source()
-    assert not self.types["functions"]
+    assert not self.functions
 
 
 STRUCT_TEXT = """
@@ -131,8 +131,8 @@ PARSED_STRUCT_METHODS = {
 def test_struct():
     self = cslug.Types(io.StringIO(), io.StringIO(STRUCT_TEXT + STRUCT_METHODS))
     self.make()
-    assert self.types["structs"] == PARSED_STRUCTS
-    assert self.types["functions"] == PARSED_STRUCT_METHODS
+    assert self.structs == PARSED_STRUCTS
+    assert self.functions == PARSED_STRUCT_METHODS
 
 
 @filter_warnings("ignore", category=cslug.exceptions.TypeParseWarning)
@@ -155,8 +155,8 @@ def test_struct_prototypes():
                        headers=[struct_prototypes,
                                 io.StringIO(STRUCT_TEXT)])
     self.init_from_source()
-    assert self.types["structs"] == PARSED_STRUCTS
-    assert self.types["functions"] == PARSED_STRUCT_METHODS
+    assert self.structs == PARSED_STRUCTS
+    assert self.functions == PARSED_STRUCT_METHODS
 
     # The same test but pass the struct definition as a true source.
     # Should make no difference.
@@ -164,8 +164,8 @@ def test_struct_prototypes():
     self = cslug.Types(io.StringIO(), io.StringIO(STRUCT_TEXT),
                        headers=struct_prototypes)
     self.init_from_source()
-    assert self.types["structs"] == PARSED_STRUCTS
-    assert self.types["functions"] == PARSED_STRUCT_METHODS
+    assert self.structs == PARSED_STRUCTS
+    assert self.functions == PARSED_STRUCT_METHODS
 
 
 @pytest.mark.parametrize("strict", [0, 1])

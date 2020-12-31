@@ -46,7 +46,7 @@ def _init():
     _std_types.init_from_json()
 
     _std_types.apply(stdlib)
-    __all__ = list(_std_types.types["functions"])
+    __all__ = list(_std_types.functions)
     for name in __all__:
         globals()[name] = getattr(stdlib, name)
 
