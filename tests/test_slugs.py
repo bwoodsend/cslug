@@ -178,8 +178,8 @@ def test_names_not_in_dll():
     self.dll
 
     # Check cslug found them.
-    assert "add_1" in self.types_dict.types["functions"]
-    assert "times_2" in self.types_dict.types["functions"]
+    assert "add_1" in self.types_dict.functions
+    assert "times_2" in self.types_dict.functions
 
     # But they are not in the DLL.
 
