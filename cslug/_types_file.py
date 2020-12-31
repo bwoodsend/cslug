@@ -62,6 +62,14 @@ class Types(object):
     #         self.init()
     #     return super().__getattribute__(item)
 
+    @property
+    def functions(self):
+        return self.types["functions"]
+
+    @property
+    def structs(self):
+        return self.types["structs"]
+
     def apply(self, dll, strict=False):
         """Set the type information for the contents of **dll**.
 
@@ -71,9 +79,9 @@ class Types(object):
             strict (bool):
                 Raise an :class:`AttributeError` if a symbol wasn't found.
 
-        For every structure in ``self.types["structs"]``, turn it into a
+        For every structure in ``self.structs``, turn it into a
         :class:`ctypes.Structure` and set it as an attribute of **dll**.
-        For every function in ``self.types["functions"]``, get it from **dll**
+        For every function in ``self.functions``, get it from **dll**
         then set its ``argtypes`` and ``restype`` attributes.
 
         .. note::
@@ -86,14 +94,14 @@ class Types(object):
         if strict:
             errors = []
 
-        for (name, params) in self.types["structs"].items():
+        for (name, params) in self.structs.items():
             fields = [(name, getattr(ctypes, type), *bits)
                       for (name, type, *bits) in params]
             structs[name] = make_struct(name, fields)
 
         dll.__dict__.update(structs)
 
-        for (name, (return_type, arg_types)) in self.types["functions"].items():
+        for (name, (return_type, arg_types)) in self.functions.items():
             func = getattr(dll, name, None)
             if func is None:
                 # A function may be missing if any of:

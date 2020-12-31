@@ -54,6 +54,6 @@ types.init_from_json()
 functions = {
     key: [
         function for function in functions[key]
-        if function.name in types.types["functions"]
+        if function.name in types.functions
     ] for key in functions
 }
