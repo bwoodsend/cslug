@@ -119,8 +119,11 @@ def parse_function(string, typedefs=None):
     args = [i for i in args if not _re.fullmatch(r"\s*void\s*", i)]
     a, b, name = parse_parameter(res, typedefs=typedefs)
     res = _choose_ctype(a, b, name)
-    args = [_choose_ctype(*parse_parameter(i, typedefs=typedefs)) for i in args]
-    return name, res, args
+    args_ = []
+    for arg in args:
+        type, pointer, name = parse_parameter(arg, typedefs=typedefs)
+        args_.append([name, _choose_ctype(type, pointer, name)])
+    return name, res, args_
 
 
 def parse_functions(text, typedefs=None, definitions=True, prototypes=False):

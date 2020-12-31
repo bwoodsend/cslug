@@ -15,10 +15,13 @@ from cslug._struct import make_struct
 
 
 class Types(object):
-    def __init__(self, path, *sources, headers=()):
+    def __init__(self, path, *sources, headers=(), pyi_path=None,
+                 pyi_namespace="slug(CSlug):dll(ctypes.CDLL)"):
         self.sources = [misc.as_path_or_buffer(i) for i in sources]
         self.headers = list(map(misc.as_path_or_buffer, misc.flatten(headers)))
         self.json_path = misc.as_path_or_buffer(path)
+        self.pyi_path = pyi_path and misc.as_path_or_buffer(pyi_path)
+        self.pyi_namespace = pyi_namespace
 
     def init_from_source(self):
         self.types = self._types_from_source()
@@ -52,6 +55,8 @@ class Types(object):
     def make(self):
         self.init_from_source()
         self.write(self.json_path)
+        if self.pyi_path:
+            misc.write(self.pyi_path, self.pyi_stubs())
 
     def write(self, path=sys.stdout):
         misc.write(path, json.dumps(self.types, indent="  ", sort_keys=True),
@@ -128,12 +133,41 @@ class Types(object):
             # will almost certainly cause strange incorrect behaviour.
             func.argtypes = [
                 structs.get(i) or getattr(ctypes, i, ctypes.c_int)
-                for i in arg_types
+                for (arg_name, i) in arg_types
             ]
 
         if strict and len(errors):
             raise AttributeError(f"Symbols {errors} not found in {dll}.")
 
+    def pyi_stubs(self):
+        head = ["import ctypes\n", "from cslug import CSlug\n"]
+        lines = []
 
-if __name__ == "__main__":
-    pass
+        def c(type):
+            return _ctype_to_py_type(type) or \
+                   "ctypes." + type if hasattr(ctypes, type) else type
+
+        for (name, (restype, argtypes)) in self.functions.items():
+            lines.append(f"{name} = ctypes.CFUNCTYPE({c(restype)})()\n")
+
+        for (name, parameters) in self.structs.items():
+            lines.append(f"class {name}(ctypes.Structure):\n")
+            if not parameters:
+                lines.append("pass\n")
+            for (_name, type) in parameters:
+                lines.append(f"    {_name}: {c(type)}\n")
+
+        for prefix in filter(None, self.pyi_namespace.split(":")[::-1]):
+            lines = [f"class {prefix}:\n"] + \
+                    (["    " + i for i in lines] or ["    pass\n"])
+
+        return "".join(head + lines)
+
+
+def _ctype_to_py_type(name):
+    if not hasattr(ctypes, name):
+        return
+    c_type = getattr(ctypes, name)().value
+    if c_type is None:
+        return
+    return type(c_type).__name__
