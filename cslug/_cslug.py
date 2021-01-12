@@ -33,7 +33,7 @@ SUFFIX = "-{}-{}bit{}".format(OS, BIT_NESS, SUFFIX)
 
 
 class CSlug(object):
-    def __init__(self, path, *sources, headers=()):
+    def __init__(self, path, *sources, headers=(), links=()):
         path, *sources = misc.flatten(sources, initial=misc.flatten(path))
         path = misc.as_path_or_buffer(path)
         if not isinstance(path, Path):
@@ -46,6 +46,7 @@ class CSlug(object):
             sources = (path,)
         self.sources = [misc.as_path_or_readable_buffer(i) for i in sources]
         self.headers = misc.flatten(headers)
+        self.links = misc.flatten(links)
         for h in self.headers:
             if not isinstance(h, Header):
                 raise TypeError(
@@ -171,8 +172,10 @@ class CSlug(object):
 
         stdin_flags = "-x c -".split() if buffers else []
 
+        link_flags = ["-l" + i for i in self.links]
+
         return ([_cc] + output + flags + warning_flags + true_files +
-                stdin_flags, buffers)
+                stdin_flags + link_flags, buffers)
 
     def _check_printfs(self):
         return any(check_printfs(*misc.read(i)) for i in self.sources)
