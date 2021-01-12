@@ -60,7 +60,7 @@ class CSlug(object):
 
         command, buffers = self.compile_command()
         p = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE,
-                  universal_newlines=True)
+                  encoding="utf-8")
         for buffer in buffers:
             p.stdin.write(misc.read(buffer)[0])
         p.stdin.close()
