@@ -369,3 +369,11 @@ def test_remake():
     # `_slug_refs` should be cleared of dead links on calling `close()`.
     slug.close()
     assert len(_slug_refs[slug.path]) == 1
+
+
+def test_link():
+    # TODO: This isn't much of a test. Try to think of a cross platform library
+    #       to link against. Or a non cross platform library for each OS.
+    self = CSlug(RESOURCES / "basic.c", links="m")
+    assert self.links == ["m"]
+    assert "-lm" in self.compile_command()[0]
