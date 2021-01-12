@@ -30,7 +30,7 @@ OS = platform.system()
 SUFFIX = {"Windows": ".dll", "Linux": ".so", "Darwin": ".dylib"}.get(OS, ".so")
 BIT_NESS = 8 * ctypes.sizeof(ctypes.c_void_p)
 SUFFIX = "-{}-{}bit{}".format(OS, BIT_NESS, SUFFIX)
-
+DEFAULT_LINKS = ["m"] if OS != "Windows" else []
 
 class CSlug(object):
     def __init__(self, path, *sources, headers=(), links=()):
@@ -47,6 +47,9 @@ class CSlug(object):
         self.sources = [misc.as_path_or_readable_buffer(i) for i in sources]
         self.headers = misc.flatten(headers)
         self.links = misc.flatten(links)
+        for link in DEFAULT_LINKS:  # pramga: Linux
+            if link not in self.links:
+                self.links.append(link)
         for h in self.headers:
             if not isinstance(h, Header):
                 raise TypeError(
