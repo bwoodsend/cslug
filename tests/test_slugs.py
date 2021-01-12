@@ -374,6 +374,20 @@ def test_remake():
 def test_link():
     # TODO: This isn't much of a test. Try to think of a cross platform library
     #       to link against. Or a non cross platform library for each OS.
+    self = CSlug(RESOURCES / "basic.c", links="c")
+    if platform.system() == "Linux":
+        assert self.links == ["c", "m"]
+    else:
+        assert self.links == ["c"]
+    assert "-lc" in self.compile_command()[0]
+
+
+def test_default_link():
+    # 'm' should always be linked to on Unix-like platforms.
+    self = CSlug(RESOURCES / "basic.c")
+    if platform.system() != "Windows":
+        assert "-lm" in self.compile_command()[0]
+
+    # A library that is added both explicitly add by default should not be
     self = CSlug(RESOURCES / "basic.c", links="m")
-    assert self.links == ["m"]
-    assert "-lm" in self.compile_command()[0]
+    assert self.compile_command()[0].count("-lm") == 1
