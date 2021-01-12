@@ -74,7 +74,7 @@ class CSlug(object):
 
         if p.returncode:
             if re.search("(?:open output|write).*permission denied", msg,
-                         re.DOTALL | re.IGNORECASE):  # pragma: Windows
+                         re.DOTALL | re.IGNORECASE):  # pragma: no cover
                 raise exceptions.LibraryOpenElsewhereError(self.path)
             raise exceptions.BuildError(command, msg)
 
