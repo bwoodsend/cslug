@@ -48,7 +48,7 @@ stdlib_json = Path(__file__, "..", "..", "cslug", "stdlib.json").resolve()
 stdlib_h = io.StringIO("".join(
     j.prototype + "\n" for i in functions.values() for j in i))
 
-types = Types(stdlib_json, headers=stdlib_h)
+types = Types(stdlib_json, headers=stdlib_h, compact=False)
 types.init_from_json()
 
 functions = {

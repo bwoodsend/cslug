@@ -5,6 +5,7 @@ import io
 import json
 import warnings
 import ctypes
+import re
 
 import pytest
 
@@ -74,12 +75,14 @@ PARSED_FUNCTIONS = {
 
 @pytest.mark.parametrize("modifier",
                          [lambda x: x, lambda x: x.replace("{", "\n{")])
-def test_functions(modifier):
+@pytest.mark.parametrize("compact", range(2))
+def test_functions(modifier, compact):
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore",
                                 category=cslug.exceptions.TypeParseWarning)
 
-        self = cslug.Types(io.StringIO(), io.StringIO(modifier(SOURCE)))
+        self = cslug.Types(io.StringIO(), io.StringIO(modifier(SOURCE)),
+                           compact=compact)
         self.make()
         assert self.functions == PARSED_FUNCTIONS
         assert json.loads(
@@ -87,6 +90,12 @@ def test_functions(modifier):
         from_json = cslug.Types(io.StringIO(self.json_path.getvalue()))
         from_json.init_from_json()
         assert from_json.types == self.types
+
+        json_: str = self.json_path.getvalue()
+        if compact:
+            assert not re.search(r"\s", json_)
+        else:
+            assert json_.endswith("\n") and not json_.endswith("\n\n")
 
 
 @pytest.mark.parametrize(
