@@ -15,10 +15,11 @@ from cslug._struct import make_struct
 
 
 class Types(object):
-    def __init__(self, path, *sources, headers=()):
+    def __init__(self, path, *sources, headers=(), compact=True):
         self.sources = [misc.as_path_or_buffer(i) for i in sources]
         self.headers = list(map(misc.as_path_or_buffer, misc.flatten(headers)))
         self.json_path = misc.as_path_or_buffer(path)
+        self.compact = compact
 
     def init_from_source(self):
         self.types = self._types_from_source()
@@ -54,8 +55,13 @@ class Types(object):
         self.write(self.json_path)
 
     def write(self, path=sys.stdout):
-        misc.write(path, json.dumps(self.types, indent="  ", sort_keys=True),
-                   "\n")
+        if self.compact:
+            # Squeeze out redundant whitespace characters.
+            out = json.dumps(self.types, separators=(",", ":")),
+        else:
+            # Write a git friendly, human readable json.
+            out = json.dumps(self.types, indent="  ", sort_keys=True), "\n"
+        misc.write(path, *out)
 
     # def __getattribute__(self, item):
     #     if item == "types":
