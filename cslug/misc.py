@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 """The miff-muffet-moof module."""
 
-import io
-import sys
-import re
-from pathlib import Path
+import io as _io
+import sys as _sys
+import re as _re
+from pathlib import Path as _Path
 import contextlib as _contextlib
 
 
 def as_path_or_buffer(file):
     """Normalise filenames to :class:`pathlib.Path`, leaving streams untouched.
     """
-    return file if isinstance(file, io.IOBase) else Path(file)
+    return file if isinstance(file, _io.IOBase) else _Path(file)
 
 
 def as_path_or_readable_buffer(file):
@@ -25,15 +25,15 @@ def as_path_or_readable_buffer(file):
     holding large files in memory.
 
     """
-    if isinstance(file, io.IOBase):
+    if isinstance(file, _io.IOBase):
         if hasattr(file, "getvalue"):
             return file
-        return io.StringIO(file.read())
-    return Path(file)
+        return _io.StringIO(file.read())
+    return _Path(file)
 
 
 def _read(path, mode="r"):
-    if isinstance(path, io.IOBase):
+    if isinstance(path, _io.IOBase):
         if hasattr(path, "getvalue"):
             return path.getvalue(), None
         return path.read(), None
@@ -50,7 +50,7 @@ def read(path, mode="r"):
     """
     text, path = _read(path, mode)
     if mode == "r":
-        text = re.sub("\r\n?", "\n", text)
+        text = _re.sub("\r\n?", "\n", text)
     return text, path
 
 
@@ -74,7 +74,7 @@ def write(path, *data, mode="w"):
     closed.
 
     """
-    if isinstance(path, io.IOBase):
+    if isinstance(path, _io.IOBase):
         return path.writelines(data)
     with open(path, mode, encoding="utf-8") as f:
         return f.writelines(data)
@@ -93,12 +93,12 @@ def anchor(*paths):
     this function to make your code working-dir independent.
     """
     paths = map(as_path_or_buffer, paths)
-    file = sys._getframe().f_back.f_globals.get("__file__")
+    file = _sys._getframe().f_back.f_globals.get("__file__")
     if file is None or file[0] == "<":
-        return [Path.cwd() / i for i in paths]
-    parent = Path(file).parent
+        return [_Path.cwd() / i for i in paths]
+    parent = _Path(file).parent
     return [
-        parent / i if isinstance(i, Path) and not i.is_absolute() else i
+        parent / i if isinstance(i, _Path) and not i.is_absolute() else i
         for i in paths
     ]
 
