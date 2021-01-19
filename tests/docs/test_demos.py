@@ -11,7 +11,7 @@ import pytest
 pytestmark = pytest.mark.order(-2)
 
 from cslug import CSlug
-from tests import DEMOS
+from tests import DEMOS, DOCS
 
 
 def _test_demo(demo_path):
@@ -58,3 +58,7 @@ def test_count(count, text, char):
 
 def test_str_reverse():
     _test_demo(DEMOS / "strings" / "reverse.py")
+
+
+def test_arrays():
+    _test_demo(DOCS / "source" / "arrays-and-buffers" / "arrays-demo.py")

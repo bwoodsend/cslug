@@ -5,9 +5,11 @@
 from pathlib import Path
 from uuid import uuid1 as uuid
 
-HERE = Path(__file__).parent
+HERE = Path(__file__).parent.resolve()
 RESOURCES = HERE / "resources"
-DEMOS = HERE / ".." / "docs" / "demos"
+ROOT = HERE.parent
+DOCS = ROOT / "docs"
+DEMOS = DOCS / "demos"
 
 DUMP = HERE / "dump"
 DUMP.mkdir(exist_ok=True)

@@ -73,3 +73,118 @@ As it was when :ref:`writing strings <Writing to strings>`, returning a block of
 memory is disproportionally fiddly and dangerous.
 Instead, create an empty writeable buffer in Python
 (:py:`out = bytearray(length)`), then pass that buffer to C to populate it.
+
+--------------------------------------------------------------------------------
+
+Arrays
+------
+
+Arrays from the :mod:`array` standard library module are almost the same as
+buffers but with one more thing to watch out for:
+
+* The *typecode* of the array passed to a C function must match the type of
+  pointer specified as the argtype of that function.
+
+So for the following C function:
+
+.. literalinclude:: arrays-demo.c
+    :language: C
+    :caption: totals.c
+    :end-at: }
+
+Loaded into Python with:
+
+.. literalinclude::  arrays-demo.py
+    :language: python
+    :start-at: import array
+    :end-at: slug =
+
+The :c:`double sum(double * arr, int len_arr)` function expects a to receive a
+:c:`double *` (AKA an array of doubles) so we must give it one.
+Types in :mod:`array` are specified with *typecodes*.
+Looking at `array's table of type codes`_, :py:`'d'` is the type code for
+doubles.
+
+    >>> arr = array.array("d", [10, 11, 12])
+    >>> slug.dll.sum(ptr(arr), len(arr))
+    33.0
+
+The safety nets of :mod:`ctypes` and |cslug| both fall short on array item
+types.
+There is no type checking. If you get it wrong, you just get bogus results,
+
+    >>> arr = array.array("f", [10, 11, 12])
+    >>> slug.dll.sum(ptr(arr), len(arr))
+    1048576.2543945312  # 10 + 11 + 12 is not this!
+
+It's therefore best to put your own check/conversion in.
+
+.. literalinclude:: arrays-demo.py
+    :start-at: def sum_
+    :end-at: return
+
+Now you can give it more or less anything (although it'll be much faster if you
+give it the correct type)::
+
+    >>> sum_(range(10))
+    45.0
+
+
+Benchmarks
+..........
+
+With the correct types this C version of ``sum()`` is 16 times faster than the
+builtin :func:`sum`.
+
+    >>> from sloth.simple import time_callable  # Use `pip install sloth-speedtest`.
+    >>> arr = array.array("d", range(100000))
+    >>> time_callable(sum, 100, arr) / time_callable(sum_, 100, arr)
+    16.31841284669072
+
+But with the wrong types it's 4-5 times slower.
+
+    >>> arr = range(100000)
+    >>> time_callable(sum, 100, arr) / time_callable(sum_, 100, arr)
+    0.22091244446076183
+
+In short, to get the most out of C, you need to pick a type and stick to it. If
+you want to duck-type, use Python.
+
+
+Exact types
+...........
+
+You may also notice that `array's table of type codes`_ lacks the exact type
+from :c:`#include <stdint.h>`.
+Use the :func:`cslug.misc.array_typecode()` helper function to get them.
+e.g. If your C function has an argument of type :c:`uint16_t *` then use::
+
+    >>> from cslug.misc import array_typecode
+    >>> arr = array.array(array_typecode("uint16_t"), arr)
+    >>> arr
+    array('H', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    >>> arr.itemsize
+    2
+
+
+Writing an array
+................
+
+Write an array by populating an empty one.
+For example this uninspiring C function takes an input array which it reads from
+and an output array where it writes what you'd typically return in Python.
+
+.. literalinclude:: arrays-demo.c
+    :language: C
+    :start-at: #include
+    :end-before: // ---
+
+The above may be wrapped with something like the following.
+
+.. literalinclude:: arrays-demo.py
+    :start-at: from cslug.misc import array_typecode
+    :end-at: return
+
+
+.. _`Buffer Protocol`: https://docs.python.org/3/c-api/buffer.html
+.. _`array's table of type codes`: https://docs.python.org/3.8/library/array.html#module-array
