@@ -6,6 +6,8 @@ import sys as _sys
 import re as _re
 from pathlib import Path as _Path
 import contextlib as _contextlib
+import functools as _funtiontools
+import ctypes as _ctypes
 
 
 def as_path_or_buffer(file):
@@ -193,3 +195,88 @@ def block_compile():
             del os.environ["CC"]
         else:
             os.environ["CC"] = old
+
+
+def array_typecode(c_name):
+    """Choose a type code for :class:`array.array`.
+
+    Args:
+        c_name (str): The name you would use in C to define the type.
+
+    Returns:
+        str: Any of :data:`array.typecodes`.
+
+    Use this function to normalise aliases and platform specific exact types.
+
+    Examples:
+        >>> array_typecode("long")
+        'l'
+        >>> array_typecode("double")
+        'd'
+        >>> array_typecode("uint64_t")
+        'Q'
+        >>> array_typecode("size_t")
+        'Q'
+
+    """
+    out = _array_typecode(c_name)
+    if out is None:
+        raise ValueError(f"Unrecognised or unsupported type '{c_name}'.")
+    return out
+
+
+@_funtiontools.lru_cache()
+def _array_typecode(c_name: str):
+    """The workhorse behind :func:`array_typecode`.
+
+    The only difference is that this function returns None rather than raising
+    an error if it can't find a typecode. Splitting into two allows this
+    function to call itself with normalised inputs without having to remember
+    the original value of **c_name** to include in any error messages.
+    """
+    import ctypes
+    if c_name.startswith("unsigned "):
+        # Unsigned typecodes are the same as their signed types but upper-cased.
+        return _array_typecode(c_name[9:]).upper()
+
+    # XXX: Can be replaced with str.removeprefix() in Python 3.9
+    # Remove `signed ` prefix.
+    c_name = _re.fullmatch(r"(?:signed )?(.*)", c_name).group(1)
+    # Remove `c_` prefix and `_t` suffix.
+    c_name = _re.fullmatch(r"(?:c_)?(.+?)(?:_t)?", c_name).group(1)
+    # Ignore the word ` int` if there are other words in front of it.
+    c_name = _re.fullmatch(r"(.+?)(?: int)?", c_name).group(1)
+    # Collapse any spaces.
+    c_name = c_name.replace(" ", "")
+
+    if c_name in _ARRAY_TYPECODES:
+        return _ARRAY_TYPECODES[c_name]
+
+    # ctypes has already normalised exact types to the more standard types.
+    # e.g. `ctypes.c_int16` is just an alias for `ctypes.c_short` so
+    # `ctypes.c_int16.__name__` will give `c_short`.
+    ctypes_name = "c_" + c_name
+    if hasattr(ctypes, ctypes_name):
+        c_name = getattr(ctypes, ctypes_name).__name__
+        c_name = c_name[2:]
+
+    if c_name in _ARRAY_TYPECODES:
+        return _ARRAY_TYPECODES[c_name]
+
+    if c_name.startswith("u") and c_name[1:] in _ARRAY_TYPECODES:
+        return _ARRAY_TYPECODES[c_name[1:]].upper()
+
+
+_ARRAY_TYPECODES = {
+    "char": "b",
+    "short": "h",
+    "int": "i",
+    "long": "l",
+    "longlong": "q",
+    "float": "f",
+    "double": "d",
+    "byte": "b",
+}
+
+_ARRAY_TYPECODES["ssize"] = array_typecode(_ctypes.c_ssize_t.__name__)
+_ARRAY_TYPECODES["size"] = _ARRAY_TYPECODES["ssize"].upper()
