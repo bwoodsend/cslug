@@ -8,11 +8,11 @@
     quickstart
     types
     strings-and-bytes
-    arrays-and-buffers
     headers
     oop-structs
     globals
     error-handling
+    arrays-and-buffers/arrays-and-buffers
     stdlib
     packaging
     cpp
