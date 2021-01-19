@@ -27,6 +27,9 @@ Module contents
 
 .. autofunction:: nc_ptr
 
+.. autoclass:: PointerType
+    :show-inheritance:
+
 .. autofunction:: cc
 
 .. autofunction:: cc_version

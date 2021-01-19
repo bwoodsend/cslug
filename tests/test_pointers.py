@@ -5,6 +5,7 @@
 import os
 import sys
 import array
+import weakref
 
 import pytest
 
@@ -91,3 +92,28 @@ def test_leaks():
 def test_ptr_leaks():
     leaks(lambda: ptr(bytes(MEM_BLOCK_SIZE)), MEM_LEAK_TOL)
     leaks(lambda: nc_ptr(bytes(MEM_BLOCK_SIZE)), MEM_LEAK_TOL)
+
+
+def test_repr():
+    p = ptr(b"")
+    assert repr(int(p)) in repr(p)
+    assert repr(int(p)) != repr(p)
+
+
+def test_inc_reffing():
+    buffer = array.array("i", range(100))
+    old = sys.getrefcount(buffer)
+
+    p = ptr(buffer)
+    assert sys.getrefcount(buffer) == old + 1
+    del p
+    assert sys.getrefcount(buffer) == old
+
+    buffer_ = weakref.ref(buffer)
+    assert sys.getrefcount(buffer) == old
+    p = ptr(buffer)
+    assert sys.getrefcount(buffer) == old + 1
+    del buffer
+    assert buffer_() is not None
+    del p
+    assert buffer_() is None
