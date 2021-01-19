@@ -6,11 +6,14 @@ import os, sys
 from pathlib import Path
 import random
 import io
+from array import array
+import ctypes
 
 import pytest
 
 import cslug
-from cslug.misc import read, as_path_or_readable_buffer, block_compile
+from cslug.misc import read, as_path_or_readable_buffer, block_compile, \
+    array_typecode
 
 from tests import RESOURCES
 
@@ -120,3 +123,44 @@ def test_block_compile():
         os.environ["CC"] = old
 
     assert os.environ.get("CC") == old
+
+
+def test_array_typecodes():
+    # Basic types from
+    # https://docs.python.org/3.8/library/array.html#module-array
+    assert array_typecode("int") == "i"
+    assert array_typecode("signed int") == "i"
+    assert array_typecode("unsigned int") == "I"
+    assert array_typecode("uint") == "I"
+    assert array_typecode("int_t") == "i"
+    assert array_typecode("c_int") == "i"
+    assert array_typecode("short") == "h"
+    assert array_typecode("long") == "l"
+    assert array_typecode("unsigned long long") == "Q"
+    assert array_typecode("byte") == "b"
+    assert array_typecode("char") == "b"
+    assert array_typecode("signed char") == "b"
+    assert array_typecode("unsigned char") == "B"
+    assert array_typecode("uchar") == "B"
+    assert array_typecode("float") == "f"
+    assert array_typecode("double") == "d"
+
+    # Platform specific aliases that cslug has used ctypes to follow.
+    _test_exact_type("int8", 1)
+    _test_exact_type("uint8", 1, signed=False)
+    _test_exact_type("int16", 2)
+    _test_exact_type("int32_t", 4)
+    _test_exact_type("int64", 8)
+    _test_exact_type("size", ctypes.sizeof(ctypes.c_size_t), signed=False)
+    _test_exact_type("ssize", ctypes.sizeof(ctypes.c_size_t))
+
+    with pytest.raises(ValueError, match="'int33'"):
+        array_typecode("int33")
+    with pytest.raises(ValueError):
+        array_typecode("signed bagel")
+
+
+def _test_exact_type(name, size, signed=True):
+    code = array_typecode(name)
+    assert array(code).itemsize == size
+    assert code.islower() is signed

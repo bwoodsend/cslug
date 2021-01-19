@@ -6,6 +6,8 @@ import sys as _sys
 import re as _re
 from pathlib import Path as _Path
 import contextlib as _contextlib
+import functools as _funtiontools
+import ctypes as _ctypes
 
 
 def as_path_or_buffer(file):
@@ -193,3 +195,75 @@ def block_compile():
             del os.environ["CC"]
         else:
             os.environ["CC"] = old
+
+
+def array_typecode(c_name):
+    """Choose a type code for :class:`array.array`.
+
+    Args:
+        c_name (str): The name you would use in C to define the type.
+
+    Returns:
+        str: Any of :attr:`array.typecodes`.
+
+    Use this function to normalise aliases and platform specific exact types.
+
+    Examples:
+        >>> array_typecode("long")
+        'l'
+        >>> array_typecode("double")
+        'd'
+        >>> array_typecode("uint64_t")
+        'Q'
+        >>> array_typecode("size_t")
+        'Q'
+
+    """
+    out = _array_typecode(c_name)
+    if out is None:
+        raise ValueError(f"Unrecognised or unsupported type '{c_name}'.")
+    return out
+
+
+@_funtiontools.lru_cache()
+def _array_typecode(c_name: str):
+    import ctypes
+    if c_name.startswith("unsigned "):
+        return _array_typecode(c_name[9:]).upper()
+
+    # XXX: Can be replaced with str.removeprefix() in Python 3.9
+    if c_name.startswith("signed "):
+        c_name = c_name[7:]
+    if c_name.endswith("_t"):
+        c_name = c_name[:-2]
+    if c_name.startswith("c_"):
+        c_name = c_name[2:]
+
+    if c_name in _ARRAY_TYPECODES:
+        return _ARRAY_TYPECODES[c_name]
+
+    ctypes_name = "c_" + c_name
+    if hasattr(ctypes, ctypes_name):
+        c_name = getattr(ctypes, ctypes_name).__name__
+        c_name = c_name[2:]
+
+    if c_name in _ARRAY_TYPECODES:
+        return _ARRAY_TYPECODES[c_name]
+
+    if c_name.startswith("u") and c_name[1:] in _ARRAY_TYPECODES:
+        return _ARRAY_TYPECODES[c_name[1:]].upper()
+
+
+_ARRAY_TYPECODES = {
+    "char": "b",
+    "short": "h",
+    "int": "i",
+    "long": "l",
+    "long long": "q",
+    "float": "f",
+    "double": "d",
+    "byte": "b",
+}
+
+_ARRAY_TYPECODES["ssize"] = array_typecode(_ctypes.c_ssize_t.__name__)
+_ARRAY_TYPECODES["size"] = _ARRAY_TYPECODES["ssize"].upper()
