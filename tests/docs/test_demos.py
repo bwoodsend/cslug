@@ -62,3 +62,4 @@ def test_str_reverse():
 
 def test_arrays():
     _test_demo(DOCS / "source" / "arrays-and-buffers" / "arrays-demo.py")
+    _test_demo(DOCS / "source" / "arrays-and-buffers" / "flatten.py")

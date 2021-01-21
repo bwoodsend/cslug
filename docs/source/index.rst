@@ -13,6 +13,7 @@
     globals
     error-handling
     arrays-and-buffers/arrays-and-buffers
+    arrays-and-buffers/numpy
     stdlib
     packaging
     cpp

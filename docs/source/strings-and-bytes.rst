@@ -12,8 +12,8 @@ There are two ways to work with text.
 2. Treat your text as an array, passing raw |pointers| to C. This is harder
    but much more efficient.
 
-This page focuses on option :math:`1`. For option :math:`2` see :ref:`Buffers,
-Arrays and NumPy Arrays`.
+This page focuses on option :math:`1`. For option :math:`2` see :ref:`Buffers
+and Arrays`.
 
 
 Reading strings
