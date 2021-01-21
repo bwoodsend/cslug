@@ -19,3 +19,16 @@ void cumsum(int32_t * in, int32_t * out, int len) {
 }
 
 // ---
+// vectorization
+
+#include <stddef.h>
+
+void add_1(int * in, int * out, size_t len) {
+  /* Add 1 to every element in the 1D array `in`.
+     Write to the 1D array `out`. */
+  for (size_t i = 0; i < len; i++) {
+    out[i] = in[i] + 1;
+  }
+}
+
+// ---

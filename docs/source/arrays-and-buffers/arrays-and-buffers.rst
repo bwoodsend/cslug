@@ -1,6 +1,6 @@
-================================
-Buffers, Arrays and NumPy Arrays
-================================
+==================
+Buffers and Arrays
+==================
 
 There exists a lesser known family of objects within the more C-ish corners of
 Python known as the *bytes-like* objects.
@@ -90,6 +90,7 @@ So for the following C function:
 .. literalinclude:: arrays-demo.c
     :language: C
     :caption: totals.c
+    :name: totals.c
     :end-at: }
 
 Loaded into Python with:
@@ -176,6 +177,7 @@ and an output array where it writes what you'd typically return in Python.
 
 .. literalinclude:: arrays-demo.c
     :language: C
+    :name: cumsum
     :start-at: #include
     :end-before: // ---
 
