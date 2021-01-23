@@ -96,6 +96,9 @@ class Types(object):
             them in there for simplicity.
 
         """
+        dll.__dict__.update(self._merge_apply(dll, strict=strict))
+
+    def _merge_apply(self, *dlls, strict=False):
         structs = {}
         if strict:
             errors = []
@@ -105,11 +108,14 @@ class Types(object):
                       for (name, type, *bits) in params]
             structs[name] = make_struct(name, fields)
 
-        dll.__dict__.update(structs)
+        namespace = {}
 
         for (name, (return_type, arg_types)) in self.functions.items():
-            func = getattr(dll, name, None)
-            if func is None:
+            for dll in dlls:
+                func = getattr(dll, name, None)
+                if func is not None:
+                    break
+            else:
                 # A function may be missing if any of:
                 #
                 #   - The function was declared `inline`.
@@ -137,8 +143,14 @@ class Types(object):
                 for i in arg_types
             ]
 
+            namespace[name] = func
+
         if strict and len(errors):
+            dll = " ".join(map(repr, dlls))
             raise AttributeError(f"Symbols {errors} not found in {dll}.")
+
+        namespace.update(structs)
+        return namespace
 
 
 if __name__ == "__main__":
