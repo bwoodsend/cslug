@@ -63,6 +63,8 @@ elif OS == "FreeBSD":  # pragma: FreeBSD
     # only way to open it. The name must include the .so.7 suffix.
     stdlib = ctypes.CDLL("libc.so.7")
     dlclose = stdlib.close
+    # Maths functions are in a separate library.
+    extra_libs.append(ctypes.CDLL("libm.so.5"))
 
 else:  # pragma: no cover
     # Default to do nothing.
