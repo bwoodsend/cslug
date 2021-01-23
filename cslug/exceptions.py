@@ -31,6 +31,10 @@ class NoGccError(Exception):
                 # msys2 doesn't have sudo.
                 cmd = "sudo " + cmd
 
+        elif shutil.which("apt"):
+            # Ubuntu Linux.
+            cmd = "sudo apt install gcc"
+
         else:
             # Windows, most Linux distributions and unknown OSs.
             cmd = None
