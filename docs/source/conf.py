@@ -101,6 +101,8 @@ rst_prolog = """
    :language: python
    :class: highlight
 
+.. role:: strikethrough
+
 """
 
 import runpy
