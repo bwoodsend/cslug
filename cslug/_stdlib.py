@@ -13,6 +13,8 @@ def null_free_dll(*spam):  # pragma: no cover
     pass
 
 
+extra_libs = []
+
 if OS == "Windows":  # pragma: Windows
     _dlclose = ctypes.windll.kernel32.FreeLibrary
     dlclose = lambda handle: 0 if _dlclose(handle) else 1
