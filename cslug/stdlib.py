@@ -39,16 +39,14 @@ def _init():
     import io
     from pathlib import Path
     from cslug import __loader__, Types
-    from cslug._stdlib import stdlib
+    from cslug._stdlib import stdlib, extra_libs
     json = Path(__file__).with_suffix(".json")
 
     _std_types = Types(io.StringIO(__loader__.get_data(str(json)).decode()))
     _std_types.init_from_json()
 
-    _std_types.apply(stdlib)
+    globals().update(_std_types._merge_apply(stdlib, *extra_libs))
     __all__ = list(_std_types.functions)
-    for name in __all__:
-        globals()[name] = getattr(stdlib, name)
 
     return _std_types, __all__
 
