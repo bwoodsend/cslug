@@ -22,7 +22,7 @@ class NoGccError(Exception):
 
         elif platform.system() == "FreeBSD":
             # FreeBSD.
-            cmd = "su pkg install gcc"
+            cmd = "pkg install gcc"
 
         elif shutil.which("pacman"):
             # Some Linux distros (Manjaro) and msys2.
