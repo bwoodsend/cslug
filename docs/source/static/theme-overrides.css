@@ -35,6 +35,23 @@ a {
 /* Inline literals. */
 .rst-content code.literal, .rst-content tt.literal {
   color: #034040;
+  background: #0000;
+  border: #0000;
+  border-bottom: solid 1px #0001;
+  padding: 2px 2px;
+}
+/* Inline literals in tables. */
+.rst-content table.docutils .code.literal {
+  /* Keep the fonts but lose the border box. Enable word wrapping. */
+  border-bottom: #0000;
+  white-space: normal;
+}
+/* Inline literals in admonitions. */
+.rst-content .admonition .code.literal, .rst-content .admonition code {
+  /* These blend into the background too much. Make them more prominent. */
+  background: #FCFCFCA0;
+  border-bottom: none;
+  padding: 2px 5px;
 }
 
 /* Use different color code-blocks for C and Python. */
