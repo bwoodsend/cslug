@@ -148,7 +148,7 @@ length. This approach will work for any array type as well as strings:
     :start-at: # Extract
     :end-at: contains_null =
 
-This gives us a subscriptable :class:`ctypes.Array` object. Not only can we see
+This gives us a scriptable :class:`ctypes.Array` object. Not only can we see
 past the NULL character in the middle but we can see that this string is also
 |null terminated|::
 

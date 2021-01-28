@@ -18,7 +18,7 @@ SOURCE = RESOURCES / "unicode.c"
 
 
 def delayed_skip_if_unsupported():
-    """Skip unicode tests if the compiler is knonw not to support them.
+    """Skip unicode tests if the compiler is known not to support them.
 
     This is intentionally not a ``pytest.mark.skipif()`` to avoid evaluating
     this on test collection.
