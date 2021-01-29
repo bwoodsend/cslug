@@ -12,8 +12,7 @@ import platform
 import collections
 import weakref
 
-from cslug._types_file import Types
-from cslug import misc, exceptions, c_parse
+from cslug import misc, exceptions, c_parse, Types
 from cslug._headers import Header
 from cslug._cc import cc, cc_version
 from cslug._stdlib import dlclose
@@ -56,7 +55,7 @@ class CSlug(object):
                 raise TypeError(
                     "The `headers` argument must be of `cslug.Header()` type, "
                     "not {}.".format(type(h)))
-        self.types_dict = Types(path.with_suffix(".json"), *self.sources)
+        self.types_map = Types(path.with_suffix(".json"), *self.sources)
         self._dll = None
 
     def compile(self):
@@ -122,7 +121,7 @@ class CSlug(object):
         for header in self.headers:
             header.make()
         ok = self.compile()
-        self.types_dict.make()
+        self.types_map.make()
         self._check_printfs()
         return ok
 
