@@ -4,10 +4,13 @@
 :mod:`cslug.exceptions`
 =======================
 
+All custom exception and warning classes are defined and accessible here.
+
 """
 
 
 class NoGccError(Exception):
+    """|gcc| is not in ``PATH`` and the ``CC`` environment variable is unset."""
     def __str__(self):  # pragma: no cover
         """Provide some explanation on how to install gcc.
 
@@ -68,6 +71,7 @@ class NoGccError(Exception):
 
 
 class CCNotFoundError(Exception):
+    """The ``CC`` environment variable is set but could not be found."""
     def __str__(self):
         from os.path import dirname
         path, = self.args
@@ -80,16 +84,19 @@ class CCNotFoundError(Exception):
 
 
 class BuildError(Exception):
+    """Compiler raised an error during a compile."""
     def __str__(self):
         return "The build command:\n\n%s\n\nFailed with:\n\n%s\n" % self.args
 
 
 class BuildBlockedError(Exception):
+    """The ``CC`` environment variable is set to ``!block``. (For testing.)"""
     def __str__(self):
         return "The build was blocked by the environment variable `CC=!block`."
 
 
 class LibraryOpenElsewhereError(BuildError):
+    """Writing to a DLL raised a misleading permission error."""
     def __str__(self):
         path, = self.args
         return f"Writing to {path} failed because it is open in another " \
@@ -98,12 +105,17 @@ class LibraryOpenElsewhereError(BuildError):
 
 
 class BuildWarning(Warning):
+    """Compiler issued a build warning."""
     pass
 
 
 class PrintfWarning(Warning):
+    """C source code contains I/O functions which write to true stdout. These
+    are not generally redirectable and will therefore be invisible if run from
+    an IDE rather than a terminal."""
     pass
 
 
 class TypeParseWarning(Warning):
+    """An argument or return type was not recognised."""
     pass
