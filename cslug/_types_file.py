@@ -8,6 +8,7 @@ from pathlib import Path
 import json
 import ctypes
 import itertools
+from typing import Union, Dict, List
 
 from cslug.c_parse import parse_functions, parse_structs
 from cslug import misc
@@ -15,20 +16,64 @@ from cslug._struct import make_struct
 
 
 class Types(object):
+    """Manages type information which is not found in a |shared library|.
+
+    * Scans source code for:
+
+      - The name, argument and return types of each function.
+      - The name, field names, types and bit-field sizes of structures.
+
+    * Stores the above in a portable and quickly deserializable json file.
+    * Sets the types for the contents of a :class:`ctypes.CDLL`.
+
+    """
     def __init__(self, path, *sources, headers=(), compact=True):
+        """
+
+        Args:
+            path (str, os.PathLike, io.TextIOBase):
+                A filename to read or write serialised type information to.
+            *sources (str, os.PathLike, io.TextIOBase):
+                C sources to extract function definitions from.
+            headers (str, os.PathLike, io.TextIOBase, list):
+                C sources to extract function prototypes from.
+            compact (bool):
+                If true, serialise minimising file size. Otherwise, pretty
+                format for human readability.
+
+        Note the distinction between **sources** and **headers**.
+        A function prototype such as :c:`int foo();` will be ignored if
+        found in **sources** but included if it were in **headers**.
+        A true function definition such as :c:`int foo() {}`, as well as
+        structure definitions would be collected in either case.
+
+        """
         self.sources = [misc.as_path_or_buffer(i) for i in sources]
         self.headers = list(map(misc.as_path_or_buffer, misc.flatten(headers)))
         self.json_path = misc.as_path_or_buffer(path)
         self.compact = compact
 
+    types: dict
+    """All type information collected. This is broken out into :attr:`functions`
+    and :attr:`structs`.
+
+    Note that this attribute is not set automatically. You must explicitly call
+    either :meth:`init_from_source` or :meth:`init_from_json` before accessing.
+    """
+
+    json_path: Union[io.TextIOBase, Path]
+    """File to read or write the json."""
+
     def init_from_source(self):
+        """Initialise :attr:`types` by scanning source code."""
         self.types = self._types_from_source()
 
     def init_from_json(self):
+        """Initialise :attr:`types` by  source code."""
         self.types = self._types_from_json()
 
     def _types_from_source(self):
-        """
+        """Read and parse all source files.
 
         :rtype: dict
         """
@@ -51,10 +96,19 @@ class Types(object):
         return json.loads(misc.read(self.json_path)[0])
 
     def make(self):
+        """Initialise from source then write to file."""
         self.init_from_source()
         self.write(self.json_path)
 
     def write(self, path=sys.stdout):
+        """Serialise contents to **path**.
+
+        Args:
+            path:
+                A filename or stream to write to. Defaults to
+                :data:`sys.stdout`.
+
+        """
         if self.compact:
             # Squeeze out redundant whitespace characters.
             out = json.dumps(self.types, separators=(",", ":")),
@@ -69,11 +123,32 @@ class Types(object):
     #     return super().__getattribute__(item)
 
     @property
-    def functions(self):
+    def functions(self) -> dict:
+        """All functions (from true definitions of prototypes).
+
+        The format is::
+
+            function_name: [return_type, [arg_type, arg_type, ...]]
+
+        All types are strings - either names of structures or attribute names of
+        :mod:`ctypes`.
+
+        """
         return self.types["functions"]
 
     @property
-    def structs(self):
+    def structs(self) -> dict:
+        """All structures defined using :c:`typedef struct {...} name`.
+
+        The format is::
+
+            name: [(field_name, field_type), ...]
+
+        Or for bit-field structs::
+
+            name: [(field_name, field_type, bit_length), ...]
+
+        """
         return self.types["structs"]
 
     def apply(self, dll, strict=False):
