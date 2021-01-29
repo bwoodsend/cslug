@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
-"""The miff-muffet-moof module."""
+"""
+=================
+:mod:`cslug.misc`
+=================
+
+The miff-muffet-moof module.
+
+"""
 
 import io as _io
 import sys as _sys

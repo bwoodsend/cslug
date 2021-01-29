@@ -1,4 +1,5 @@
-cslug.building module
+=====================
+:mod:`cslug.building`
 =====================
 
 .. automodule:: cslug.building
