@@ -10,18 +10,12 @@ Module contents
     :noindex:
 
 .. autoclass:: CSlug
-    :members:
-    :undoc-members:
 
 .. autofunction:: anchor
 
 .. autoclass:: Header
-    :members:
-    :undoc-members:
 
 .. autoclass:: Types
-    :members:
-    :undoc-members:
 
 .. autofunction:: ptr
 

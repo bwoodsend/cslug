@@ -195,3 +195,10 @@ intersphinx_mapping = {
     'numpy': ('https://numpy.org/doc/stable/', None),
     'setuptools': ('https://setuptools.readthedocs.io/en/latest/', None),
 }
+
+# Autodoc defaults.
+autodoc_default_options = {
+    'members': True,
+    'special-members': '__init__',
+    'undoc-members': True,
+}
