@@ -18,7 +18,7 @@ def _test():
     You shouldn't need this in your code but if you have it, it should pass.
     """
     assert deep_thought.path.exists()
-    assert deep_thought.types_dict.json_path.exists()
+    assert deep_thought.types_map.json_path.exists()
     assert not deep_thought.sources[0].exists()
     assert ultimate_answer() == 42
     print("ok")

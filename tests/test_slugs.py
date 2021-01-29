@@ -32,10 +32,10 @@ def test_basic(true_file):
     self = CSlug(*anchor(name(), file)) # yapf: disable
 
     assert not self.path.exists()
-    assert not self.types_dict.json_path.exists()
+    assert not self.types_map.json_path.exists()
     self.dll
     assert self.path.exists()
-    assert self.types_dict.json_path.exists()
+    assert self.types_map.json_path.exists()
 
     assert hasattr(self.dll, "add_1")
     assert hasattr(self.dll, "times_2")
@@ -178,8 +178,8 @@ def test_names_not_in_dll():
     self.dll
 
     # Check cslug found them.
-    assert "add_1" in self.types_dict.functions
-    assert "times_2" in self.types_dict.functions
+    assert "add_1" in self.types_map.functions
+    assert "times_2" in self.types_map.functions
 
     # But they are not in the DLL.
 

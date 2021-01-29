@@ -35,12 +35,12 @@ def test_make():
     from cslug.building import make
 
     assert not Nested.NameSpace.slug.path.exists()
-    assert not Nested.NameSpace.slug.types_dict.json_path.exists()
+    assert not Nested.NameSpace.slug.types_map.json_path.exists()
 
     make("tests.test_building:Nested.NameSpace.slug")
 
     assert Nested.NameSpace.slug.path.exists()
-    assert Nested.NameSpace.slug.types_dict.json_path.exists()
+    assert Nested.NameSpace.slug.types_map.json_path.exists()
 
     with pytest.raises(CalledMake):
         make("tests.test_building:Nested.NameSpace")
