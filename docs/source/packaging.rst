@@ -275,13 +275,7 @@ in its filename.
     wheel_ isn't installed then just ``pip install wheel``.
 
 PyPA are pushing (albeit half-heartedly) away from direct ``python setup.py
-command`` usage. To conform to this instead use
-
-.. code-block:: shell
-
-    pip wheel .
-
-to build wheels.
+command`` usage. To conform to this instead use ``pip wheel .`` to build wheels.
 
 The above is slightly different in that it builds wheels for all your
 dependencies too and places them in your current working directory rather than a

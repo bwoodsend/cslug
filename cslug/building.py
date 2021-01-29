@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 r"""
-Tools for integrating with :std:doc:`setuptools`.
+Tools for integrating with :std:doc:`setuptools <setuptools>`.
 
-Integration with :std:doc:`setuptools` is a somewhat messy affair. By putting a
+Integration with ``setuptools`` is a somewhat messy affair. By putting a
 :class:`cslug.CSlug` in a package, we now have to coerce our package setup to do
 the following 5 things:
 
