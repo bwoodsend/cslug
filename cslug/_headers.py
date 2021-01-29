@@ -76,3 +76,10 @@ class Header(object):
 
     def make(self):
         self.write(self.path)
+
+
+def _include_local_or_system(x):
+    """Wrap **x** in quotes if it is not wrapped in angle brackets."""
+    if re.fullmatch("<.*>", x):
+        return x
+    return '"' + x.strip('"') + '"'

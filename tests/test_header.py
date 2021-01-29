@@ -65,3 +65,12 @@ def test_implicit_name_no_includes_sourceless():
     assert self.sources == [RESOURCES / "non-existent.c"]
     assert self.path == RESOURCES / "non-existent.h"
     assert not self.path.exists()
+
+
+def test_include_local_or_system():
+    from cslug._headers import _include_local_or_system
+    assert _include_local_or_system('x') == '"x"'
+    assert _include_local_or_system('"x"') == '"x"'
+    assert _include_local_or_system('"x"""') == '"x"'
+    assert _include_local_or_system('x"') == '"x"'
+    assert _include_local_or_system('<x>') == '<x>'

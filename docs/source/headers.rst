@@ -144,11 +144,11 @@ Add :c:`#include`\s to generated headers
 
 If you use types which are defined in other header files such as :c:`wchar_t`
 then you need to :c:`#include` those headers to the generated header. For local
-headers wrap the name in double quotes::
+headers use::
 
-    Header(..., includes='"some-header.h"')
+    Header(..., includes='some-header.h')
 
-or for system-wide ones libraries use angle-brackets::
+or for system-wide ones libraries enclose with angle brackets::
 
     Header(..., includes='<stddef.h>')
 
