@@ -24,13 +24,76 @@ comparison of the various methods can be found `here
 <https://intermediate-and-advanced-software-carpentry.readthedocs.io/en/latest/c++-wrapping.html>`_.
 **cslug** aims to be the simplest although it certainly isn't the most flexible.
 
+Using ctypes driven wrapping has both advantages and disadvantages over Python
+extension modules and tools that write them (such as Cython_).
+
+
+Advantages
+..........
+
+* C code can be just plain high school level C.
+  Even a hello world extension module is some 40 lines of incomprehensible
+  macros.
+  This does not apply to Cython.
+* Binaries are not linked against Python and are therefore not tied to a
+  specific Python version.
+  A Python extension module needs to be recompiled for every minor version of
+  Python (3.6, 3.7, 3.8, 3.9) and for every platform (Windows, macOS, Linux)
+  whereas a **cslug** binary need only be compiled for every platform.
+* You can use virtually any C compiler.
+  Python extension modules must be built with clang_ on macOS and MSVC on
+  Windows.
+
+
+Disadvantages
+.............
+
+* The wrapping Python code is less automated. A Python extension module looks
+  and feels like a native Python module out the box whereas a small wrapper
+  function is generally required for ctypes.
+* You can't use native Python types such as ``list`` or ``dict`` within C code.
+  However, using such types will generally reduce performance down to near pure
+  Python levels anyway.
+
+
+Shared Caveats
+..............
+
+Before you commit yourself to any non Pure-Python you should bear in mind:
+
+* You should ship wheels for every platform you wish to support.
+  Otherwise, users of your code will have to install a C compiler to run it.
+  This means that you either need access to all platforms, or you will have to
+  setup Continuous Integration to build you package on a cloud server.
+* Linux wheels must be built on a manylinux Docker image in order to be
+  compatible with all distributions of Linux.
+* Unless your users have the relevant security thrice disabled, uninstalled,
+  blocked and scraped off the hard drive,
+  recent macOS will block or delete any binary file you produce
+  unless you throw them some money and get it code-signed.
+
+
+Supported Compilers
+-------------------
+
+======== ===== ======= ===== ======= ============
+Compiler Linux Windows macOS FreeBSD Cygwin/msys2
+======== ===== ======= ===== ======= ============
+gcc_     ✓     ✓       ✓     ✓       ✓
+clang_   ✓     ✗       ✓     ✓       ✗
+MSVC     ✗     ✗       ✗     ✗       ✗
+TinyCC_  ✓     ✓       ✗     ✗       ✗
+======== ===== ======= ===== ======= ============
+
 
 Installation
 ------------
 
-**cslug** requires gcc_ to compile C code. If you're on Linux you probably
-already have it but if you are on another OS then you should get it with
-mingw_. To check you have it run the following in terminal::
+**cslug** requires a C compiler to compile C code.
+Its favourite compiler is gcc_.
+If you're on Linux you probably already have it.
+If you are on another OS then you should get it with mingw_.
+To check you have it run the following in terminal::
 
     gcc -v
 
@@ -39,6 +102,10 @@ mingw_. To check you have it run the following in terminal::
     gcc_ is a build time dependency only. If you provide wheels for a package
     that contain binaries built with **cslug**, then your users will not need a
     compiler; only if they try to build your package from source.
+
+To use any other supported compiler, **cslug** respects the ``CC`` environment
+variable.
+Set it to the name or full path of your alternative compiler.
 
 To install **cslug** itself use the usual::
 
@@ -67,3 +134,7 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 .. _ctypes: https://docs.python.org/3.9/library/ctypes.html
 .. _mingw: http://mingw-w64.org/doku.php/download
 .. _gcc: https://gcc.gnu.org/
+.. _TinyCC: https://bellard.org/tcc/
+.. _clang: https://clang.llvm.org/
+.. _`pcc`: http://pcc.ludd.ltu.se/
+.. _`Cython`: https://cython.readthedocs.io/en/latest/index.html
