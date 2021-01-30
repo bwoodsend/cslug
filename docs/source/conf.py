@@ -107,6 +107,7 @@ rst_prolog = """
 
 import runpy
 
+sys.path.insert(0, "../..")
 stdlib = runpy.run_path("../../stdlib/docs.py")["epilog"]
 
 if os.path.exists("stdlib.rst"):
