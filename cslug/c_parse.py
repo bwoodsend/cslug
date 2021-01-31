@@ -140,6 +140,7 @@ _ALIAS_TYPES = {
     "WORD": "int16_t",
     "DWORD": "int32_t",
     "QWORD": "int64_t",
+    "ptrdiff_t": "ssize_t",
 }
 
 _ALIAS_PTR_TYPES = {
