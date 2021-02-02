@@ -32,7 +32,7 @@ Advantages
 ..........
 
 * C code can be just plain high school level C.
-  Even a hello world extension module is some 40 lines of incomprehensible
+  Even a hello world Python extension module is some 40 lines of incomprehensible
   macros.
   This does not apply to Cython.
 * Binaries are not linked against Python and are therefore not tied to a
@@ -43,17 +43,20 @@ Advantages
 * You can use virtually any C compiler.
   Python extension modules must be built with clang_ on macOS and MSVC on
   Windows.
+* File sizes of binaries are very small.
+  1000 lines of C code equates to about 20KB of binary on Linux.
 
 
 Disadvantages
 .............
 
-* The wrapping Python code is less automated. A Python extension module looks
+* The surrounding Python code is less automated. A Python extension module looks
   and feels like a native Python module out the box whereas a small wrapper
   function is generally required for ctypes.
 * You can't use native Python types such as ``list`` or ``dict`` within C code.
   However, using such types will generally reduce performance down to near pure
   Python levels anyway.
+* You can't use C++.
 
 
 Shared Caveats
