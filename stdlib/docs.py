@@ -37,6 +37,9 @@ Access the C Standard Library
 The functions on this page are grouped by the header file they are included
 from.
 
+**Credits**: The textual descriptions on this page were taken from `here
+<https://www.ibm.com/support/knowledgecenter/ssw_ibm_i_74/rtref/stalib.htm>`_.
+
 """
 ]
 
