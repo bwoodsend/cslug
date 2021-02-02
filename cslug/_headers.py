@@ -32,8 +32,8 @@ class Header(object):
         Args:
             path: A file to write the header to.
             *sources: C source files to extract functions from.
-            includes (str, list[str]): Other headers to :c:`#include`.
-            defines (dict, enum.Enum): Constants classes to :c:`#define`.
+            includes (str or list[str]): Other headers to :c:`#include`.
+            defines (dict or enum.Enum): Constants classes to :c:`#define`.
 
         For local **includes** wrap in double quotes :py:`includes='"header.h"'`
         or leave as is py:`includes='header.h'`. For library includes use angle

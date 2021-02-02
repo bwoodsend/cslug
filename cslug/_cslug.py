@@ -39,13 +39,13 @@ class CSlug(object):
         """
 
         Args:
-            path (typing.Union[str, os.PathLike]):
-            *sources (str, os.PathLike, io.TextIOBase):
+            path (str or os.PathLike or list):
+            *sources (str or os.PathLike or io.TextIOBase):
                 C source code files. May also be lists of files.
-            headers (cslug.Header, list[cslug.Header]):
+            headers (cslug.Header or list[cslug.Header]):
                 cslug generated headers - not just ``*.h`` files (which |cslug|
                 doesn't need to see anywhere).
-            links (typing.Union[str, list[str]]):
+            links (str or list[str]):
                 Other C libraries to link to via the ``-l`` compiler switch.
                 Should not contain the ``-l`` prefix or platform suffix.
 

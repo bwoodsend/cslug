@@ -134,7 +134,7 @@ def copy_requirements(path="pyproject.toml", exclude=()):
 
     :param path: Specify an alternative toml file to parse from, defaults to
                  ``'pyproject.toml'``.
-    :type path: Union[str, os.PathLike, io.TextIOBase]
+    :type path: str or os.PathLike or io.TextIOBase
     :param exclude: Requirements to exclude, use to remove build only
                    requirements.
     :type exclude: Iterable[str]
