@@ -20,6 +20,7 @@
     tips
     jargon
     stubs/cslug.rst
+    history
 
 
 Indices and tables
