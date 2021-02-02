@@ -1,0 +1,4 @@
+* Fix docstring type annotations to use ``or`` instead of ``Union[...]``.
+
+* Add C type :c:`ptrdiff_t` as an alias for :c:`ssize_t`.
+
