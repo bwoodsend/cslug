@@ -34,7 +34,7 @@ def as_path_or_readable_buffer(file):
     holding large files in memory.
 
     """
-    if isinstance(file, _io.IOBase):
+    if isinstance(file, _io.TextIOBase):
         if hasattr(file, "getvalue"):
             return file
         return _io.StringIO(file.read())
@@ -67,9 +67,9 @@ def write(path, *data, mode="w"):
     """Write to a path or a stream.
 
     Args:
-        path (str, os.PathLike, io.IOBase):
+        path (str or os.PathLike or io.IOBase):
             File to write to.
-        *data (str, bytes):
+        *data (str or bytes):
             Data to write.
         mode (str):
             A mode to be passed to :func:`open`, ignored if **path** is a
@@ -94,9 +94,9 @@ def anchor(*paths):
     parent.
 
     :param paths: Path(s) to freeze or pseudo files.
-    :type paths: str, os.PathLike, io.IOBase
+    :type paths: str or os.PathLike or io.IOBase
     :return: List of modified paths.
-    :rtype: list[pathlib.Path, io.IOBase]
+    :rtype: list
 
     Pseudo files (:class:`io.IOBase`) and absolute paths are left unchanged. Use
     this function to make your code working-dir independent.

@@ -31,11 +31,11 @@ class Types(object):
         """
 
         Args:
-            path (str, os.PathLike, io.TextIOBase):
+            path (str or os.PathLike or io.TextIOBase):
                 A filename to read or write serialised type information to.
-            *sources (str, os.PathLike, io.TextIOBase):
+            *sources (str or os.PathLike or io.TextIOBase):
                 C sources to extract function definitions from.
-            headers (str, os.PathLike, io.TextIOBase, list):
+            headers (str or os.PathLike or io.TextIOBase or list):
                 C sources to extract function prototypes from.
             compact (bool):
                 If true, serialise minimising file size. Otherwise, pretty
@@ -104,7 +104,7 @@ class Types(object):
         """Serialise contents to **path**.
 
         Args:
-            path:
+            path (str or os.PathLike or io.TextIOBase):
                 A filename or stream to write to. Defaults to
                 :data:`sys.stdout`.
 
