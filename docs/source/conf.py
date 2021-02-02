@@ -13,6 +13,7 @@
 # serve to show the default.
 
 import os
+from pathlib import Path
 import cslug
 
 # -- General configuration ---------------------------------------------
@@ -118,6 +119,24 @@ else:
 if needs_reloading:
     with open("stdlib.rst", "w") as f:
         f.write(stdlib)
+
+histories = sorted(Path("../../history").resolve().glob("*.rst"),
+                   key=lambda x: tuple(map(int, x.stem.split("."))),
+                   reverse=True)
+
+history = """\
+=========
+Changelog
+=========
+
+
+""" + "\n".join(f"v{i.stem}\n-{'-' * len(i.stem)}\n\n{i.read_text()}"
+                for i in histories)
+
+history_path = Path("history.rst")
+if (not history_path.exists()) or history_path.read_text() != history:
+    history_path.write_text(history)
+
 
 # -- Options for HTML output -------------------------------------------
 
