@@ -86,7 +86,7 @@ class Env(object):
 
     def pip(self, *args, cwd=".", check=True):
         return self.python("-m", "pip", "--disable-pip-version-check", "-q",
-                           *args, cwd=cwd, check=check)
+                           "--no-cache-dir", *args, cwd=cwd, check=check)
 
 
 def master_python(*args, cwd=".", check=True):
