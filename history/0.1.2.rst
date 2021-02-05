@@ -1,0 +1,3 @@
+* Default unrecognised C types to void pointer.
+  Formally the default was :c:`int` for arguments,
+  none for return types and structure fields broke.
