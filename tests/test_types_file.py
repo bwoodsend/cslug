@@ -63,8 +63,8 @@ PARSED_FUNCTIONS = {
     'char_ptr': ['None', ['c_char_p', 'c_char_p', 'c_wchar_p']],
     'char_ptr_ptr': ['None', ['c_void_p', 'c_void_p', 'c_void_p']],
     #
-    'invalid_argument': ['c_char', ['None']],
-    'invalid_argument_2': ['None', ['None']],
+    'invalid_argument': ['c_char', ['c_void_p']],
+    'invalid_argument_2': ['None', ['c_void_p']],
     #
     'unicode_ÀÆÌÐÔÙÝáåéíñõùý': ['c_byte', ['c_void_p', 'c_void_p']],
     #
