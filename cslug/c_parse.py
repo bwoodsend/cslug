@@ -236,8 +236,9 @@ def parse_parameter(string, typedefs=None):
     if type is None and not pointer and "void" not in type_words:
         from warnings import warn
         from cslug.exceptions import TypeParseWarning
-        warn("Unrecognised type '{}'. Type will not be set in wrapped C "
-             "functions.".format(string), TypeParseWarning) # yapf: disable
+        warn("Unrecognised type '{}'. Type will default to void pointer."
+             .format(string), TypeParseWarning) # yapf: disable
+        type = "c_void_p"
 
     if type is None:
         # str None is less ugly to serialise.
