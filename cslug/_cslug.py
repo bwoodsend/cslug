@@ -282,7 +282,8 @@ class CSlug(object):
 
         # Compile all .c files into 1 combined library.
         # Note that you don't pass header files to compilers.
-        true_files = [str(i) for i in self.sources if isinstance(i, Path)]
+        true_files = [str(i) for i in self.sources if isinstance(i, Path)
+                      if i.suffix != ".h"]  # yapf: disable
         buffers = [i for i in self.sources if not isinstance(i, Path)]
 
         stdin_flags = "-x c -".split() if buffers else []

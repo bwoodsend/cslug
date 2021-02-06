@@ -277,6 +277,13 @@ def test_header_type_error():
         CSlug("name", headers="not a header")
 
 
+def test_do_not_compile_headers():
+    self = CSlug("name", "file.h", "file.c")
+    cmd = self.compile_command()[0]
+    assert "file.c" in cmd
+    assert "file.h" not in cmd
+
+
 def test_with_header():
     header_name = "header-" + name().stem + ".h"
     cake = random.randint(0, 256)
