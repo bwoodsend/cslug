@@ -262,7 +262,8 @@ class CSlug(object):
             "-shared", "-rdynamic" if cc_name in ("tcc", "pcc") else "-fPIC"
         ]
 
-        if cc_name == "gcc" and version >= (4, 6, 0):  # pragma: no cover
+        if cc_name == "gcc" and version >= (4, 6, 0) \
+            or cc_name == "clang" and version >= (3, 7, 0):  # pragma: no cover
             # Optimize for speed.
             flags.append("-Ofast")
 
