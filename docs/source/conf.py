@@ -221,3 +221,6 @@ autodoc_default_options = {
     'special-members': '__init__',
     'undoc-members': True,
 }
+
+# -- Add this file for Google search console ----------
+html_extra_path = ["static/google77eb9775385691af.html"]
