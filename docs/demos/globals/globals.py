@@ -58,3 +58,5 @@ address = ctypes.cast(slug.dll.contains_null, ctypes.c_void_p).value
 contains_null = (ctypes.c_char * length).from_address(address)
 
 assert contains_null.raw == b"This sentence has a \x00 in the middle of it.\x00"
+
+a_const_int = ctypes.cast(slug.dll.a_const_int, ctypes.POINTER(ctypes.c_int)).contents

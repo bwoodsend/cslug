@@ -15,3 +15,4 @@ int len_contains_null = sizeof(contains_null) / sizeof(char);
 int get_an_int() {
   return an_int;
 }
+const int a_const_int = 3;
