@@ -1,0 +1,5 @@
+* Compile with -Ofast on clang.
+
+* Prevent .h files being passed to compiler.
+  TinyCC and certain versions of clang raise an error if passed a header file
+  directly.
