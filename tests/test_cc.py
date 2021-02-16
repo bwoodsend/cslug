@@ -95,7 +95,7 @@ def test_no_cc_or_blocked_error():
 
         misc.hide_from_PATH("gcc")
         with pytest.raises(exceptions.NoGccError,
-                           match=".* requires gcc .* in your PATH."):
+                           match=".* requires gcc .* in the PATH."):
             cc()
     finally:
         os.environ.clear()
