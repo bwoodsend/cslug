@@ -46,13 +46,17 @@ class NoGccError(Exception):
             # Windows, most Linux distributions and unknown OSs.
             cmd = None
 
-        out_ = "Building requires gcc to be installed and in your PATH. {}" \
-               "Alternatively, set the CC environment variable to the " \
-               "name of any supported compiler in PATH, or the full path of " \
-               "a compiler which need not be in PATH."
+        out_ = \
+            "Attempted a compile without a C compiler. " \
+            "Building requires gcc to be installed "\
+            "and its executable to be findable in the PATH environment variable. "\
+            "{}" \
+            "Alternatively, set the CC environment variable to the " \
+            "name of any other supported compiler such as 'clang' in PATH, " \
+            "or the full path a compiler executable which need not be in PATH." \
 
         if cmd:
-            return out_.format(f"Get it by running:\n    {cmd}\n"
+            return out_.format(f"Install gcc by running:\n    {cmd}\n"
                                f"in bash/terminal. ")
 
         # Installing on Windows is a bit strange. The easiest method seems to be
