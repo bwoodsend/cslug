@@ -42,6 +42,10 @@ class NoGccError(Exception):
             # Ubuntu Linux.
             cmd = "sudo apt install gcc"
 
+        elif shutil.which("apk"):
+            # Alpine Linux.
+            cmd = "apk add gcc musl-dev"
+
         else:
             # Windows, most Linux distributions and unknown OSs.
             cmd = None

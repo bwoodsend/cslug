@@ -10,7 +10,7 @@ directly called from Python.
 ========  ======================================================================================================================
 Platform  Library/location
 ========  ======================================================================================================================
-Linux     The anonymous, non-existent :py:`ctypes.CDLL("")`. Don't ask me what it is - I haven't a clue.
+Linux     The anonymous, non-existent :py:`ctypes.CDLL("")`. Don't ask me what it is - I haven't a clue. Apline Linux uses ``libc.so``.
 Windows   The somewhat barren ``C:\Windows\system32\msvcrt.dll``.
 macOS     Either ``libc.dylib`` (for new OSXs), ``libSystem`` (for older) or ``/usr/lib/system/libsystem_c.dylib`` (really old).
 MSYS2     Good old ``msys-2.0.dll``.

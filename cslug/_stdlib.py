@@ -13,6 +13,10 @@ def null_free_dll(*spam):  # pragma: no cover
     pass
 
 
+# Try to find a good runtime library which is always available and contains
+# the standard library C functions such as malloc() or printf().
+# XXX: Keep chosen library names in sync with the table in `cslug/stdlib.py`.
+
 extra_libs = []
 
 if OS == "Windows":  # pragma: Windows
@@ -48,7 +52,11 @@ elif OS == "Darwin":  # pragma: Darwin
         dlclose = null_free_dll
 
 elif OS == "Linux":  # pragma: Linux
-    stdlib = ctypes.CDLL("")
+    try:
+        stdlib = ctypes.CDLL("")
+    except OSError:  # pragma: no cover
+        # Alpine Linux.
+        stdlib = ctypes.CDLL("libc.so")
     dlclose = stdlib.dlclose
 
 elif sys.platform == "msys":  # pragma: msys
