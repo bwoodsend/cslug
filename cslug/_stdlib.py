@@ -48,7 +48,11 @@ elif OS == "Darwin":  # pragma: Darwin
         dlclose = null_free_dll
 
 elif OS == "Linux":  # pragma: Linux
-    stdlib = ctypes.CDLL("")
+    try:
+        stdlib = ctypes.CDLL("")
+    except OSError:  # pragma: no cover
+        # Alpine Linux.
+        stdlib = ctypes.CDLL("libc.so")
     dlclose = stdlib.dlclose
 
 elif sys.platform == "msys":  # pragma: msys
