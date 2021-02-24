@@ -165,6 +165,11 @@ def test():
     assert p.returncode
     assert re.search(b"No module named contains_slugs", p.stderr), p.stderr
 
+    # Clean out dist folder to prevent interference with wheels from previous
+    # runs.
+    if (CSLUG_ROOT / "dist").exists():
+        [os.remove(i) for i in (CSLUG_ROOT / "dist").iterdir()]
+
     # Build a wheel for cslug using the master environment. This will be needed
     # later.
     p = master_python("setup.py", "-q", "bdist_wheel", cwd=CSLUG_ROOT)
@@ -182,12 +187,20 @@ def test():
     # It should contain all source code and no cslug generated/binary artifacts.
     inspect_sdist(sdist)
 
+    wheel_dump = contains_slugs / "wheels"
+    wheel_dump.mkdir(exist_ok=True)
+    p = target.pip("download", "setuptools", "wheel", "toml", cwd=wheel_dump)
+
     # `pip install` the sdist into the virtual environment. pip will build from
     # the sdist in an isolated environment, pulling in build dependencies
     # (i.e. cslug) automatically. Use `--find-links` to tell it where to find
-    # our `contains-slugs` sdist and our wheel for `cslug`.
-    p = target.pip("install", "contains-slugs", "--find-links",
-                   contains_slugs / "dist", "--find-links", CSLUG_ROOT / "dist")
+    # our `contains-slugs` sdist, our wheel for `cslug` and wheels for
+    # `setuptools`, `wheel` and `toml`. The `--no-index` blocks download from
+    # PyPI. This is to force it to use this cslug version rather than to
+    # download one from PyPI.
+    p = target.pip("install", "contains-slugs", "--no-index", "--find-links",
+                   contains_slugs / "dist", "--find-links", CSLUG_ROOT / "dist",
+                   "--find-links", wheel_dump)
 
     # Test the contains slugs installation. `contains_slugs.__main__` contains
     # its own validations of which files it should and shouldn't have.
