@@ -1,0 +1,17 @@
+# Install cslug and gcc into an Alpine image.
+# ---
+# Build with:
+#  $ docker build -t cslug-alpine -f Dockerfile_alpine .
+# Then to launch an interactive terminal:
+#  $ docker run -v `pwd`:/io -it cslug-alpine ash
+# To launch a Python console (the default for this container):
+#  $ docker run -v `pwd`:/io -it cslug-alpine
+# To run pytest:
+#  $ docker run -v `pwd`:/io -it cslug-alpine pytest
+
+FROM python:3.9.0-alpine
+COPY . /io
+WORKDIR /io
+RUN pip install wheel auditwheel
+RUN pip install --prefer-binary -e .[test]
+RUN apk add gcc musl-dev
