@@ -1,0 +1,22 @@
+---
+name: Test Docker
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-docker:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        base-image: ['manylinux1_x86_64', 'manylinux1_i686']
+    steps:
+      - uses: actions/checkout@v2
+      - run: git fetch --prune --unshallow
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t sluggy-image \
+            -f Dockerfile_manylinux \
+            --build-arg BASE=${{ matrix.base-image }} .
+      - run: docker run sluggy-image pytest
