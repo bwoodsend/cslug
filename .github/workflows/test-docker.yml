@@ -2,10 +2,10 @@
 name: Test Docker
 
 on:
-  push:
+  workflow_dispatch:
 
 jobs:
-  test-docker:
+  test-manylinux:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -18,3 +18,10 @@ jobs:
           docker build -t cslug-image -f Dockerfile_manylinux \
             --build-arg BASE=${{ matrix.base-image }} .
       - run: docker run cslug-image pytest
+
+  test-alpine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker build -t cslug-alpine -f Dockerfile_alpine .
+      - run: docker run cslug-alpine pytest
