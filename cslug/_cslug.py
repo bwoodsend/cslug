@@ -275,8 +275,12 @@ class CSlug(object):
             # I've only seen this needed on manylinux docker images.
             flags.append("--std=c99")
 
-        # Set 32/64 bit.
-        flags += ["-m" + str(BIT_NESS)]
+        # Set 32 bit only if needed. Forcing `-m64` causes aarch64 to fail
+        # because it interprets it as x86_64.
+        # XXX: This will still break 32bit platforms other than i386 such as
+        #      aarch32.
+        if BIT_NESS != 64:  # pragma: no cover
+            flags += ["-m" + str(BIT_NESS)]
 
         # Super noisy build warnings.
         warning_flags = "-Wall -Wextra".split()
