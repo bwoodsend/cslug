@@ -10,13 +10,14 @@ jobs:
     strategy:
       matrix:
         base-image: ['manylinux1_x86_64', 'manylinux1_i686',
-                     'manylinux2014_aarch64']
+                     'manylinux2014_aarch64', 'manylinux2014_ppc64le',
+                     'manylinux2014_s390x']
     steps:
       - uses: actions/checkout@v2
       - run: git fetch --prune --unshallow
 
       - name: Install Docker Buildx
-        if: endsWith(matrix.base-image, 'aarch64')
+        if: ${{ !startsWith(matrix.base-image, 'manylinux1_') }}
         id: buildx
         uses: crazy-max/ghaction-docker-buildx@v3.3.0
         with:
