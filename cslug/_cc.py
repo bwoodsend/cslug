@@ -70,9 +70,9 @@ def cc(CC=None):
         return _cc
 
     CC = which("gcc")
-    if CC is None:
+    if CC is None:  # pragma: no branch
         raise exceptions.NoGccError
-    return CC
+    return CC  # pragma: no cover
 
 
 def cc_version(CC=None):

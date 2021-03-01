@@ -30,7 +30,7 @@ jobs:
             -t sluggy-image \
             -f Dockerfile_manylinux \
             --build-arg BASE=${{ matrix.base-image }} .
-      - run: docker run sluggy-image pytest
+      - run: docker run sluggy-image sh -c "pytest && ls packaging/contains-slugs/dist"
 
   test-alpine:
     runs-on: ubuntu-latest
