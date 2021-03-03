@@ -10,8 +10,8 @@
 #  $ docker run -v `pwd`:/io -it cslug-alpine pytest
 
 FROM python:3.9.0-alpine
+RUN pip install wheel auditwheel
+RUN apk add gcc musl-dev
 COPY . /io
 WORKDIR /io
-RUN pip install wheel auditwheel
 RUN pip install --prefer-binary -e .[test]
-RUN apk add gcc musl-dev
