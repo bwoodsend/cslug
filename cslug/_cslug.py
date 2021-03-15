@@ -265,7 +265,7 @@ class CSlug(object):
         if cc_name == "gcc" and version >= (4, 6, 0) \
             or cc_name == "clang" and version >= (3, 7, 0):  # pragma: no cover
             # Optimize for speed.
-            flags.append("-Ofast")
+            flags.append("-O3")
 
         # Compile for older versions of macOS.
         if cc_name in ("gcc", "clang") and OS == "Darwin":  # pragma: no cover

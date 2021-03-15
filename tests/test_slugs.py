@@ -8,6 +8,7 @@ import io
 import ctypes
 import fnmatch
 import itertools
+import math
 import random
 import platform
 
@@ -399,3 +400,27 @@ def test_default_link():
     # duplicated.
     self = CSlug(RESOURCES / "basic.c", links="m")
     assert self.compile_command()[0].count("-lm") == 1
+
+
+def test_infinite_math():
+    # Assert that the `-ffinite-math-only` optimizer flag (or something similar)
+    # is not enabled.
+    # This is why -Ofast should not be used.
+
+    self = CSlug(anchor(name(), io.StringIO("""\
+        #include <math.h>
+
+        int is_nan(double x) { return isnan(x); }
+        int is_finite(double x) { return isfinite(x); }
+
+    """)))  # yapf: disable
+
+    assert self.dll.is_nan(12) == 0
+    assert self.dll.is_finite(12) == 1
+
+    assert self.dll.is_nan(math.inf) == 0
+    assert self.dll.is_finite(math.inf) == 0
+
+    # Bizarrely, Windows gcc but not tcc returns -1 instead of 1.
+    assert self.dll.is_nan(math.nan) in (-1, 1)
+    assert self.dll.is_finite(math.nan) == 0
