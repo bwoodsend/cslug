@@ -1,4 +1,2 @@
-include HISTORY.rst
 include LICENSE
-include README.rst
 include cslug/stdlib.json
