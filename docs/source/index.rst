@@ -15,6 +15,7 @@
     arrays-and-buffers/arrays-and-buffers
     arrays-and-buffers/numpy
     stdlib
+    customising-build
     packaging
     cpp
     tips
