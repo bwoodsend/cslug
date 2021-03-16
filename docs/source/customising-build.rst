@@ -48,6 +48,42 @@ recommended.
 .. _TinyCC: https://bellard.org/tcc/
 
 
+Add compiler flags
+------------------
+
+|cslug| supports two ways to add compiler flags.
+
+1. Using the **flags** option of :class:`cslug.CSlug`.
+2. Via the ``CC_FLAGS`` environment variable.
+
+Option :math:`1` is the preferred long term approach.
+``CC_FLAGS`` may be used to temporarily trial new options.
+
+.. versionadded:: 0.3.0
+
+
+Select warnings
+...............
+
+Options may be used to silence a particular compiler warning that you are not
+interested in.
+For example, if you want to divide by zero without being warned against it::
+
+    slug = CSlug("file.c", flags=["-Wno-div-by-zero"])
+
+See ``gcc --help=warnings`` for a complete list of warning names.
+
+
+Extra :c:`#include` paths
+.........................
+
+If you use a 3\ :superscript:`rd` party C library in your own C code then you
+will likely need to add **the folder containing that library** to your
+compiler's search path using the ``-I`` option::
+
+    slug = CSlug("your-code.c", flags=["-I", "/path/to/extra/library"])
+
+
 Minimum OSX version
 -------------------
 

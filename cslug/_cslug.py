@@ -35,7 +35,7 @@ DEFAULT_LINKS = ["m"] if OS == "Linux" else []
 class CSlug(object):
     """Compiles and loads C code in a relatively safe and streamlined manner.
     """
-    def __init__(self, path, *sources, headers=(), links=()):
+    def __init__(self, path, *sources, headers=(), links=(), flags=()):
         """
 
         Args:
@@ -48,6 +48,14 @@ class CSlug(object):
             links (str or list[str]):
                 Other C libraries to link to via the ``-l`` compiler switch.
                 Should not contain the ``-l`` prefix or platform suffix.
+            flags (str or list[str]):
+                Additional flags to be passed directly to the C compiler.
+                Can also be configured using the ``CC_FLAGS`` environment
+                variable. Inspect using :meth:`compile_command`.
+
+        .. versionchanged:: 0.3.0
+
+            Add **flags** parameter and the ``CC_FLAGS`` variable.
 
         """
         path, *sources = misc.flatten(sources, initial=misc.flatten(path))
@@ -73,6 +81,7 @@ class CSlug(object):
                     "not {}.".format(type(h)))
         self.types_map = Types(path.with_suffix(".json"), *self.sources)
         self._dll = None
+        self.flags = [str(i) for i in misc.flatten(flags)]
 
     def compile(self):
         """Recompile C code only.
@@ -285,6 +294,10 @@ class CSlug(object):
         # Super noisy build warnings.
         warning_flags = "-Wall -Wextra".split()
 
+        # Custom flags from the CC_FLAGS environment variable. Delimited
+        # with whitespace.
+        env_flags = re.findall(r"[^\s]+", os.environ.get("CC_FLAGS", ""))
+
         # Compile all .c files into 1 combined library.
         # Note that you don't pass header files to compilers.
         true_files = [str(i) for i in self.sources if isinstance(i, Path)
@@ -295,8 +308,8 @@ class CSlug(object):
 
         link_flags = ["-l" + i for i in self.links]
 
-        return ([_cc] + output + flags + warning_flags + true_files +
-                stdin_flags + link_flags, buffers)
+        return ([_cc] + output + flags + warning_flags + self.flags +
+                env_flags + true_files + stdin_flags + link_flags, buffers)
 
     def _check_printfs(self):
         return any(check_printfs(*misc.read(i)) for i in self.sources)

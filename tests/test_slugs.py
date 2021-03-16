@@ -11,6 +11,7 @@ import itertools
 import math
 import random
 import platform
+import warnings
 
 import pytest
 
@@ -424,3 +425,68 @@ def test_infinite_math():
     # Bizarrely, Windows gcc but not tcc returns -1 instead of 1.
     assert self.dll.is_nan(math.nan) in (-1, 1)
     assert self.dll.is_finite(math.nan) == 0
+
+
+def test_custom_compiler_flags():
+    """Assert that custom flags appear and in the right place."""
+
+    self = CSlug(name(), "file.c", flags="-some-flag", links="some-library")
+
+    old = os.environ.copy()
+    try:
+        os.environ["CC_FLAGS"] = "-env-flag1 -env-flag2"
+        cmd = self.compile_command()[0]
+    finally:
+        os.environ.clear()
+        os.environ.update(old)
+
+    # The order must be defaults, CSlug(flags=...) flags, CC_FLAGS, files,
+    # linker options.
+
+    assert cmd.index("-Wall") \
+         < cmd.index("-some-flag") \
+         < cmd.index("-env-flag1") \
+         < cmd.index("-env-flag2") \
+         < cmd.index("file.c") \
+         < cmd.index("-lsome-library")
+
+
+def test_contradictory_flags():
+    """Assert that compilers accept contradictory flags without complaint."""
+
+    # Should warn for implicit function declaration due to missing
+    # #include <math.h>.
+    self = CSlug(anchor(name()), io.StringIO("double foo() { return sin(3); }"))
+
+    try:
+        with pytest.warns(exceptions.BuildWarning, match="implicit.*"):
+            self.make()
+    except exceptions.BuildError as ex:
+        # The default clang on macOS elevates this to an error with -Werror.
+        # Also fixable with flags="-Wno-error=implicit-function-declaration".
+        assert "implicit" in str(ex)
+
+    # Specify no warnings to override the default of all warnings -Wall.
+    self.flags.append("-w")
+
+    with warnings.catch_warnings():
+        warnings.filterwarnings("error", category=exceptions.BuildWarning)
+        self.make()
+
+
+def test_custom_include():
+    """``#include`` an awkwardly located header file using the ``-I`` option."""
+
+    self = CSlug(anchor(name()),
+                 io.StringIO("""\
+        #include <header-in-random-location.h>
+
+        int foo() { return REMOTE_CONSTANT; }
+
+    """), flags=["-I", RESOURCES / "somewhere-remote"])  # yapf: disable
+
+    assert self.dll.foo() == 13
+
+    self.flags.clear()
+    with pytest.raises(exceptions.BuildError):
+        self.make()

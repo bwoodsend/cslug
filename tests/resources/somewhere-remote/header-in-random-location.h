@@ -1,0 +1,1 @@
+#define REMOTE_CONSTANT 13
