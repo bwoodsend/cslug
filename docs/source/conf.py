@@ -106,6 +106,9 @@ rst_prolog = """
 
 """
 
+from cslug._cc import macos_version_min
+rst_prolog += f".. |macos_version_min| replace:: ``{macos_version_min()}``\n\n"
+
 import runpy
 
 sys.path.insert(0, "../..")
