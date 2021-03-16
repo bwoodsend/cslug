@@ -131,11 +131,34 @@ Check out our `quickstart page on readthedocs
 Credits
 -------
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+:emphasis:`Hall of fame for contributions to cslug`.
+
+* .. figure:: https://raw.githubusercontent.com/bwoodsend/cslug/master/docs/source/icons/jetbrains.svg
+    :target: JetBrains_
+    :height: 75px
+
+    Huge shout out to JetBrains_ for PyCharm_ and for providing their full range
+    of products `free to open source developers
+    <https://www.jetbrains.com/community/opensource/#support>`_.
+    (The ability to run Python from inside a docker image with completion,
+    debugging, and all the other bells and whistles has been a big help to this
+    project.)
+
+
+* .. figure:: https://raw.githubusercontent.com/cookiecutter/cookiecutter/3ac078356adf5a1a72042dfe72ebfa4a9cd5ef38/logo/cookiecutter_medium.png
+    :target: Cookiecutter_
+    :height: 75px
+
+    This initial creation of this package was sped up considerably by
+    Cookiecutter_ and a fork of the `audreyr/cookiecutter-pypackage`_ project
+    template.
+
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 
+.. _JetBrains: https://jb.gg/OpenSource
+.. _PyCharm: https://www.jetbrains.com/pycharm/
 .. _ctypes: https://docs.python.org/3.9/library/ctypes.html
 .. _mingw: http://mingw-w64.org/doku.php/download
 .. _gcc: https://gcc.gnu.org/
