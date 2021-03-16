@@ -106,6 +106,8 @@ To check you have it run the following in terminal::
     that contain binaries built with **cslug**, then your users will not need a
     compiler; only if they try to build your package from source.
 
+By default, **cslug** will use gcc_ if it can find it. On macOS or FreeBSD it
+will switch to clang_ if **gcc** is unavailable.
 To use any other supported compiler, **cslug** respects the ``CC`` environment
 variable.
 Set it to the name or full path of your alternative compiler.

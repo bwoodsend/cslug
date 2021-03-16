@@ -92,11 +92,15 @@ def test_no_cc_or_blocked_error():
     try:
         os.environ.pop("CC", None)
         try:
-            assert cc() == which("gcc")
+            if platform.system() in ("Darwin", "FreeBSD"):
+                assert cc() == (which("gcc") or which("clang"))
+            else:
+                assert cc() == which("gcc")
         except exceptions.NoGccError:
             pass
 
         misc.hide_from_PATH("gcc")
+        misc.hide_from_PATH("clang")
         with pytest.raises(exceptions.NoGccError,
                            match=".* requires gcc .* in the PATH."):
             cc()
