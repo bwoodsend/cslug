@@ -120,7 +120,8 @@ else:
             # target version of Python. This is completely irrelevant to cslug.
             # The correct version is whatever cslug passed to gcc's
             # --mmacosx-version-min parameter.
-            min_osx = os.environ.get('MIN_OSX', 10.5)
+            from cslug._cc import macos_version_min
+            min_osx = macos_version_min()
             self.plat_name = re.sub(r"macosx-\d+[.]\d+-", f"macosx-{min_osx}-",
                                     self.plat_name)
 

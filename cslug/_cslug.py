@@ -14,7 +14,7 @@ import weakref
 
 from cslug import misc, exceptions, c_parse, Types
 from cslug._headers import Header
-from cslug._cc import cc, cc_version
+from cslug._cc import cc, cc_version, macos_version_min
 from cslug._stdlib import dlclose
 
 # TODO: maybe try utilising this. Probably not worth it...
@@ -269,7 +269,7 @@ class CSlug(object):
 
         # Compile for older versions of macOS.
         if cc_name in ("gcc", "clang") and OS == "Darwin":  # pragma: no cover
-            flags += [f"-mmacosx-version-min={os.environ.get('MIN_OSX', 10.5)}"]
+            flags += [f"-mmacosx-version-min={macos_version_min()}"]
 
         if cc_name == "gcc":  # pragma: no cover
             # I've only seen this needed on manylinux docker images.
