@@ -129,4 +129,4 @@ def macos_version_min():  # pragma: Darwin
     # - Python 3.9 -> OSX 10.9
     default = "10.6"
 
-    return os.environ.get("OSX_MIN", default)
+    return os.environ.get("MACOS_DEPLOYMENT_TARGET", default)

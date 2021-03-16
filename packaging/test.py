@@ -124,7 +124,7 @@ def inspect_sdist(sdist):
 
 def inspect_wheel(wheel):
     """Inspect the contents of a ``contains-slugs`` wheel."""
-    # Test `MIN_OSX` has been propagated into the filename.
+    # Test `MACOS_DEPLOYMENT_TARGET` has been propagated into the filename.
     if "macos" in wheel.stem:
         from cslug._cc import macos_version_min
         min_osx = macos_version_min()
