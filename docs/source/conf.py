@@ -14,6 +14,7 @@
 
 import os
 from pathlib import Path
+from textwrap import indent
 import cslug
 
 # -- General configuration ---------------------------------------------
@@ -133,8 +134,9 @@ Changelog
 =========
 
 
-""" + "\n".join(
-    f"v{i.stem}\n-{'-' * len(i.stem)}\n\n{i.read_text()}" for i in histories)
+""" + "\n".join(f"v{i.stem}\n-{'-' * len(i.stem)}\n\n"
+                f".. rst-class:: spacious\n\n"
+                f"{indent(i.read_text(), '    ')}" for i in histories)
 
 history_path = Path("history.rst")
 if (not history_path.exists()) or history_path.read_text() != history:
