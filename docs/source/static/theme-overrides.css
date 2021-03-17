@@ -71,3 +71,8 @@ div[class*="highlight-py"] .highlight, div[class*="highlight-default"] .highligh
 .strikethrough {
   text-decoration: line-through;
 }
+
+/* Space out bullet point lists in custom `.. rst-class:: spacious` blocks. */
+.rst-content .section ul.spacious li {
+  margin-bottom: 18px;
+}
