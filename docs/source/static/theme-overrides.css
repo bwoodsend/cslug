@@ -22,16 +22,6 @@
   background: #397e57;
 }
 
-/* Make urls slightly darker. */
-a {
-  color: #7218bb;
-}
-/* Make visited urls less in-your-face purple. */
-.rst-content a:visited {
-  color: #692099;
-}
-
-
 /* Inline literals. */
 .rst-content code.literal, .rst-content tt.literal {
   color: #034040;
