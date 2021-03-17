@@ -34,7 +34,6 @@ Advantages
 * C code can be just plain high school level C.
   Even a hello world Python extension module is some 40 lines of incomprehensible
   macros.
-  This does not apply to Cython.
 * Binaries are not linked against Python and are therefore not tied to a
   specific Python version.
   A Python extension module needs to be recompiled for every minor version of
@@ -45,6 +44,8 @@ Advantages
   Windows.
 * File sizes of binaries are very small.
   1000 lines of C code equates to about 20KB of binary on Linux.
+  Python extension modules are typically several times larger and
+  a bare-bones Cython-ised ``import numpy`` extension is several MBs.
 
 
 Disadvantages
@@ -54,30 +55,35 @@ Disadvantages
   and feels like a native Python module out the box whereas a small wrapper
   function is generally required for ctypes.
 * You can't use native Python types such as ``list`` or ``dict`` within C code.
-  However, using such types will generally reduce performance down to near pure
-  Python levels anyway.
+  Using such types will generally reduce performance down to near pure
+  Python levels anyway so this is a small loss in practice.
 * You can't use C++.
 
 
 Shared Caveats
 ..............
 
-Before you commit yourself to any non Pure-Python you should bear in mind:
+Before you commit yourself to any non Pure-Python you should bear in mind that:
 
-* You should ship wheels for every platform you wish to support.
+* You'll need to ship wheels for every platform you wish to support.
   Otherwise, users of your code will have to install a C compiler to run it.
   This means that you either need access to all platforms, or you will have to
   setup Continuous Integration to build you package on a cloud server.
-* Linux wheels must be built on a manylinux Docker image in order to be
+  Linux users can get around this by using Vagrant_.
+* Linux wheels must be built on a manylinux_ Docker image in order to be
   compatible with all distributions of Linux.
 * Unless your users have the relevant security thrice disabled, uninstalled,
   blocked and scraped off the hard drive,
   recent macOS will block or delete any binary file you produce
-  unless you throw them some money and get it code-signed.
+  unless you either pay for a codesign license
+  or your software becomes famous enough to be whitelisted for you by Apple.
+  Windows users face a similar, albeit lesser, problem with Microsoft Defender.
 
 
 Supported Compilers
 -------------------
+
+The following OS/compiler combinations are fully supported and tested regularly.
 
 ======== ===== ======= ===== ======= ============
 Compiler Linux Windows macOS FreeBSD Cygwin/msys2
@@ -94,9 +100,12 @@ Installation
 
 **cslug** requires a C compiler to compile C code.
 Its favourite compiler is gcc_.
-If you're on Linux you probably already have it.
-If you are on another OS then you should get it with mingw_.
-To check you have it run the following in terminal::
+Linux distributions typically come with it preinstalled.
+If you are on another OS or just don't have it then you should get it with
+mingw-w64_.
+Windows users are recommended to use MinGW-Builds_.
+
+Check that you have it set up by running the following in a terminal::
 
     gcc -v
 
@@ -112,13 +121,15 @@ To use any other supported compiler, **cslug** respects the ``CC`` environment
 variable.
 Set it to the name or full path of your alternative compiler.
 
-To install **cslug** itself use the usual::
+Install **cslug** itself with the usual::
 
     pip install cslug
 
-This package is very much in its beta-stages and its API will likely move
-around. Please don't assume forward compatibility - pick a version you like and
+Whilst **cslug** is still in its 0.x versions, breaking changes may occur on
+minor version increments.
+Please don't assume forward compatibility - pick a version you like and
 pin it in a ``requirements.txt``.
+Inspect the `changelog`_ for anything that may break your code.
 
 
 Quickstart
@@ -157,12 +168,16 @@ Credits
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 
+.. _changelog: https://cslug.readthedocs.io/en/latest/history.html
 .. _JetBrains: https://jb.gg/OpenSource
 .. _PyCharm: https://www.jetbrains.com/pycharm/
 .. _ctypes: https://docs.python.org/3.9/library/ctypes.html
-.. _mingw: http://mingw-w64.org/doku.php/download
+.. _mingw-w64: http://mingw-w64.org/doku.php/download
 .. _gcc: https://gcc.gnu.org/
 .. _TinyCC: https://bellard.org/tcc/
 .. _clang: https://clang.llvm.org/
 .. _`pcc`: http://pcc.ludd.ltu.se/
 .. _`Cython`: https://cython.readthedocs.io/en/latest/index.html
+.. _Vagrant: https://github.com/hashicorp/vagrant
+.. _manylinux: https://github.com/pypa/manylinux/tree/manylinux1
+.. _MinGW-Builds: https://sourceforge.net/projects/mingwbuilds/
