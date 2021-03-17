@@ -20,8 +20,8 @@ FreeBSD   A tentative union of ``libc.so.7`` and ``libm.so.5`` (which also don't
 
 Not every function is made available. A function is excluded if:
 
-* It is not available on every supported platform so that you don't have to
-  worry about cross-platform compatibility.
+* It is not available on every supported platform (shoots a filthy look towards
+  Windows) so that you don't have to worry about cross-platform compatibility.
 * It uses types which are unavailable to :mod:`ctypes`.
 * It's a macro, meaning that it's refactored away at compile time and doesn't
   exist in any |binaries| format.

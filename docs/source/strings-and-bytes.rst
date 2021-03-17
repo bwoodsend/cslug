@@ -45,13 +45,14 @@ And run it::
     >>> slug.dll.count("hello", "l")
     2
 
-OK, now that we've got it going, let's talk about the C code a bit.
+Yay, it works! Now that we've got it going, let's talk about the code.
 
-Notice the types of the inputs: :c:`wchar_t *` and :c:`wchar_t`. The former
-accepts a :class:`str` of arbitrary length but the latter accepts only a single
-character :class:`str`. We could have used pointers for both arguments, but
-using just :c:`wchar_t` adds an implicit check that our single character argument
-is indeed singular::
+Notice the types of the inputs :c:`count()`\ : :c:`wchar_t *` and :c:`wchar_t`.
+:c:`wchar_t *` accepts a :class:`str` of arbitrary length
+but :c:`wchar_t` accepts only a single character :class:`str`.
+We could have used pointers for both arguments,
+but using just :c:`wchar_t` adds an implicit check that our single character
+argument is indeed singular::
 
     >>> slug.dll.count("This will break", "will")
     ctypes.ArgumentError: argument 2: <class 'TypeError'>: wrong type
@@ -101,19 +102,20 @@ Whereas this performs only one conversion::
 Writing to strings
 ------------------
 
-We can write to strings inplace or to new strings in C, but it's not so
-streamlined.
+Writing to strings inplace or to new strings is possible but not so streamlined.
 
-* In order to avoid the cacophony of memory issues that is creating and sharing
-  buffers in C, strings should only be created in Python. To write a string in
-  C, create an empty one of the right length then give it to C to populate.
-  This unfortunately means that you must know how long your string will be
-  before you write it.
+1. In order to avoid the cacophony of memory issues that is creating and sharing
+   buffers in C, strings should only be created in Python. To write a string in
+   C, create an empty one of the right length then give it to C to populate.
+   This unfortunately means that you must know how long your string will be
+   before you write it.
 
-* As we've seen above, strings are converted to :mod:`ctypes` character arrays
-  when passed to a C function, which then gets discarded immediately, losing any
-  changes the function made. To avoid this we must must do the conversion
-  explicitly like in :ref:`Caching the conversion overhead`.
+2. As we've seen above, strings are converted to :mod:`ctypes` character arrays
+   when passed to a C function.
+   Writing to the converted on does not update the original and the converted
+   array is discarded immediately after the function is complete, losing any
+   changes the function made. To avoid this we must must do the conversion
+   explicitly.
 
 We'll show these in our next example: A C function which outputs the reverse of
 a :class:`str`:
@@ -122,8 +124,9 @@ a :class:`str`:
     :language: C
     :caption: reverse.c
 
-Notice that output string is an argument rather than a :c:`return` value. This is
-in accordance with complication one above. Let us compile our C code:
+Notice that the output string is an argument rather than a :c:`return` value.
+This is in accordance with complication :math:`1` above.
+Let's compile the C code:
 
 .. literalinclude:: ../demos/strings/reverse.py
     :start-at: import ctypes
@@ -135,9 +138,10 @@ And give ourselves something to reverse:
     :start-at: in_ =
     :end-at: in_ =
 
-Before using our C function, we need to make it an output to populate. Because
-of complication two, this must be a :class:`ctypes.Array` instead of a generic
-Python :class:`str` (although you can always try it anyway to see what happens).
+Before using our C function, we need to make it an output to populate.
+Because of complication :math:`2`, this must be a :class:`ctypes.Array`
+instead of a generic Python :class:`str`.
+(Try giving it a Python :class:`str` anyway to see what happens).
 
 .. literalinclude:: ../demos/strings/reverse.py
     :start-at: out =

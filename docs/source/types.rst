@@ -3,16 +3,16 @@ Types and Type Safety
 
 Shared libraries don't contain any information about the types of a function's
 arguments or its return type. It doesn't even count how many arguments a
-function takes - you just get seg-faults and memory errors if you get it wrong.
+function takes - you just get |seg-faults| and memory errors if you get it wrong.
 
 :mod:`ctypes` allows you to set the type information for functions (accessible via
 ``function.argtypes`` and ``function.restype``) but it means you have to
 effectively copy and translate function prototypes from C into Python (which is
 both mind-numbing and error-prone).
 
-|cslug| tries to do the above for you by scanning your C source code for
+|cslug| automates the above by scanning your C source code for
 function definitions, dumping the information into a json file with the same
-name as your shared library (first argument to :meth:`~cslug.CSlug`) then
+name as your shared library (first argument to :class:`~cslug.CSlug`) then
 setting the type information for each function on loading the library (invoked
 by accessing ``slug.dll``). This provides some degree of implicit type safety
 and casting for the basic types:
@@ -33,9 +33,12 @@ Arbitrary length :class:`bytes`   `char *`
 Type Checking
 ~~~~~~~~~~~~~
 
-To see type checking in action, put the following function into ``typing.c``.
+You don't need to do anything to enable type checking - it's automatic.
+The rest of this page is purely to see type checking in action.
+Put the following function into ``typing.c``.
 
 .. literalinclude:: ../demos/typing.c
+    :language: C
 
 Now, to compile it::
 

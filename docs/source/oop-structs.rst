@@ -30,6 +30,11 @@ We'll start by writing a simple C file containing a struct definition:
 Note that the simpler :c:`struct Person {...};` form of a struct definition is
 intentionally not supported. You must use the above :c:`typedef` form.
 
+.. note::
+
+    If you define a struct in a header file, you should add that file to your
+    :class:`cslug.CSlug` sources.
+
 
 Using a Struct in Python
 ------------------------
@@ -164,6 +169,19 @@ struct:
         # Do something with the card.
         # Then delete it safely:
         slug.dll.delete_card(card._ptr)
+
+
+As :c:`delete_card()` is just an alias for :c:`free()` there's no need to
+create a function for it.
+Instead use the :ref:`free <stdlib-free>` function directly::
+
+    from cslug.stdlib import free
+
+    while True:
+        card = slug.dll.Card.from_address(slug.dll.make_card_ptr_safer(1, 2))
+        # Do something with the card.
+        # Then delete it safely:
+        free(card._ptr)
 
 
 Warning for Structs Containing Pointers
