@@ -10,7 +10,7 @@ directly called from Python.
 ========  ======================================================================================================================
 Platform  Library/location
 ========  ======================================================================================================================
-Linux     The anonymous, non-existent :py:`ctypes.CDLL("")`. Don't ask me what it is - I haven't a clue. Apline Linux uses ``libc.so``.
+Linux     The anonymous, non-existent :py:`ctypes.CDLL("")`. Don't ask me what it is - I haven't a clue. Alpine Linux uses ``libc.so``.
 Windows   The somewhat barren ``C:\Windows\system32\msvcrt.dll``.
 macOS     Either ``libc.dylib`` (for new OSXs), ``libSystem`` (for older) or ``/usr/lib/system/libsystem_c.dylib`` (really old).
 MSYS2     Good old ``msys-2.0.dll``.
@@ -20,8 +20,8 @@ FreeBSD   A tentative union of ``libc.so.7`` and ``libm.so.5`` (which also don't
 
 Not every function is made available. A function is excluded if:
 
-* It is not available on every supported platform so that you don't have to
-  worry about cross-platform compatibility.
+* It is not available on every supported platform (shoots a filthy look towards
+  Windows) so that you don't have to worry about cross-platform compatibility.
 * It uses types which are unavailable to :mod:`ctypes`.
 * It's a macro, meaning that it's refactored away at compile time and doesn't
   exist in any |binaries| format.

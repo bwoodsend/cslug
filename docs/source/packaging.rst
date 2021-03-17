@@ -84,13 +84,16 @@ whenever you:
 * ``pip install /path/to/source/distribution.tar.gz`` but not
   ``pip install /path/to/binary/distribution.whl``.
 
-You should hook ``setup.py build`` to also call :func:`cslug.CSlug.make` on
-every :class:`cslug.CSlug`. We will do this by indirectly calling
-:func:`cslug.building.make`. To attach our own code to the ``setup.py build``
-command we must overload the ``run()`` method of
-:class:`!distutils.command.build.build`. :func:`cslug.building.build_slugs` does
-exactly this. i.e. creates a subclass adding :func:`~cslug.building.make` to the
-``run()`` method.
+To make package building as streamlined as possible,
+hook ``setup.py build`` to also call :func:`cslug.CSlug.make` on every
+:class:`cslug.CSlug`.
+Calling :func:`cslug.building.make` is a convenient way to call make throughout
+a project
+but to attach it to ``setup.py build`` requires overloading the
+``run()`` method of :class:`!distutils.command.build.build`.
+:func:`cslug.building.build_slugs` does exactly this.
+It creates a subclass of ``build``, prepending :func:`~cslug.building.make` to
+the ``run()`` method.
 
 So finally, to create and register this custom build class, add the following
 option::
@@ -165,7 +168,7 @@ When the build dependencies get noticed
 .......................................
 
 Build dependencies, being new, has a few holes in it. They are ignored (usually
-resulting in :class:`ModuleNotFoundError`\ s) with any of the:
+resulting in :class:`ModuleNotFoundError`\ s) if you use:
 
 .. code-block:: shell
 

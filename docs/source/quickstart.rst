@@ -6,7 +6,8 @@ not the case then first refer to the :ref:`Installation` guide.
 
 Throughout these mini-tutorials we will use the convention of yellow background
 code-blocks for Python and blue for C. We will also assume, for convenience,
-that all files are in the current working directory unless indicated otherwise.
+that all Python and C files are in the same folder and that that folder is the
+current working directory unless indicated otherwise.
 
 
 Hello cslug
@@ -15,6 +16,9 @@ Hello cslug
 Typically, we write C source code in its own ``.c`` file but for the purposes of
 getting started we'll lazily embed the C source into our Python code using
 :class:`io.StringIO`.
+For C programmers who have never written a |shared library| before -
+it is exactly the same as writing an executable except that you don't define
+an :c:`int main()` function.
 
 .. code-block:: python
 
@@ -47,8 +51,8 @@ Let's talk through what just happened. |cslug| should have:
   <cslug.CSlug.dll>`) and set the type information for the functions it
   contains.
 
-Finally, ``print(slug.dll.add_1(10))`` will call our C function :c:`add_1()`
-on ``10`` and print the answer.
+Finally, :py:`print(slug.dll.add_1(10))` will call our C function :c:`add_1()`
+on :py:`10` and print the answer.
 
 .. note::
 
@@ -70,9 +74,10 @@ takes one output name, and an arbitrary number of source files.
 
 Note the lack of a suffix for the output - this is because the suffix is
 platform dependent and should therefore not be hard-coded.
+Leave |cslug| in charge of slapping a ``.so`` on the end.
 
-For slugs containing just one source file you may specify only the source file
-and output filename will default to the same name with the ``.c`` stripped.
+Slugs containing just one source file may specify only the source file
+and the output filename will default to the same name with the ``.c`` stripped.
 i.e::
 
     CSlug("kangaroo.c")
@@ -177,8 +182,8 @@ your Python code's location (typically using ``__file__``)::
     HERE = Path(__file__).resolve().parent
     slug = CSlug(HERE / "name", HERE / "c-code.c")
 
-This gets pretty darn clunky so |cslug| provides an :func:`~cslug.anchor`
-function to do it for you. The above can be rewritten as::
+This gets clunky very quickly so |cslug| provides an :func:`~cslug.anchor`
+function replace it. The above can be rewritten as::
 
     from cslug import cslug, anchor
     slug = CSlug(anchor("name"), anchor("c-code.c"))

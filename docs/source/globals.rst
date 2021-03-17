@@ -3,15 +3,15 @@ Accessing Global Variables and Constants
 ========================================
 
 Neither :mod:`ctypes` nor |cslug| offer much help to access C globals (although
-the latter may change if I feel motivated enough to do something about it
-(unlikely)).
+the latter may change if I feel motivated enough to do something about it).
 
-If you're looking for a way to access constants from Python you'd be better off
-defining them in Python and using :ref:`Sharing constants between Python and C`
-to pass them to C. And if you have non constant global variables then you should
-get rid of them - they're considered bad practice for a reason.
+If you're looking for a way to access constants from Python,
+the preferred approach is to define them in Python then :ref:`pass them to C
+<Sharing constants between Python and C>` using a header file.
+And if you have non constant global variables then you are advised to
+get rid of them - they're considered bad practice and rightly so.
 
-If I've failed to put you off yet then here's how to force your way through.
+If I have been unsuccessful in putting   you off yet then here's how to do it.
 Throughout this page we'll use the following C code and Python setup:
 
 .. literalinclude:: ../demos/globals/globals.c

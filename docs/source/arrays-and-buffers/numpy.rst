@@ -46,7 +46,18 @@ array.
 Contiguity
 ----------
 
-Contiguity will be easier to explain when you see it go wrong.
+Contiguity describes how an array's elements are laid out in memory.
+In C this is always just one after the other in order with no gaps in between.
+Multi dimensional arrays are flattened *column major* so a :math:`2 \times 3`
+array is really::
+
+    a := [ a[0, 0], a[0, 1], a[0, 2], a[1, 0], a[1, 1], a[1, 2] ]
+
+This is the opposite of Fortran which uses *column minor* arrays.
+NumPy, which is written in both C and Fortran, not only bounces between the
+two formats but invents all kinds of other formats in between.
+
+The effect of contiguity will be easier to explain when you see it go wrong.
 Let's start by bypassing the contiguity enforcement in the :ref:`sum example
 above <numpy-wrap-sum>`.
 The following creates an array of the correct dtype
@@ -247,13 +258,17 @@ demonstrates the above for a 3D array.
 .. literalinclude:: flatten.py
     :pyobject: flatten_3D
 
+The more mathematically inclined may observe that ``n`` is always equal to
+``flat_index`` in the above example and that the whole triple for loop is
+therefore redundant in this case.
+
 
 Strided Arrays
 ..............
 
 For those wanting to squeeze out every last clock cycle,
 strided arrays can be supported directly (without conversion)
-relatively easily if the number of dimensions is fixed.
+relatively easily **if the number of dimensions is fixed**.
 Use the :attr:`numpy.ndarray.strides` attribute and the formula below
 to locate elements.
 In these formula,
