@@ -1,0 +1,32 @@
+* Clang is now adopted automatically on macOS and FreeBSD if gcc unavailable.
+  Preference for either compiler can still be overridden using the ``CC``
+  environment variable.
+
+* Custom compiler options may now be provided either with the new **flags**
+  option to :class:`cslug.CSlug` or with the ``CC_ARGS`` environment variable.
+  See :ref:`Add compiler flags`.
+
+* Control of the minimum support macOS version has moved from the previously
+  undocumented ``MIN_OSX`` environment variable to the more standard (albeit
+  wordier) ``MACOS_DEPLOYMENT_TARGET`` environment variable.
+  See :ref:`Minimum OSX version`.
+  The default value for this variable has changed from 10.5 to 10.6
+  to match that of minimum supported Python (currently Python 3.6).
+
+* Compile with ``-O3`` instead of ``-Ofast``. The latter breaks handling of
+  ``NaN`` and ``INF`` amongst other things. ``-Ofast`` may be re-enabled
+  through :ref:`custom compiler flags <Add compiler flags>` if desired.
+
+* Only specify architecture to compiler (using ``-m32`` if Python is 32bit).
+  This fixes compatibility with ``aarch64``/``arm64``, ``ppc64le`` and ``s390x``
+  architectures which are now considered supported and part of routine testing
+  using the `manylinux wacky-architecture
+  <https://github.com/pypa/manylinux#manylinux2014-centos-7-based>`_
+  docker images.
+
+* Fix compatibility with `Alpine Linux <https://alpinelinux.org/>`_.
+  Cross-distribution compiling for or from Alpine is not possible but compiling
+  on Alpine for Alpine is now officially supported and routinely tested with
+  the `Python Alpine
+  <https://hub.docker.com/layers/python/library/python/3.9.0-alpine3.12/images/sha256-df77433749466a68bb599009753c9e5a8efaa3dd9c16450d442bb32f4c1fad4e?context=explore>`_
+  docker images.
