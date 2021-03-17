@@ -21,12 +21,18 @@ ARG BASE=manylinux1_x86_64
 FROM quay.io/pypa/${BASE}
 # Choosing a Python version is done just by prepending its bin dir to PATH.
 ENV PATH=/opt/python/cp39-cp39/bin:$PATH
-# Install dependencies. Installing as many as possible before the COPY
+RUN pip install wheel
+
+# Install dependencies. Installing as many as possible before the ``COPY . /io``
 # helps docker to cache them.
-RUN pip install wheel auditwheel pytest-timeout coverage-conditional-plugin
-# Copy across this repo.
-COPY . /io
+# Otherwise this block could be replaced with just ``COPY . /io``.
+COPY setup.py /io/setup.py
+COPY README.rst /io/README.rst
+COPY cslug/_version.py /io/cslug/_version.py
+
 # Set the repo's root as the cwd.
 WORKDIR /io
 # Install more dependencies.
 RUN pip install --prefer-binary -e .[test]
+# Copy across this repo.
+COPY . /io
