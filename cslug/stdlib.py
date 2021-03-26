@@ -14,6 +14,7 @@ Linux     The anonymous, non-existent :py:`ctypes.CDLL("")`. Don't ask me what i
 Windows   The somewhat barren ``C:\Windows\system32\msvcrt.dll``.
 macOS     Either ``libc.dylib`` (for new OSXs), ``libSystem`` (for older) or ``/usr/lib/system/libsystem_c.dylib`` (really old).
 MSYS2     Good old ``msys-2.0.dll``.
+Cygwin    ``cygwin1.dll``, requires ``cslug >= 0.4.0``.
 FreeBSD   A tentative union of ``libc.so.7`` and ``libm.so.5`` (which also don't exist).
 ========  ======================================================================================================================
 

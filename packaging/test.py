@@ -158,6 +158,12 @@ def inspect_wheel(wheel):
 @pytest.mark.order(-1)
 @pytest.mark.timeout(200)
 def test():
+    if sys.platform == "cygwin":
+        pytest.skip("venv is not supported on cygwin.")
+        # TODO: virtualenv is technically (but flakely) supported but it lacks a
+        #  programmatic API, requires some quite aggressive version pinning and
+        #  is a pain to debug.
+
     # Create a virtual environment.
     target = Env(HERE / "venv-dir")
 
