@@ -65,6 +65,10 @@ elif sys.platform == "msys":  # pragma: msys
     stdlib = ctypes.CDLL("msys-2.0.dll")
     dlclose = stdlib.dlclose
 
+elif sys.platform == "cygwin":  # pragma: cygwin
+    stdlib = ctypes.CDLL("cygwin1.dll")
+    dlclose = stdlib.dlclose
+
 elif OS == "FreeBSD":  # pragma: FreeBSD
     # FreeBSD uses `/usr/lib/libc.so.7` where `7` is anothoer version number.
     # It is not in PATH but using its name instead of its path is somehow the
