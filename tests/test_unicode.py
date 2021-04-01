@@ -73,7 +73,6 @@ def test_escaped_unicode_literal(source):
     self = CSlug(anchor(name()), source)
     self.make()
     assert self.dll.a() == "㟐"
-    assert self.dll.b() == "🚀"
 
 
 @_path_or_piped(UNICODE / "literal.c")
@@ -83,7 +82,6 @@ def test_non_escaped_unicode_literal(source):
     self = CSlug(anchor(name()), source)
     self.make()
     assert self.dll.a() == "㟐"
-    assert self.dll.b() == "🚀"
 
 
 @_path_or_piped(UNICODE / "identifiers.c")
