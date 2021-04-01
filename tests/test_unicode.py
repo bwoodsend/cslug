@@ -4,6 +4,7 @@
 
 import io
 import shutil
+import platform
 
 import pytest
 
@@ -34,6 +35,12 @@ def delayed_skip_if_unsupported():
         pytest.skip("Unicode identifiers requires clang 3.3.")
 
 
+no_windows = pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="No compilers recognise unicode filenames on Windows.")
+
+
+@no_windows
 def test_unicode_dll_path():
     """Test the filename to a DLL may contain unicode."""
     self = CSlug(DUMP / ("㟐㟐㟐" + name().name), RESOURCES / "basic.c")
@@ -41,6 +48,7 @@ def test_unicode_dll_path():
     assert self.dll.add_1(-3) == -2
 
 
+@no_windows
 def test_unicode_source_path():
     """Test the filename to a .c source file may contain unicode."""
     unicode_filename = DUMP / ("㟐㟐㟐" + name().stem + ".c")
