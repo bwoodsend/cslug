@@ -45,7 +45,7 @@
 }
 
 /* Use different color code-blocks for C and Python. */
-div[class*="highlight-C"] .highlight{
+div[class*="highlight-C"] .highlight, .highlight-c > .highlight{
   background: #e6f0f9;
 }
 div[class*="highlight-py"] .highlight, div[class*="highlight-default"] .highlight{
