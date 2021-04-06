@@ -14,6 +14,11 @@
   color: #76D5FF;
 }
 
+/* Move padding beneath the last contents entry so that there isn't
+   a silly little green stub poking out under the scrollbar. */
+.wy-nav-side { padding-bottom: unset; }
+.wy-menu-vertical { padding-bottom: 1em; }
+
 /* Turn `.. note::` and `.. seealso::` etc green. */
 .rst-content .note, .rst-content .seealso, .rst-content .wy-alert-info.admonition, .rst-content .wy-alert-info.admonition-todo, .rst-content .wy-alert-info.attention, .rst-content .wy-alert-info.caution, .rst-content .wy-alert-info.danger, .rst-content .wy-alert-info.error, .rst-content .wy-alert-info.hint, .rst-content .wy-alert-info.important, .rst-content .wy-alert-info.tip, .rst-content .wy-alert-info.warning, .wy-alert.wy-alert-info {
   background: #e7faf2;
