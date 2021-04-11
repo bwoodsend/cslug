@@ -16,6 +16,7 @@ macOS     Either ``libc.dylib`` (for new OSXs), ``libSystem`` (for older) or ``/
 MSYS2     Good old ``msys-2.0.dll``.
 Cygwin    ``cygwin1.dll``, requires ``cslug >= 0.4.0``.
 FreeBSD   A tentative union of ``libc.so.7`` and ``libm.so.5`` (which also don't exist).
+Android   Similar to FreeBSD, a union of ``libc.so`` and ``libm.so``.
 ========  ======================================================================================================================
 
 

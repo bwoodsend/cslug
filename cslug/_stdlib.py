@@ -55,8 +55,17 @@ elif OS == "Linux":  # pragma: Linux
     try:
         stdlib = ctypes.CDLL("")
     except OSError:  # pragma: no cover
-        # Alpine Linux.
+        # Either Alpine Linux or Android.
+        # Unfortunately, there doesn't seem to be any practical way
+        # to tell them apart.
         stdlib = ctypes.CDLL("libc.so")
+
+        # Android, like FreeBSD puts its math functions
+        # in a dedicated `libm.so`.
+        # The only way to know that this is not Alpine is to check if the math
+        # functions are already available in `libc.so`.
+        if not hasattr(stdlib, "sin"):
+            extra_libs.append(ctypes.CDLL("libm.so"))
     dlclose = stdlib.dlclose
 
 elif sys.platform == "msys":  # pragma: msys
