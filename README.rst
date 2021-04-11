@@ -85,15 +85,16 @@ Supported Compilers
 
 The following OS/compiler combinations are fully supported and tested regularly.
 
-======== ===== ======= ===== ======= ============
-Compiler Linux Windows macOS FreeBSD Cygwin/msys2
-======== ===== ======= ===== ======= ============
-gcc_     ✓     ✓       ✓     ✓       ✓
-clang_   ✓     ✗       ✓     ✓       ✗
-MSVC     ✗     ✗       ✗     ✗       ✗
-TinyCC_  ✓     ✓       ✗     ✗       ✗
-======== ===== ======= ===== ======= ============
+======== ===== ======= ===== ======= ============ ========
+Compiler Linux Windows macOS FreeBSD Cygwin/msys2 Android*
+======== ===== ======= ===== ======= ============ ========
+gcc_     ✓     ✓       ✓     ✓       ✓            ✗  
+clang_   ✓     ✗       ✓     ✓       ✗            ✓
+MSVC     ✗     ✗       ✗     ✗       ✗            ✗  
+TinyCC_  ✓     ✓       ✗     ✗       ✗            ✗ 
+======== ===== ======= ===== ======= ============ ========
 
+\* Using Termux_.
 
 Installation
 ------------
@@ -181,3 +182,4 @@ Credits
 .. _Vagrant: https://github.com/hashicorp/vagrant
 .. _manylinux: https://github.com/pypa/manylinux/tree/manylinux1
 .. _MinGW-Builds: https://sourceforge.net/projects/mingwbuilds/
+.. _Termux: https://termux.com/
