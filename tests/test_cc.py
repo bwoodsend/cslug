@@ -8,10 +8,10 @@ import re
 
 import pytest
 
-from cslug._cc import cc, cc_version, which
+from cslug._cc import cc, cc_version, which, _parse_cc_version
 from cslug import exceptions, misc
 
-from tests import DUMP, uuid
+from tests import DUMP, uuid, RESOURCES
 
 pytestmark = pytest.mark.order(-4)
 
@@ -114,3 +114,38 @@ def test_no_cc_or_blocked_error():
     str(exceptions.BuildBlockedError())
 
     assert cc()
+
+
+cc_version_files = list((RESOURCES / "cc_versions").glob("*"))
+
+
+@pytest.mark.parametrize("path", cc_version_files,
+                         ids=[i.name for i in cc_version_files])
+def test_cc_version_parse(path):
+    """Test the parsing of ``$CC -v`` output. So that these can be easily tested
+    on all platforms, sample outputs of ``$CC -v`` are dumped in files located
+    at tests/resources/cc_versions/.
+    """
+    # The intended parse output is the filename.
+    name, version, _ = path.name.split("-")
+    version = tuple(map(int, version.split(".")))
+
+    # The file contents is the stdout that is dumped by the compiler.
+    stdout = path.read_bytes()
+
+    # Check the target matches what is parsed.
+    parsed = _parse_cc_version(stdout, "")
+    assert (name, version) == parsed
+
+
+CC_VERSION_ERROR_MESSAGE = """\
+Failed to .* output of
+    \\['unknown-cc', '-v'\\]
+::
+    Miff muffet moof compiler with added miffle."""
+
+
+def test_failed_cc_version():
+    with pytest.raises(RuntimeError, match=CC_VERSION_ERROR_MESSAGE):
+        _parse_cc_version(b"Miff muffet moof compiler with added miffle.",
+                          ["unknown-cc", "-v"])
