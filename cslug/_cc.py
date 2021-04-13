@@ -106,6 +106,22 @@ def cc_version(CC=None):
 
     # Some compilers use stdout and others use stderr - combine them.
     stdout = p.stdout + p.stderr
+    return _parse_cc_version(stdout, cmd)
+
+
+def _parse_cc_version(stdout: bytes, cmd: list):
+    """The parser for :func:`cc_version`.
+
+    Args:
+        stdout:
+            Whatever ``$CC -v`` gives.
+        cmd:
+            The command used to obtain **stdout**. Only needed to display in
+            case of an error.
+    Returns:
+        (str, tuple[int]): A ``(name, version_info)`` pair.
+
+    """
     # All compilers except pcc use the format "[name] version [version]".
     m = re.search(rb"(\S+) version (\S+)", stdout) \
         or re.search(rb"(pcc) (\S+) for \S+", stdout)
@@ -113,7 +129,7 @@ def cc_version(CC=None):
     try:
         name, version = m.groups()
         return name.decode(), tuple(map(int, version.split(b".")))
-    except:  # pragma: no cover
+    except:
         from textwrap import indent
         raise RuntimeError(
             f"Failed to get CC version from the output of\n    {cmd}\n::\n"
