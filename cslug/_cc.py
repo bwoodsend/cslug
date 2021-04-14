@@ -96,6 +96,7 @@ def cc_version(CC=None):
     - ``'tcc'`` for `TinyCC`_ including the 32-bit ``i386-win32-tcc`` version.
     - ``'clang'`` for clang_.
     - ``'pcc'`` for `Portable C Compiler`_.
+    - ``'MSVC'`` for Microsoft Visual Compiler.
 
     The `version_info` is in the standard ``(major, minor, micro)`` version
     format.
@@ -127,7 +128,13 @@ def _parse_cc_version(stdout: bytes, cmd: list):
         or re.search(rb"(pcc) (\S+) for \S+", stdout)
 
     try:
-        name, version = m.groups()
+        if m:
+            name, version = m.groups()
+        else:
+            # MSVC of course has to break the nice trend completely...
+            m = re.search(rb"Microsoft .* Version (\S+)", stdout)
+            name = b"MSVC"
+            version = m.group(1)
         return name.decode(), tuple(map(int, version.split(b".")))
     except:
         from textwrap import indent

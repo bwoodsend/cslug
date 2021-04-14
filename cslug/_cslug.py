@@ -311,6 +311,15 @@ class CSlug(object):
         return ([_cc] + output + flags + warning_flags + self.flags +
                 env_flags + true_files + stdin_flags + link_flags, buffers)
 
+    def _msvc_command(self):
+        for source in self.sources:
+            if not isinstance(source, Path):
+                raise RuntimeError("MSVC does not support piped sources.")
+
+        return ["cl", "/Fe" + str(self.path), "/LD",
+         *(str(i) for i in self.sources if i.suffix != ".h"),
+        "/DEF", str(self.types_map.json_path.with_suffix(".def"))]
+
     def _check_printfs(self):
         return any(check_printfs(*misc.read(i)) for i in self.sources)
 
