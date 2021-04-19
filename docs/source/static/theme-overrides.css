@@ -82,3 +82,8 @@ div[class*="highlight-py"] .highlight, div[class*="highlight-default"] .highligh
 .wy-nav-content-wrap {
   margin-left: min(28%, 300px);
 }
+
+/* Custom `.. rst-class:: in-red` blocks. */
+.in-red {
+  color: darkred;
+}

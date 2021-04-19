@@ -133,6 +133,11 @@ history = """\
 Changelog
 =========
 
+.. role:: red
+    :class: in-red
+
+Release history for |cslug|.
+Breaking changes are :red:`highlighted in red` text.
 
 """ + "\n".join(f"v{i.stem}\n-{'-' * len(i.stem)}\n\n"
                 f".. rst-class:: spacious\n\n"

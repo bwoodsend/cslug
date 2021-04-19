@@ -1,0 +1,19 @@
+*   Force ``setup.py bdist_wheel`` to run ``clean --all``.
+    Doing so blocks setuptools from dumping files for the wrong platform from
+    the build cache folder into a wheel without any check to see if it is
+    required.
+    See :class:`cslug.building.bdist_wheel` for details.
+
+* Support Android running Termux_.
+
+*   .. rst-class:: in-red
+
+        Drop the :c:`mblen()` function from :mod:`cslug.stdlib` due to its
+        unavailability on Android.
+
+*   Support Cygwin Python and Cygwin native |gcc|.
+    Formerly, |cslug| supported a Cygwin environment but only using a regular
+    MSVC build of Python and |gcc| cross compile headers for building generic
+    Windows applications.
+
+.. _Termux: https://termux.com/
