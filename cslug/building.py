@@ -98,6 +98,11 @@ else:
     class bdist_wheel(_bdist_wheel):
         """:mod:`!wheel.bdist_wheel` with platform dependent but Python
         independent tags.
+
+        In addition to setting the tags, also prevent setuptools's build cache
+        from leaking binaries for the wrong platform into the wheel. See
+        :meth:`run` for details.
+
         """
         def finalize_options(self):  # pragma: no cover
             """Set platform dependent wheel tag.
@@ -126,6 +131,29 @@ else:
                                     self.plat_name)
 
             super().finalize_options()
+
+        def run(self):  # pragma: no cover
+            """Additionally run ``setup.py clean --all`` before building the
+            wheel.
+
+            Setuptools's caching can cause files for the wrong platform to be
+            collected if you build wheels for the two platforms on the same
+            filesystem. This can happen by switching from 64 to 32 bit
+            Python, using Docker, dual booting or any kind of cross compiling.
+
+            Forcing a clean will ensure that no files are included in wheels
+            which they shouldn't be.
+
+            .. versionchanged:: v0.4.0
+
+                Add this force-cleaning step.
+
+            """
+            clean = self.distribution.get_command_obj("clean")
+            clean.all = True
+            clean.verbose = 0
+            self.run_command("clean")
+            super().run()
 
 
 def copy_requirements(path="pyproject.toml", exclude=()):

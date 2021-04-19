@@ -237,6 +237,7 @@ those which are appropriate.
     collected but for some unfortunate caching. If you compile for multiple
     platforms which share a filesystem, run ``python setup.py clean`` between
     each switch.
+    This problem is rectified in `v0.4.0`.
 
 
 Platform specific wheel tag

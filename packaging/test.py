@@ -66,6 +66,8 @@ def run(*args, cwd=".", check=True):
                 if re.search(r"no files found matching .* under directory .*",
                              line):
                     continue
+                if re.search(r"does not exist.*can't clean it", line):
+                    continue
                 warnings.warn(line)
     return p
 
@@ -218,10 +220,14 @@ def test():
 
     # bdist_wheel appears to lazily just copy `build/lib` which it really
     # shouldn't. If you `setup.py build` with two platforms which share a file
-    # system then the second wheel will collect junk from the first. The only
-    # way to stop it is to nuke your `build` folder. Even `setup.py clean` is
-    # inadequate.
-    shutil.rmtree(contains_slugs / "build", ignore_errors=True)
+    # system then the second wheel will collect junk from the first.
+    # `cslug.building.bdist_wheel.run()` should ensure that `clean` is called
+    # automatically.
+    # To verify that the cleaning is happening, inject some rubbish into the
+    # build directory.
+    for path in (contains_slugs / "build").rglob("*"):
+        if path.is_dir():
+            (path / "build-junk").write_text("I am full of rubbish")
 
     # Build a wheel for `contains-slugs` using the master environment.
     shutil.rmtree(contains_slugs / "dist", ignore_errors=True)
