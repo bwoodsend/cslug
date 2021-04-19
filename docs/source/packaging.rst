@@ -78,7 +78,7 @@ Compile on ``setup.py build``.
 Whilst you rarely use it directly, ``setup.py build`` is called implicitly
 whenever you:
 
-* ``pip install .`` or ``pip install -e .``.
+* ``pip install .`` but not ``pip install -e .``
 * ``python setup.py bdist_wheel`` or ``pip wheel .`` but not
   ``python setup.py sdist``.
 * ``pip install /path/to/source/distribution.tar.gz`` but not
@@ -179,7 +179,7 @@ is to:
 
 .. code-block:: shell
 
-    pip install -e .
+    pip install .
 
 Or manually install the build dependencies before invoking any ``setup.py``
 commands.
