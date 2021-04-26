@@ -6,8 +6,8 @@ There exists a lesser known family of objects within the more C-ish corners of
 Python known as the *bytes-like* objects.
 These are objects which, using the `Buffer Protocol`_, agree to have their raw
 contents read from and written to by other (usually C) code.
-Or in more C like terms, these objects give you a void |pointer| to their data
-and you're free to do what you like with it.
+Or in more C like terms, these objects give you a void |../pointer| to their
+data and you're free to do what you like with it.
 
 This family includes the standard types:
 
@@ -155,7 +155,7 @@ you want to duck-type, use Python.
 Exact types
 ...........
 
-You may also notice that `array's table of type codes`_ lacks the exact type
+You may also notice that `array's table of type codes`_ lacks the exact types
 from :c:`#include <stdint.h>`.
 Use the :func:`cslug.misc.array_typecode()` helper function to get them.
 e.g. If your C function has an argument of type :c:`uint16_t *` then use::

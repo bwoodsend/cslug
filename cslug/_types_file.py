@@ -16,7 +16,7 @@ from cslug._struct import make_struct
 
 
 class Types(object):
-    """Manages type information which is not found in a |shared library|.
+    """Manages type information which is not found in a |../shared library|.
 
     * Scans source code for:
 
@@ -156,7 +156,7 @@ class Types(object):
 
         Args:
             dll (ctypes.CDLL):
-                The opened |shared library| to apply type information to.
+                The opened |../shared library| to apply type information to.
             strict (bool):
                 Raise an :class:`AttributeError` if a symbol wasn't found.
 

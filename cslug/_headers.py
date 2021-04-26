@@ -37,7 +37,7 @@ class Header(object):
                 Constants classes to :c:`#define`.
 
         For local **includes** wrap in double quotes :py:`includes='"header.h"'`
-        or leave as is py:`includes='header.h'`. For library includes use angle
+        or leave as is :py:`includes='header.h'`. For library includes use angle
         brackets :py:`includes='<stdint.h>'`.
 
         """

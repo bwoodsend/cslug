@@ -9,7 +9,8 @@ there are a few knobs for options which may be forwarded on the the C compiler.
 
     The setting of these options will not trigger a recompile.
     To have any effect you must call :meth:`cslug.CSlug.make`,
-    or if you set up `setuptools integration <Packaging with setuptools>`_,
+    or if you set up :ref:`setuptools integration <Packaging
+    with setuptools>`,
     re-run ``python setup.py build``.
 
 
@@ -25,8 +26,9 @@ This may be:
    disambiguate from form 1.
 3. A full path to a compiler executable.
 
-This feature is intended to be used after setting up `setuptools integration
-<Packaging with setuptools>`_ to temporarily switch to an alternative compiler.
+This feature is intended to be used after setting up
+:ref:`setuptools integration <Packaging with setuptools>`
+to temporarily switch to an alternative compiler.
 For example to recompile a project using the TinyCC_ (aka ``tcc``) compiler run:
 
 On Unix (Linux, macOS, FreeBSD and any Unix emulator such as MSYS2)::
@@ -96,7 +98,8 @@ have reason to lower it.
 You may however need to raise it if your compiler lacks the SDKs for older
 versions.
 Do this by setting the ``MACOS_DEPLOYMENT_TARGET`` environment variable
-(assuming that you set up `setuptools integration <Packaging with setuptools>`_)
+(assuming that you set up :ref:`setuptools integration <Packaging with
+setuptools>`)
 ::
 
     MACOS_DEPLOYMENT_TARGET=10.10 python setup.py build
