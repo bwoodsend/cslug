@@ -128,8 +128,8 @@ def inspect_wheel(wheel):
     """Inspect the contents of a ``contains-slugs`` wheel."""
     # Test `MACOS_DEPLOYMENT_TARGET` has been propagated into the filename.
     if "macos" in wheel.stem:
-        from cslug._cc import macos_version_min
-        min_osx = macos_version_min()
+        from cslug._cc import mmacosx_version_min
+        min_osx = mmacosx_version_min()
         # The '.' gets normalised to a '_'.
         assert re.search(min_osx.replace(".", r"\D"), wheel.stem)
 

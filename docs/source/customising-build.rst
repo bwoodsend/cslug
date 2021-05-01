@@ -90,9 +90,9 @@ Minimum OSX version
 -------------------
 
 To compile on a new macOS version then run on an older one requires setting the
-macOS deployment target (``-macos-version-min`` compiler option) to whatever
+macOS deployment target (``-mmacosx-version-min=`` compiler option) to whatever
 the oldest version is that you wish to support.
-By default, |cslug| sets this to |macos_version_min| which is the same as the
+By default, |cslug| sets this to |mmacosx_version_min| which is the same as the
 oldest version of Python that |cslug| supports, so in theory you should never
 have reason to lower it.
 You may however need to raise it if your compiler lacks the SDKs for older

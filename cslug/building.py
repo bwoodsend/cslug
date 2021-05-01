@@ -124,9 +124,9 @@ else:
             # `wheel` assumes that the macOS target version is the same as the
             # target version of Python. This is completely irrelevant to cslug.
             # The correct version is whatever cslug passed to gcc's
-            # --mmacosx-version-min parameter.
-            from cslug._cc import macos_version_min
-            min_osx = macos_version_min()
+            # -mmacosx-version-min parameter.
+            from cslug._cc import mmacosx_version_min
+            min_osx = mmacosx_version_min()
             self.plat_name = re.sub(r"macosx-\d+[.]\d+-", f"macosx-{min_osx}-",
                                     self.plat_name)
 

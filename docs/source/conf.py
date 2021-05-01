@@ -107,8 +107,8 @@ rst_prolog = """
 
 """
 
-from cslug._cc import macos_version_min
-rst_prolog += f".. |macos_version_min| replace:: ``{macos_version_min()}``\n\n"
+from cslug._cc import mmacosx_version_min
+rst_prolog += f".. |mmacosx_version_min| replace:: ``{mmacosx_version_min()}``\n\n"
 
 import runpy
 

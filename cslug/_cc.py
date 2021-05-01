@@ -136,13 +136,14 @@ def _parse_cc_version(stdout: bytes, cmd: list):
             f"{indent(stdout.decode(errors='replace'), '    ')}") from None
 
 
-def macos_version_min():  # pragma: Darwin
-    """Get a value to be used for the ``-macos_version_min`` compiler option."""
+def mmacosx_version_min():  # pragma: Darwin
+    """Get a value to be used for the ``-mmacosx-version-min`` compiler option.
+    """
 
-    # The default value should be kept in sync with the minimum macos version
+    # The default value should be kept in sync with the minimum macOS version
     # compiled against on https://www.python.org/downloads/mac-osx/ for the
     # oldest Python version supported by cslug so as to
-    # maximise macos-version-min without cutting off anything that Python
+    # maximise -mmacosx-version-min without cutting off anything that Python
     # doesn't already. Whilst cslug supports:
     # - Python 3.6 -> OSX 10.6
     # - Python 3.7 -> OSX 10.6 (again)
