@@ -165,6 +165,7 @@ html_static_path = ['static']
 def setup(app):
     app.add_css_file('tooltip.css')  # may also be an URL
     app.add_css_file('theme-overrides.css')
+    app.add_js_file('table-highlight.js')
 
 
 html_favicon = html_logo = 'icons/venomous-sea-slug-flare-icon.png'
