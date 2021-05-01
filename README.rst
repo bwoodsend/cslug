@@ -9,9 +9,9 @@ Welcome to cslug!
 Quick and painless wrapping C code into Python.
 
 * Free software: MIT license
-* Documentation: https://cslug.readthedocs.io.
-* Source: https://github.com/bwoodsend/cslug
-* Releases: https://github.com/bwoodsend/cslug/releases
+* Documentation: https://cslug.readthedocs.io/
+* Source: https://github.com/bwoodsend/cslug/
+* Releases: https://github.com/bwoodsend/cslug/releases/
 
 The **cslug** package provides a thin layer on top of the built-in ctypes_
 library, making it easier to load functions and structures from C into Python.
