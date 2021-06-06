@@ -126,7 +126,10 @@ def parse_function(string, typedefs=None):
 def parse_functions(text, typedefs=None, definitions=True, prototypes=False):
     for func in search_functions(text, definitions=definitions,
                                  prototypes=prototypes):
-        name, *args = parse_function(func, typedefs=typedefs)
+        try:
+            name, *args = parse_function(func, typedefs=typedefs)
+        except ValueError:
+            continue
         yield name, args
 
 
