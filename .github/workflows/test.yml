@@ -96,6 +96,12 @@ jobs:
           CC: tcc
         run: pytest
 
+      - name: Test clang
+        if: ${{ runner.os == 'linux' }}
+        env:
+          CC: clang
+        run: pytest
+
       - name: Test TinyCC
         if: ${{ runner.os == 'windows' && matrix.architecture == 'x64' }}
         run: set CC=%ProgramFiles%/tcc/tcc/tcc && pytest
