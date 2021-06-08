@@ -1,0 +1,1 @@
+* Fix :func:`~cslug.cc_version` when version to parse has additional suffixes.
