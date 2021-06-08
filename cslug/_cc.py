@@ -123,8 +123,8 @@ def _parse_cc_version(stdout: bytes, cmd: list):
 
     """
     # All compilers except pcc use the format "[name] version [version]".
-    m = re.search(rb"(\S+) version (\S+)", stdout) \
-        or re.search(rb"(pcc) (\S+) for \S+", stdout)
+    m = re.search(rb"(\S+) version ([\d.]+)", stdout) \
+        or re.search(rb"(pcc) ([\d.]+) for \S+", stdout)
 
     try:
         name, version = m.groups()

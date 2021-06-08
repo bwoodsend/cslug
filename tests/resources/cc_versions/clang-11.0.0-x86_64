@@ -1,0 +1,11 @@
+Ubuntu clang version 11.0.0-2~ubuntu20.04.1
+Target: x86_64-pc-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/10
+Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/9
+Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/10
+Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/9
+Selected GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/10
+Candidate multilib: .;@m64
+Selected multilib: .;@m64
