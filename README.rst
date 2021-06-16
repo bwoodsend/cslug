@@ -88,10 +88,10 @@ The following OS/compiler combinations are fully supported and tested regularly.
 ======== ===== ======= ===== ======= ============ ========
 Compiler Linux Windows macOS FreeBSD Cygwin/msys2 Android*
 ======== ===== ======= ===== ======= ============ ========
-gcc_     ✓     ✓       ✓     ✓       ✓            ✗  
-clang_   ✓     ✗       ✓     ✓       ✗            ✓
-MSVC     ✗     ✗       ✗     ✗       ✗            ✗  
-TinyCC_  ✓     ✓       ✗     ✗       ✗            ✗ 
+gcc_     ✓     ✓       ✓     ✓       ✓            ✗
+clang_   ✓     ✓       ✓     ✓       ✗            ✓
+MSVC     ✗     ✗       ✗     ✗       ✗            ✗
+TinyCC_  ✓     ✓       ✗     ✗       ✗            ✗
 ======== ===== ======= ===== ======= ============ ========
 
 \* Using Termux_.

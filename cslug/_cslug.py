@@ -30,6 +30,12 @@ SUFFIX = {"Windows": ".dll", "Linux": ".so", "Darwin": ".dylib"}.get(OS, ".so")
 BIT_NESS = 8 * ctypes.sizeof(ctypes.c_void_p)
 SUFFIX = "-{}-{}bit{}".format(OS, BIT_NESS, SUFFIX)
 DEFAULT_LINKS = ["m"] if OS == "Linux" else []
+EXPORT_SYMBOLS = {
+    "tcc": "-rdynamic",
+    "pcc": "-rdynamic",
+    "gcc": "-fPIC",
+    "clang": "" if OS == "Windows" else "-fPIC",
+}
 
 
 class CSlug(object):
@@ -267,9 +273,9 @@ class CSlug(object):
         output = ["-o", str(self.path)]
 
         # Create a library, exporting all symbols.
-        flags = [
-            "-shared", "-rdynamic" if cc_name in ("tcc", "pcc") else "-fPIC"
-        ]
+        flags = ["-shared"]
+        if EXPORT_SYMBOLS[cc_name]:  # pragma: no cover
+            flags.append(EXPORT_SYMBOLS[cc_name])
 
         if cc_name == "gcc" and version >= (4, 6, 0) \
             or cc_name == "clang" and version >= (3, 7, 0):  # pragma: no cover
