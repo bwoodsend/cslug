@@ -104,7 +104,9 @@ Its favourite compiler is gcc_.
 Linux distributions typically come with it preinstalled.
 If you are on another OS or just don't have it then you should get it with
 mingw-w64_.
-Windows users are recommended to use MinGW-Builds_.
+Windows users are recommended to download WinLibs_ without
+``LLVM/Clang/LLD/LLDB`` (although **cslug** works with ``clang`` too)
+and add its ``mingw64/bin`` directory to ``PATH``.
 
 Check that you have it set up by running the following in a terminal::
 
@@ -181,5 +183,5 @@ Credits
 .. _`Cython`: https://cython.readthedocs.io/en/latest/index.html
 .. _Vagrant: https://github.com/hashicorp/vagrant
 .. _manylinux: https://github.com/pypa/manylinux/tree/manylinux1
-.. _MinGW-Builds: https://sourceforge.net/projects/mingwbuilds/
 .. _Termux: https://termux.com/
+.. _WinLibs: https://www.winlibs.com/

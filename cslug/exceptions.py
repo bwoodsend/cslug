@@ -63,16 +63,13 @@ class NoGccError(Exception):
             return out_.format(f"Install gcc by running:\n    {cmd}\n"
                                f"in bash/terminal. ")
 
-        # Installing on Windows is a bit strange. The easiest method seems to be
-        # Mingw-builds.
+        # Briefly explain how to get gcc on Windows.
         if platform.system() == "Windows":
+            bits = 32 if sys.maxsize == (1 << 31) - 1 else 64
             return out_.format(
-                "Download Mingw-builds from:\n"
-                "    http://mingw-w64.org/doku.php/download/mingw-builds\n"
-                "Install it, making sure to select:\n    Architecture: "
-                f"{'i686' if sys.maxsize == (1 << 31) - 1 else 'x86_64'}\n"
-                "Then add its 'bin' folder "
-                r"(e.g C:\Program Files\mingw-w64\mingw64\bin) "
+                f"Download WinLibs {bits}bit from:\n"
+                "    https://www.winlibs.com/#download\n"
+                f"Unpack it then add its 'mingw{bits}/bin' folder "
                 "to the 'PATH' environment variable. ")
 
         return out_.format("")
