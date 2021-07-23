@@ -9,6 +9,10 @@
 *.dylib
 *.dll
 *.def
+*.out
+*.obj
+*.lib
+*.exp
 
 # Distribution / packaging
 .Python
