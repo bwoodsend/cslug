@@ -11,6 +11,7 @@
 .. _`Python packaging tutorial`: https://python-packaging.readthedocs.io/en/latest/index.html
 .. _wheel: https://wheel.readthedocs.io/en/stable/
 .. _`raise an issue on Github`: https://github.com/bwoodsend/cslug/issues/new
+.. _WinLibs: https://www.winlibs.com/
 
 .. role:: tooltip(raw)
    :format: html

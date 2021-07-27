@@ -1,0 +1,5 @@
+* Add a ``MACOS_ARCHITECTURE`` environment variable to allow cross-building for
+  macOS's new ARM chips. See :ref:`Architectures for macOS`.
+
+* Fix compatibility with clang on Windows. Clang/Windows, installed via
+  WinLibs_, is now a supported and routinely tested combination.
