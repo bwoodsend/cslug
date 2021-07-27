@@ -60,12 +60,21 @@ jobs:
       - name: Show gcc
         run: gcc -v
 
-      - name: Test gcc
-        if: ${{ runner.os != 'macOS' && matrix.architecture == 'x64' }}
+      - name: Test native compiler
+        if: ${{ matrix.architecture == 'x64' }}
+        run: pytest
+
+      - uses: bwoodsend/setup-winlibs-action@v1
+        if:  ${{ runner.os == 'Windows' }}
+        with:
+          architecture: ${{ matrix.architecture }}
+          with_clang: true
+
+      - name: Test Winlibs gcc
+        if:  ${{ runner.os == 'Windows' }}
         run: pytest
 
       - name: Test Clang
-        if: ${{ runner.os == 'macOS' }}
         env:
           CC: clang
         run: pytest
@@ -94,12 +103,6 @@ jobs:
         if: ${{ runner.os == 'linux' }}
         env:
           CC: tcc
-        run: pytest
-
-      - name: Test clang
-        if: ${{ runner.os == 'linux' }}
-        env:
-          CC: clang
         run: pytest
 
       - name: Test TinyCC
