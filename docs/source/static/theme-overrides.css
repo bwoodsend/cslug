@@ -27,13 +27,16 @@
   background: #397e57;
 }
 
-/* Inline literals. */
+/* --- Inline literals. --- */
 .rst-content code.literal, .rst-content tt.literal {
   color: #034040;
   background: #0000;
   border: #0000;
-  border-bottom: solid 1px #0001;
   padding: 2px 2px;
+  font-weight: 100;
+}
+.rst-content a code.literal, .rst-content a tt.literal {
+  border-bottom: solid 1px #0001;
 }
 /* Inline literals in tables. */
 .rst-content table.docutils .code.literal {
