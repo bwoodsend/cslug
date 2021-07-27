@@ -3,8 +3,7 @@ Welcome to cslug!
 =================
 
 .. image::
-    https://img.shields.io/badge/
-    Python-%203.6%20%7C%203.7%20%7C%203.8%20%7C%203.9%20-%2326543A.svg
+    https://img.shields.io/pypi/pyversions/cslug?color=%2326543A&label=Python
     :alt: PyPI version
     :target: https://pypi.org/project/cslug/
 
