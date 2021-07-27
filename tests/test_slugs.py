@@ -12,6 +12,9 @@ import math
 import random
 import platform
 import warnings
+import shutil
+import re
+from subprocess import run, PIPE
 
 import pytest
 
@@ -491,3 +494,56 @@ def test_custom_include():
     self.flags.clear()
     with pytest.raises(exceptions.BuildError):
         self.make()
+
+
+def test_macos_arches(monkeypatch):
+    """Test cross compiling for arm64/x86_64 on macOS."""
+
+    if platform.system() != "Darwin":
+        return
+    xcode = _xcode_version()
+    if xcode is None or xcode < (12, 2):
+        pytest.skip("Needs Xcode >= 12.2")
+
+    # The test C code should require linking to be meaningful.
+    self = CSlug(anchor(name()), io.StringIO("""\
+        #include <math.h>
+        #include <stdlib.h>
+
+        double take_sin(double x) { return sin(x); }
+    """), links="m")  # yapf: disable
+
+    for arches in ["x86_64", "arm64", "x86_64 arm64"]:
+        monkeypatch.setenv("MACOS_ARCHITECTURE", arches)
+
+        # Try compiling.
+        try:
+            self.make()
+        except exceptions.BuildError:
+            # This is unlikely to be cslug specific. More likely its Xcode
+            # getting into a mess.
+            pytest.skip("This compiler appears not to be setup to build cross "
+                        "arch binaries.")
+
+        # Verify which type(s) are included in the binary we just built using
+        # lipo - a builtin command line tool for inspecting, slicing and making
+        # fat binaries.
+        _arches = run(["lipo", "-archs", str(self.path)],
+                      stdout=PIPE).stdout.decode()
+        assert sorted(arches.split()) == sorted(_arches.split())
+
+        # If we just built a native binary or a dual binary then we can run it
+        # and it should work.
+        if platform.machine() in arches:
+            self.dll.take_sin(2) == pytest.approx(math.sin(2))
+
+
+def _xcode_version():
+    """Get xcode version if installed or None if not."""
+    if shutil.which("xcodebuild") is None:
+        return
+    p = run(["xcodebuild", "-version"], stdout=PIPE, stderr=PIPE)
+    if p.returncode:
+        return
+    version = re.search(r"Xcode (\d+)\.(\d+)", p.stdout.decode()).groups()
+    return tuple(map(int, version))

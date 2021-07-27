@@ -125,10 +125,16 @@ else:
             # target version of Python. This is completely irrelevant to cslug.
             # The correct version is whatever cslug passed to gcc's
             # -mmacosx-version-min parameter.
-            from cslug._cc import mmacosx_version_min
+            from cslug._cc import mmacosx_version_min, macos_architecture
             min_osx = mmacosx_version_min()
             self.plat_name = re.sub(r"macosx-\d+[.]\d+-", f"macosx-{min_osx}-",
                                     self.plat_name)
+            # If macOS binaries were either cross compiled or compiled "fat"
+            # (contains two architectures in one binary) then the architecture
+            # tag needs to reflect that.
+            arch = macos_architecture()
+            if arch:
+                self.plat_name = re.sub("x86_64|arm64", arch, self.plat_name)
 
             super().finalize_options()
 

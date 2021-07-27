@@ -14,7 +14,7 @@ import weakref
 
 from cslug import misc, exceptions, c_parse, Types
 from cslug._headers import Header
-from cslug._cc import cc, cc_version, mmacosx_version_min
+from cslug._cc import cc, cc_version, mmacosx_version_min, macos_architecture
 from cslug._stdlib import dlclose
 
 # TODO: maybe try utilising this. Probably not worth it...
@@ -296,6 +296,17 @@ class CSlug(object):
         #      aarch32.
         if BIT_NESS != 64:  # pragma: no cover
             flags += ["-m" + str(BIT_NESS)]
+
+        # If on macOS, we may be cross compiling for Apple's new ARM chip.
+        if OS == "Darwin":  # pragma: no cover
+            # If the user has explicitly requested a cross compile via the
+            # MACOS_ARCHITECTURE environment variable then set the -arch
+            # flag to match.
+            arch = macos_architecture()
+            if arch == "universal2":
+                flags.extend(["-arch", "x86_64", "-arch", "arm64"])
+            elif arch:
+                flags.extend(["-arch", arch])
 
         # Super noisy build warnings.
         warning_flags = "-Wall -Wextra".split()

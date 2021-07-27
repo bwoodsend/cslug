@@ -8,7 +8,8 @@ import re
 
 import pytest
 
-from cslug._cc import cc, cc_version, which, _parse_cc_version
+from cslug._cc import cc, cc_version, which, _parse_cc_version, \
+    _macos_architecture
 from cslug import exceptions, misc
 
 from tests import DUMP, uuid, RESOURCES
@@ -149,3 +150,15 @@ def test_failed_cc_version():
     with pytest.raises(RuntimeError, match=CC_VERSION_ERROR_MESSAGE):
         _parse_cc_version(b"Miff muffet moof compiler with added miffle.",
                           ["unknown-cc", "-v"])
+
+
+def test_macos_architecture():
+    assert _macos_architecture("x86_64") == "x86_64"
+    assert _macos_architecture("universal2") == "universal2"
+    assert _macos_architecture("") is None
+    assert _macos_architecture(None) is None
+    assert _macos_architecture("x86_64, arm64") == "universal2"
+    assert _macos_architecture("x86_64 arm64") == "universal2"
+    assert _macos_architecture("x86_64,arm64") == "universal2"
+    with pytest.raises(EnvironmentError, match="The MACOS_ARCHITECTURE .*"):
+        _macos_architecture("spaghetti")

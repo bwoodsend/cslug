@@ -118,3 +118,10 @@ jobs:
       - name: Show wheel suffix
         run: ls packaging/contains-slugs/dist/
         shell: bash
+
+      # Test running the whole test suite, compiling everything fat. Only the
+      # macOS 11 images have a new enough Xcode to do this.
+      - run: pytest && ls packaging/contains-slugs/dist
+        if:  ${{ matrix.os == 'macos-11.0' }}
+        env:
+          MACOS_ARCHITECTURE: universal2

@@ -105,3 +105,41 @@ setuptools>`)
     MACOS_DEPLOYMENT_TARGET=10.10 python setup.py build
 
 .. versionadded:: 0.3.0
+
+
+Architectures for macOS
+-----------------------
+
+Newer macOS machines have switched from ``x86_64`` to ``arm64``.
+To support both you need to compile for both.
+You can do this either by compiling ``x86_64`` and ``arm64`` binaries separately
+and distributing them separately as you would for other operating systems
+or by compiling a single *fat* binary which contains both ``x86_64`` and
+``arm64`` code in one file.
+It's up to you which path you choose.
+Python itself has chosen the *fat* route but most packages are opting for
+separate wheels for each architecture.
+
+Unless you habitually keep everything up to date, you will likely need to
+upgrade your environment.
+Compiling for ARM requires a macOS version :math:`\ge 10.15`
+and the XCode command line tools with version :math:`\ge 12.2`.
+
+Architecture selection is done via the ``MACOS_ARCHITECTURE`` environment
+variable.
+Again assuming that you set up :ref:`setuptools integration <Packaging with
+setuptools>`:
+
+* Build an ``arm64`` wheel::
+
+    MACOS_ARCHITECTURE=arm64 python setup.py bdist_wheel
+
+* Build an ``x86_64`` wheel::
+
+    MACOS_ARCHITECTURE=x86_64 python setup.py bdist_wheel
+
+* Build a dual ``universal2`` wheel::
+
+    MACOS_ARCHITECTURE=universal2 python setup.py bdist_wheel
+
+.. versionadded:: v0.5.0

@@ -152,3 +152,33 @@ def mmacosx_version_min():  # pragma: Darwin
     default = "10.6"
 
     return os.environ.get("MACOS_DEPLOYMENT_TARGET", default)
+
+
+def macos_architecture():  # pragma: Darwin
+    """Read and validate the contents of the :envvar:`MACOS_ARCHITECTURE`
+    environment variable.
+
+    Returns:
+        One of :py:`('x86_64', 'arm64', 'universal2', None)`.
+    Raises:
+        EnvironmentError:
+            If its value is not one of the above.
+
+    """
+    if platform.system() == "Darwin":  # pragma: no branch
+        return _macos_architecture(os.environ.get("MACOS_ARCHITECTURE"))
+
+
+def _macos_architecture(env_value):
+    """The platform and environment independent logic behind
+    macos_architecture().
+    """
+    if not env_value:
+        return
+    valid = ("arm64", "x86_64", "universal2")
+    if env_value in valid:
+        return env_value
+    elif sorted(re.findall(r"[^\s,]+", env_value)) == ["arm64", "x86_64"]:
+        return "universal2"
+    raise EnvironmentError(f"The MACOS_ARCHITECTURE environment variable must "
+                           f"be one of {valid}. Received '{env_value}'.")
