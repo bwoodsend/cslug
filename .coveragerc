@@ -26,6 +26,6 @@ rules =
   "platform_system != 'Windows'": Windows
   "platform_system != 'Darwin'": Darwin
   "platform_system != 'Linux'": Linux
-  "sys_platform != 'msys'": msys
+  "not platform_system.startswith('MSYS')": msys
   "sys_platform != 'cygwin'": cygwin
   "platform_system != 'FreeBSD'": FreeBSD

@@ -7,17 +7,17 @@ library| which is part of your operating system (see the table below). The
 :mod:`cslug.stdlib` module loads and exposes the contents of this library to be
 directly called from Python.
 
-========  ======================================================================================================================
+========  ==========================================================================
 Platform  Library/location
-========  ======================================================================================================================
-Linux     The anonymous, non-existent :py:`ctypes.CDLL("")`. Don't ask me what it is - I haven't a clue. Alpine Linux uses ``libc.so``.
+========  ==========================================================================
+Linux     A combination of ``libc.so`` and, if present and not just aliases of ``libc.so``, ``libm.so`` and ``libdl.so``.
 Windows   The somewhat barren ``C:\Windows\system32\msvcrt.dll``.
-macOS     Either ``libc.dylib`` (for new OSXs), ``libSystem`` (for older) or ``/usr/lib/system/libsystem_c.dylib`` (really old).
-MSYS2     Good old ``msys-2.0.dll``.
+macOS     ``libc.dylib``.
+MSYS2     ``msys-2.0.dll``, requires ``cslug >= 0.5.1`` for newer versions of Python.
 Cygwin    ``cygwin1.dll``, requires ``cslug >= 0.4.0``.
-FreeBSD   A tentative union of ``libc.so.7`` and ``libm.so.5`` (which also don't exist).
-Android   Similar to FreeBSD, a union of ``libc.so`` and ``libm.so``.
-========  ======================================================================================================================
+FreeBSD   A combination of ``libc.so`` and ``libm.so``.
+Android   A combination of ``libc.so`` and ``libm.so``.
+========  ==========================================================================
 
 
 Not every function is made available. A function is excluded if:
