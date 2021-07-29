@@ -2,8 +2,8 @@
 """
 """
 
-import os, sys
-import ctypes
+import os
+import ctypes.util
 import platform
 
 OS = platform.system()
@@ -30,62 +30,75 @@ if OS == "Windows":  # pragma: Windows
     # presence. But vcruntime140 contains only a tiny strict-subset of msvcrt.
     stdlib = ctypes.CDLL("msvcrt")
 
+# POSIX should be really simple. The POSIX standard states that a libc, libm and
+# libdl (names are not set in stone) should all be linkable via the names 'c',
+# 'm' and 'dl' (names are set in stone) respectively. The symbols we're
+# interested in a mostly in libc but with math symbols in libm and DLL related
+# symbols in libdl. ctypes.util.find_library() should be able to convert linker
+# names like 'c' to the OS's DLL name to be passed to ctypes.CDLL().
+# In reality however:
+#   - The POSIX standard isn't always followed.
+#   - find_library() doesn't always work.
+#   -
+
 elif OS == "Darwin":  # pragma: Darwin
-    try:
-        try:
-            # macOS 11 (Big Sur). Possibly also later macOS 10s.
-            stdlib = ctypes.CDLL("libc.dylib")
-        except OSError:  # pragma: no cover
-            stdlib = ctypes.CDLL("libSystem")
-    except OSError:  # pragma: no cover
-        # Older macOSs. Not only is the name inconsistent but it's
-        # not even in PATH.
-        _stdlib = "/usr/lib/system/libsystem_c.dylib"
-        if os.path.exists(_stdlib):
-            stdlib = ctypes.CDLL(_stdlib)
-        else:
-            stdlib = None
-    if stdlib is not None:  # pragma: no branch
-        dlclose = stdlib.dlclose
-    else:  # pragma: no cover
-        # I hope this never happens.
-        dlclose = null_free_dll
-
-elif OS == "Linux":  # pragma: Linux
-    try:
-        stdlib = ctypes.CDLL("")
-    except OSError:  # pragma: no cover
-        # Either Alpine Linux or Android.
-        # Unfortunately, there doesn't seem to be any practical way
-        # to tell them apart.
-        stdlib = ctypes.CDLL("libc.so")
-
-        # Android, like FreeBSD puts its math functions
-        # in a dedicated `libm.so`.
-        # The only way to know that this is not Alpine is to check if the math
-        # functions are already available in `libc.so`.
-        if not hasattr(stdlib, "sin"):
-            extra_libs.append(ctypes.CDLL("libm.so"))
+    # On macOS >= 11.0, find_library() no longer works because system libraries
+    # aren't physical files anymore but something more abstract. Fortunately,
+    # you can just request libc directly. It contains all standard library
+    # symbols.
+    stdlib = ctypes.CDLL("libc.dylib")
     dlclose = stdlib.dlclose
 
-elif sys.platform == "msys":  # pragma: msys
-    # msys can also use `ctypes.CDLL("kernel32.dll").FreeLibrary()`. Not sure
-    # if or what the difference is.
+elif OS.startswith("MSYS"):  # pragma: msys
+    # On MSYS2, find_library() returns 'msys_2_0.dll' when we really want the
+    # un-normalised name 'msys-2.0.dll' which contains all the symbols we want.
+    # So this must be handled manually.
     stdlib = ctypes.CDLL("msys-2.0.dll")
     dlclose = stdlib.dlclose
 
-elif sys.platform == "cygwin":  # pragma: cygwin
-    stdlib = ctypes.CDLL("cygwin1.dll")
-    dlclose = stdlib.dlclose
+elif os.name == "posix":  # pragma: no cover
+    # Generic POSIX: This includes all flavours of Linux (even those using
+    # alternative libc implementations like Alpine with musl), Cygwin, FreeBSD,
+    # and hopefully serves as a sensible default for untested POSIX platforms.
 
-elif OS == "FreeBSD":  # pragma: FreeBSD
-    # FreeBSD uses `/usr/lib/libc.so.7` where `7` is anothoer version number.
-    # It is not in PATH but using its name instead of its path is somehow the
-    # only way to open it. The name must include the .so.7 suffix.
-    stdlib = ctypes.CDLL("libc.so.7")
-    dlclose = stdlib.close
-    # Maths functions are in a separate library.
-    extra_libs.append(ctypes.CDLL("libm.so.5"))
+    def _find_check_load_library(name, libc: ctypes.CDLL):
+        """Find a library, check that its findable, check that it's not an alias
+        of libc, then open it. Raise a tangible error message telling the user
+        that it's not their fault and to report it if things go wrong.
+        """
+        # Get the full name of the library (e.g. convert 'c' to 'libc.so.7').
+        full_name = ctypes.util.find_library(name)
+
+        # If find_library() yielded nothing:
+        if full_name is None:
+            # This is fatal for libc but (should be) harmless otherwise.
+            if libc is not None:
+                return
+            raise OSError(f"Un-findable standard library '{name}'. "
+                          f"Please report this on cslug's issue tracker.")
+
+        # If this library turns out to just be an alias for libc:
+        if libc and full_name == libc._name:
+            # Then there's no point in opening it again.
+            return
+
+        # Open the library.
+        try:
+            return ctypes.CDLL(full_name)
+        except OSError:
+            # This can fail is, like with msys-2.0.dll, find_library() gave us
+            # some incompatibly normalised name like msys_2_0.dll. This will
+            # need another explicit case handling like MSYS2 gets above.
+            raise OSError(f"Un-openable standard library {name} => {full_name}."
+                          f" Please report this on cslug's issue tracker.")
+
+    libc = _find_check_load_library("c", None)
+    libm = _find_check_load_library("m", libc)
+    libdl = _find_check_load_library("dl", libc)
+    extra_libs = [i for i in (libm, libdl) if i]
+
+    stdlib = libc
+    dlclose = (libdl or libc).dlclose
 
 else:  # pragma: no cover
     # Default to do nothing.
