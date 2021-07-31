@@ -10,12 +10,15 @@ Module contents
     :noindex:
 
 .. autoclass:: CSlug
+    :special-members: __init__
 
 .. autofunction:: anchor
 
 .. autoclass:: Header
+    :special-members: __init__
 
 .. autoclass:: Types
+    :special-members: __init__
 
 .. autofunction:: ptr
 
