@@ -161,8 +161,8 @@ other runtime-only dependencies then append them::
 .. note::
 
     If you find the isolated build environment is maddeningly slow you can skip
-    it in pip using the ``--no-build-isolation``. But only once your sure it
-    works without it.
+    it in pip using the :option:`--no-build-isolation`.
+    But only once your sure it works without it.
 
 When the build dependencies get noticed
 .......................................
