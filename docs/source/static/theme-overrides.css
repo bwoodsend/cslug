@@ -52,6 +52,17 @@
   border-bottom: none;
   padding: 2px 5px;
 }
+/* Inline literals writen as
+    | ``foo``
+    | ``bar``
+   Should enable wrapping but subsequent lines should be indented. */
+.rst-content .line code.literal,
+.rst-content .line tt.literal{
+  display: inline-block;
+  padding-left: 50px;
+  text-indent: -50px;
+  padding-bottom: 0px;
+}
 
 /* Use different color code-blocks for C and Python. */
 div[class*="highlight-C"] .highlight, .highlight-c > .highlight{
