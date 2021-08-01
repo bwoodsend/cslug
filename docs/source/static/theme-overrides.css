@@ -34,6 +34,7 @@
   border: #0000;
   padding: 2px 2px;
   font-weight: 100;
+  font-size: 100%;
 }
 .rst-content a code.literal, .rst-content a tt.literal {
   border-bottom: solid 1px #0001;
@@ -58,6 +59,9 @@ div[class*="highlight-C"] .highlight, .highlight-c > .highlight{
 }
 div[class*="highlight-py"] .highlight, div[class*="highlight-default"] .highlight{
   background: #f3ffd9;
+}
+.rst-content .linenodiv pre, .rst-content div[class^="highlight"] pre, .rst-content pre.literal-block {
+  font-size: 85%;
 }
 
 /* Enable text wrapping in tables. */
