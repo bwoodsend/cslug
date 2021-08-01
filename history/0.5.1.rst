@@ -1,0 +1,10 @@
+* Fix compatibility with newer Python versions on MSYS2 which, for some
+  reason, have started setting :data:`sys.platform` to ``cygwin`` instead of
+  ``msys``.
+
+* Redesign the :ref:`stdlib library selection<Access the C Standard Library>`
+  giving it a generic default implementation which simply assumes POSIX
+  compliance. Untested POSIXs or Linux distributions using alternative
+  implementations of libc should work out the box provided that they follow the
+  POSIX standard and :func:`ctypes.util.find_library` works on said platform.
+  All the officially supported platforms should be unaffected.
