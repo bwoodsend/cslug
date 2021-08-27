@@ -39,7 +39,8 @@ if OS == "Windows":  # pragma: Windows
 # In reality however:
 #   - The POSIX standard isn't always followed.
 #   - find_library() doesn't always work.
-#   -
+#   - libm and libdl are often either empty (with all their symbols moved to
+#     libc) or are symlinks to libc.
 
 elif OS == "Darwin":  # pragma: Darwin
     # On macOS >= 11.0, find_library() no longer works because system libraries
