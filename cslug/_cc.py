@@ -182,3 +182,49 @@ def _macos_architecture(env_value):
         return "universal2"
     raise EnvironmentError(f"The MACOS_ARCHITECTURE environment variable must "
                            f"be one of {valid}. Received '{env_value}'.")
+
+
+def msvc_paths():
+    from winreg import HKEY_LOCAL_MACHINE, OpenKey, QueryValueEx, QueryInfoKey, EnumKey, EnumValue
+
+    try:
+        versions = OpenKey(HKEY_LOCAL_MACHINE,
+                           r'SOFTWARE\Wow6432node\Microsoft\Microsoft SDKs\Windows')
+    except OSError:
+        versions = OpenKey(HKEY_LOCAL_MACHINE,
+                           r'SOFTWARE\Microsoft\Microsoft SDKs\Windows')
+    for i in range(QueryInfoKey(versions)[0]):
+        version = EnumKey(versions, i)
+        msvc = OpenKey(versions, version)
+
+from winreg import HKEY_LOCAL_MACHINE, OpenKey, QueryValueEx, QueryInfoKey, EnumKey, EnumValue
+
+def list_reg(path, out):
+    try:
+        with OpenKey(HKEY_LOCAL_MACHINE, path) as key:
+            children, values, _ = QueryInfoKey(key)
+
+            children = [path + "\\" + EnumKey(key, i) for i in
+                        range(children)]
+
+            values = [EnumValue(key, i) for i in range(values)]
+
+        out[path] = children, values
+        [list_reg(i, out) for i in children]
+
+    except PermissionError:
+        out[path] = "???"
+
+    return out
+
+software = list_reg("SOFTWARE", {})
+
+
+for path in software:
+    values = software[path][1]
+    for value in values:
+        for component in value:
+            if not isinstance(component, str):
+                continue
+            if "vcbuildtools" in component:
+                print(path, *value)
