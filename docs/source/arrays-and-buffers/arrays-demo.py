@@ -26,7 +26,7 @@ int32_t = array_typecode("int32_t")
 
 def cumsum(x):
     # Some form of type check.
-    if not (isinstance(int32_t, array) and x.typecode == int32_t):
+    if not (isinstance(x, array) and x.typecode == int32_t):
         x = array(int32_t, x)
 
     # Create an array with the same length as `x`.
