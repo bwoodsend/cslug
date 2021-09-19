@@ -8,12 +8,12 @@
     quickstart
     types
     strings-and-bytes
-    headers
     oop-structs
-    globals
-    error-handling
     arrays-and-buffers/arrays-and-buffers
     arrays-and-buffers/numpy
+    globals
+    error-handling
+    headers
     stdlib
     customising-build
     packaging
