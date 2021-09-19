@@ -74,12 +74,11 @@ Before you commit yourself to any non Pure-Python you should bear in mind that:
   setup Continuous Integration to build you package on a cloud server.
   Linux users can get around this by using Vagrant_.
 * Linux wheels must be built on a manylinux_ Docker image in order to be
-  compatible with all distributions of Linux.
-* Unless your users have the relevant security thrice disabled, uninstalled,
-  blocked and scraped off the hard drive,
-  recent macOS will block or delete any binary file you produce
-  unless you either pay for a codesign license
-  or your software becomes famous enough to be whitelisted for you by Apple.
+  widely compatible with most distributions of Linux.
+* Recent macOS versions will typically block or delete any binary file you
+  produce unless you either purchase a codesign license
+  or your software becomes famous enough to be whitelisted for you by Apple
+  (binaries uploaded to PyPI seem to be except automatically).
   Windows users face a similar, albeit lesser, problem with Microsoft Defender.
 
 
