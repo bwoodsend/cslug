@@ -124,6 +124,8 @@ Unless you habitually keep everything up to date, you will likely need to
 upgrade your environment.
 Compiling for ARM requires a macOS version :math:`\ge 10.15`
 and the XCode command line tools with version :math:`\ge 12.2`.
+If you lack these requirements, you will typically get some strange compiler
+errors somewhere deep in the macOS SDK when compiling ``arm64`` slices.
 
 Architecture selection is done via the ``MACOS_ARCHITECTURE`` environment
 variable.
@@ -141,5 +143,14 @@ setuptools>`:
 * Build a dual ``universal2`` wheel::
 
     MACOS_ARCHITECTURE=universal2 python setup.py bdist_wheel
+
+You can verify a wheel's architecture simply by looking at its filename.
+It should contain either ``arm64``, ``x86_64`` or ``universal2`` in it.
+To verify a single binary's architecture, use macOS's builtin ``lipo`` tool.
+
+.. code-block:: shell
+
+    $ lipo -archs some-slug-Darwin-64bit.so
+    x86_64 arm64
 
 .. versionadded:: v0.5.0
