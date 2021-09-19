@@ -9,7 +9,7 @@ import os
 os.chdir(os.path.dirname(__file__))
 
 import ctypes
-from cslug import CSlug, _cc
+from cslug import CSlug
 
 slug = CSlug("globals.c")
 
@@ -32,6 +32,7 @@ assert an_8_bit_int.value == 43
 a_bytes_array = ctypes.cast(slug.dll.a_bytes_array, ctypes.c_char_p)
 a_string = ctypes.cast(slug.dll.a_string, ctypes.c_wchar_p)
 
+from cslug import _cc
 assert a_bytes_array.value == b"Hello, my name is Ned."
 if a_string.value != "Сәлам. Минем исемем Нед.":
     cc_name, cc_version = _cc.cc_version()
