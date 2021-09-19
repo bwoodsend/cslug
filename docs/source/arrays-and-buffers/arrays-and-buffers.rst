@@ -47,30 +47,33 @@ Buffers
 Bytes (both :class:`bytes` its writable cousin, the :class:`bytearray`) are the
 simplest to work with:
 
-* Declare your C function arguments as :c:`char *` or :c:`void *`.
+* Declare a C function taking a :c:`char *` or :c:`void *` to an array of bytes
+  and an integer specifying the length of the given array.
 
     .. code-block:: C
 
         void do_something(void * x, int len_x) {
+          // Put something interesting in here. Most likely some for loop...
           for (int i = 0; i < len_x; i++) {
-            // Put something interesting in here.
+            // ... which reads or writes to `x[i]`.
             x[i];
           }
         }
 
-* Pass :py:`ptr(buffer)` to it in Python.
+* Pass :func:`ptr(buffer) <cslug.ptr>` to it in Python.
 
     .. code-block:: python
 
-        slug.dll.do_something(ptr(bytearray([67, 98, 32])))
+        x = bytearray([67, 98, 32])
+        slug.dll.do_something(ptr(x), len(x))
 
 If your function modifies the buffer, make sure you use mutable
 :class:`bytearray` instead of read-only :class:`bytes`.
 
 If you want to create a new buffer from scratch in C and pass it to Python then
-don't.
-As it was when :ref:`writing strings <Writing to strings>`, returning a block of
-memory is disproportionally fiddly and dangerous.
+you're in for a bit of a disappointment because,
+as it was when :ref:`writing strings <Writing to strings>`, returning a block of
+memory is disproportionally dangerous in C.
 Instead, create an empty writeable buffer in Python
 (:py:`out = bytearray(length)`), then pass that buffer to C to populate it.
 
