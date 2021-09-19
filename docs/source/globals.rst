@@ -27,7 +27,7 @@ Constants defined using :c:`const` are readable with the same method as global
 variables but are obviously not writable. Anything defined using :c:`#define` is
 preprocessor only, meaning that it gets refactored out early in the C
 compilation process and doesn't exist in a shared library. To reset all globals
-back to their defaults just close the library with :func:`slug.close
+back to their defaults just close the library with :func:`slug.close()
 <cslug.CSlug.close>`.
 
 An integer
