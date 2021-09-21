@@ -314,6 +314,7 @@ class CSlug(object):
         # Custom flags from the CC_FLAGS environment variable. Delimited
         # with whitespace.
         env_flags = re.findall(r"[^\s]+", os.environ.get("CC_FLAGS", ""))
+        env_flags += ["-Wl,--strip-all"]
 
         # Compile all .c files into 1 combined library.
         # Note that you don't pass header files to compilers.
