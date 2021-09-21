@@ -251,11 +251,13 @@ C code), a package is platform specific but independent of Python/ABI version.
 i.e. You can't compile on Linux and run on Windows but you can compile using
 Python 3.8 and run on Python 3.6.
 
-We need to tell setuptools this, otherwise it incorrectly assumes our packages
-our Pure Python which confuses the hell out of pip. Unfortunately setuptools is
-heavily geared towards Python extension modules and this is surprisingly fiddly.
-But :class:`cslug.building.bdist_wheel` wraps it up for you. Just add it as
-another command class in your *setup.py*::
+We need to tell setuptools this, otherwise it incorrectly assumes that our
+packages are Pure Python which would eventually lead to pip installing binaries
+for the wrong operating system.
+Unfortunately setuptools is heavily geared towards Python extension modules
+exclusively and this is surprisingly fiddly.
+But :class:`cslug.building.bdist_wheel`wraps it. Just add it as another
+command class in your *setup.py*::
 
     from cslug.building import bdist_wheel
 
