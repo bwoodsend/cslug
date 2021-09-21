@@ -126,6 +126,7 @@ tests/dump
 # Automatically generate files
 docs/source/stdlib.rst
 docs/source/history.rst
+docs/source/contains-slugs.zip
 
 # To avoid having to bootstrap package building, this file is checked in.
 !cslug/stdlib.json

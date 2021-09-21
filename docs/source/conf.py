@@ -239,3 +239,29 @@ autodoc_default_options = {
 
 # -- Add this file for Google search console ----------
 html_extra_path = ["static/google77eb9775385691af.html"]
+
+# -- Put the contains-slugs packaging example into a downloadable archive. ----
+
+files = [
+    "MANIFEST.in",
+    "README.md",
+    "contains_slugs/__init__.py",
+    "contains_slugs/deep-thought.c",
+    "pyproject.toml",
+    "setup.py",
+]
+
+contains_slugs = Path("../../packaging/contains-slugs").resolve()
+contains_slugs_zip = Path("contains-slugs.zip")
+
+# If the zip is missing or any of the files have been modified since the zip
+# was last written:
+if not contains_slugs_zip.exists() or \
+    max((contains_slugs / file).stat().st_mtime for file in files) > \
+    contains_slugs_zip.stat().st_mtime:
+
+    # Write the zip file.
+    import zipfile
+    with zipfile.ZipFile(contains_slugs_zip, "w") as z:
+        for file in files:
+            z.write(contains_slugs / file, file)

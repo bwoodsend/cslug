@@ -47,7 +47,9 @@ contains-slugs
 --------------
 
 Throughout this document we'll be using the ``contains_slugs`` package as an
-example. It's contents in full are below:
+example.
+You can inspect its contents with the links listed below or download the full
+project :download:`here <contains-slugs.zip>`.
 
  .. toctree::
 
