@@ -72,11 +72,10 @@ elif os.name == "posix":  # pragma: no cover
 
         # If find_library() yielded nothing:
         if full_name is None:
-            # This is fatal for libc but (should be) harmless otherwise.
-            if libc is not None:
-                return
-            raise OSError(f"Un-findable standard library '{name}'. "
-                          f"Please report this on cslug's issue tracker.")
+            # This happens on musl based Linux only if gcc is not installed.
+            # Assume that a symlink to the full name exists by adding the
+            # standard prefix and suffix.
+            full_name = f"lib{name}.so"
 
         # If this library turns out to just be an alias for libc:
         if libc and full_name == libc._name:
@@ -87,6 +86,9 @@ elif os.name == "posix":  # pragma: no cover
         try:
             return ctypes.CDLL(full_name)
         except OSError:
+            # This is fatal only libc.
+            if libc is not None:
+                return libc
             # This can fail is, like with msys-2.0.dll, find_library() gave us
             # some incompatibly normalised name like msys_2_0.dll. This will
             # need another explicit case handling like MSYS2 gets above.

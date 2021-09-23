@@ -32,11 +32,31 @@ jobs:
             -t sluggy-image \
             -f Dockerfile_manylinux \
             --build-arg BASE=${{ matrix.base-image }} .
-      - run: docker run sluggy-image sh -c "pytest && ls packaging/contains-slugs/dist"
+      - run: docker run -v "$PWD:/io" sluggy-image pytest
+      - run: ls packaging/contains-slugs/dist
+
+      # Verify that precompiled cslug packages can install and run without a C
+      # compiler.
+      - if: matrix.base-image == 'manylinux1_x86_64'
+        run: |
+          docker run -v "$PWD:/io" python:3.9.0-slim bash -c '
+            pip install /io
+            pip install /io/packaging/contains-slugs/dist/*.whl
+            python -m contains_slugs
+          '
 
   test-alpine:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: docker build -t cslug-alpine -f Dockerfile_alpine .
-      - run: docker run cslug-alpine pytest
+      - run: docker run -v "$PWD:/io" cslug-alpine pytest
+
+      # Verify that precompiled cslug packages can install and run without a C
+      # compiler.
+      - run: |
+          docker run -v "$PWD:/io" python:3.9.0-alpine ash -c '
+            pip install /io
+            pip install /io/packaging/contains-slugs/dist/*.whl
+            python -m contains_slugs
+          '
