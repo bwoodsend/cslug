@@ -34,5 +34,6 @@ COPY cslug/_version.py /io/cslug/_version.py
 WORKDIR /io
 # Install more dependencies.
 RUN pip install --prefer-binary -e .[test]
+RUN pip install psutil
 # Copy across this repo.
 COPY . /io
