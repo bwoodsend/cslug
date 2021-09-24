@@ -41,6 +41,7 @@ def cumsum(x):
 assert cumsum(array(int32_t, [10, 3, 5])) == array(int32_t, [10, 13, 18])
 
 import pytest
+
 pytest.importorskip("numpy")
 
 import numpy as np

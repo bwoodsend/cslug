@@ -8,6 +8,7 @@ slug = CSlug(anchor("flatten.c"))
 slug.make()
 
 import pytest
+
 pytest.importorskip("numpy")
 import numpy as np
 
