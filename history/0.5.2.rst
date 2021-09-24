@@ -1,0 +1,2 @@
+* Fix a regression (since ``v0.5.1``) in finding ``libc`` on musl Linux. This
+  regression is reproducible only if gcc is not installed.
