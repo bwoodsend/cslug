@@ -28,7 +28,7 @@ def eq(x, y):
     assert x is not None
     # Strictly no PathLikes here.
     assert isinstance(x, str)
-    # Windows needs is case folded. msys2 like to strip executable suffix.
+    # Windows needs its case folded. msys2 like to strip the executable suffix.
     assert os.path.splitext(os.path.normcase(x))[0] \
            == os.path.splitext(os.path.normcase(str(y)))[0]
 

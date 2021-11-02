@@ -491,6 +491,7 @@ def test_custom_include():
 
     assert self.dll.foo() == 13
 
+    # Test without the custom include path. It should lead to a failed build.
     self.flags.clear()
     with pytest.raises(exceptions.BuildError):
         self.make()

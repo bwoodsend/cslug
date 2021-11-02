@@ -17,19 +17,21 @@ from cslug._headers import Header
 from cslug._cc import cc, cc_version, mmacosx_version_min, macos_architecture
 from cslug._stdlib import dlclose
 
-# TODO: maybe try utilising this. Probably not worth it...
-# https://stackoverflow.com/questions/17942874/stdout-redirection-with-ctypes
-
 # Choose an appropriate DLL suffix. Asides from keeping files from different OSs
 # or 64/32bits getting mixed up, it also gives Linux .so files invalid Python
 # names which prevents Python from trying (and failing) to interpret a CSlug
 # file as a Python extension module if a CSlug has the same name as a .py file.
-
 OS = platform.system()
 SUFFIX = {"Windows": ".dll", "Linux": ".so", "Darwin": ".dylib"}.get(OS, ".so")
 BIT_NESS = 8 * ctypes.sizeof(ctypes.c_void_p)
 SUFFIX = "-{}-{}bit{}".format(OS, BIT_NESS, SUFFIX)
+
+# Link against libm.so by default on Linux so that math symbols are defined.
+# Other OSs merge libm with libc (which is always linked against) so they do not
+# require this flag.
 DEFAULT_LINKS = ["m"] if OS == "Linux" else []
+
+# The *export all functions* option for each compiler.
 EXPORT_SYMBOLS = {
     "tcc": "-rdynamic",
     "pcc": "-rdynamic",
@@ -286,8 +288,13 @@ class CSlug(object):
         if cc_name in ("gcc", "clang") and OS == "Darwin":  # pragma: no cover
             flags += [f"-mmacosx-version-min={mmacosx_version_min()}"]
 
+        # gcc does not automatically use the latest version of of the C
+        # standard it knows and unfortunately there is no option to do so
+        # either but C99 is a very comfortable middle ground being old enough
+        # for most compilers to support but new enough to support virtually
+        # all applications.
         if cc_name == "gcc":  # pragma: no cover
-            # I've only seen this needed on manylinux docker images.
+            # I've only seen this needed on manylinux1 docker images.
             flags.append("--std=c99")
 
         # Set 32 bit only if needed. Forcing `-m64` causes aarch64 to fail
