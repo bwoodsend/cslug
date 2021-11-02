@@ -20,7 +20,7 @@ import pytest
 
 from cslug import exceptions, anchor, CSlug, misc, Header
 
-from tests import DUMP, name, DEMOS, RESOURCES
+from tests import DUMP, name, DEMOS, RESOURCES, warnings_are_evil
 from tests.test_pointers import leaks
 
 pytestmark = pytest.mark.order(-3)
@@ -28,6 +28,7 @@ pytestmark = pytest.mark.order(-3)
 
 @pytest.mark.order(-4)
 @pytest.mark.parametrize("true_file", [True, False])
+@warnings_are_evil
 def test_basic(true_file):
     SOURCE = RESOURCES / "basic.c"
     if true_file:
@@ -162,6 +163,7 @@ def test_printf_warns():
         assert check_printfs("# 100\n\nprintf()")
 
 
+@warnings_are_evil
 def test_names_not_in_dll():
     """
     Check that CSlug doesn't get into too much of a mess if it thinks a
@@ -200,6 +202,7 @@ def test_names_not_in_dll():
         self.dll.time_2
 
 
+@warnings_are_evil
 def test_bit_ness():
     """Check 32/64b-bits behaves as expected by looking at integer overflow.
     """
@@ -233,6 +236,7 @@ def adding_1_causes_overflow_py(x):
     return ctypes.c_size_t(x + 1).value < x
 
 
+@warnings_are_evil
 def test_str():
     self = CSlug(anchor(name()), DEMOS / "strings" / "reverse.c")
     self.make()
@@ -283,6 +287,7 @@ def test_header_type_error():
         CSlug("name", headers="not a header")
 
 
+@warnings_are_evil
 def test_do_not_compile_headers():
     self = CSlug("name", "file.h", "file.c")
     cmd = self.compile_command()[0]
@@ -290,6 +295,7 @@ def test_do_not_compile_headers():
     assert "file.h" not in cmd
 
 
+@warnings_are_evil
 def test_with_header():
     header_name = "header-" + name().stem + ".h"
     cake = random.randint(0, 256)
@@ -384,6 +390,7 @@ def test_remake():
     assert len(_slug_refs[slug.path]) == 1
 
 
+@warnings_are_evil
 def test_link():
     # TODO: This isn't much of a test. Try to think of a cross platform library
     #       to link against. Or a non cross platform library for each OS.
@@ -407,6 +414,7 @@ def test_default_link():
     assert self.compile_command()[0].count("-lm") == 1
 
 
+@warnings_are_evil
 def test_infinite_math():
     # Assert that the `-ffinite-math-only` optimizer flag (or something similar)
     # is not enabled.
@@ -431,6 +439,7 @@ def test_infinite_math():
     assert self.dll.is_finite(math.nan) == 0
 
 
+@warnings_are_evil
 def test_custom_compiler_flags():
     """Assert that custom flags appear and in the right place."""
 
@@ -478,6 +487,7 @@ def test_contradictory_flags():
         self.make()
 
 
+@warnings_are_evil
 def test_custom_include():
     """``#include`` an awkwardly located header file using the ``-I`` option."""
 
@@ -497,6 +507,7 @@ def test_custom_include():
         self.make()
 
 
+@warnings_are_evil
 def test_macos_arches(monkeypatch):
     """Test cross compiling for arm64/x86_64 on macOS."""
 

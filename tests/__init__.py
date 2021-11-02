@@ -4,6 +4,7 @@
 
 from pathlib import Path
 from uuid import uuid1 as uuid
+from functools import wraps
 
 HERE = Path(__file__).parent.resolve()
 RESOURCES = HERE / "resources"
@@ -28,12 +29,15 @@ def filter_warnings(*args, **kwargs):
     import warnings
 
     def wrapper(test):
-        def wrapped():
+        @wraps(test)
+        def wrapped(*_test_args, **_test_kwargs):
             with warnings.catch_warnings():
                 warnings.filterwarnings(*args, **kwargs)
-                return test()
+                return test(*_test_args, **_test_kwargs)
 
-        wrapped.__name__ = test.__name__
         return wrapped
 
     return wrapper
+
+
+warnings_are_evil = filter_warnings("error")
