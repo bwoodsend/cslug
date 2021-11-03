@@ -19,20 +19,22 @@ from tests import name, RESOURCES, DUMP
 UNICODE = RESOURCES / "unicode"
 
 
-def delayed_skip_if_unsupported():
+def delayed_skip_if_unsupported(feature, **compiler_versions):
     """Skip unicode tests if the compiler is known not to support them.
 
     This is intentionally not a ``pytest.mark.skipif()`` to avoid evaluating
-    this on test collection.
+    cc_version() on test collection.
+
     """
     cc, version = cc_version()
 
-    if cc == "gcc" and version < (10, 0, 0):
-        pytest.skip("Unicode identifiers requires gcc 10.")
-    if cc in ("tcc", "pcc"):
-        pytest.skip("tcc doesn't support unicode.")
-    if cc == "clang" and version < (3, 3, 0):
-        pytest.skip("Unicode identifiers requires clang 3.3.")
+    supported_version = compiler_versions.get(cc, True)
+    if supported_version is True:
+        return
+    if supported_version is False:
+        pytest.skip(f"{feature} is not supported by {cc}.")
+    if version < supported_version:
+        pytest.skip(f"{feature} requires {cc} >= {supported_version}.")
 
 
 no_windows = pytest.mark.skipif(
@@ -87,8 +89,8 @@ def test_non_escaped_unicode_literal(source):
 @_path_or_piped(UNICODE / "identifiers.c")
 def test_unicode_identifiers(source):
     """Test unicode function/variable names."""
-    # Not many compilers support this.
-    delayed_skip_if_unsupported()
+    delayed_skip_if_unsupported("Unicode identifiers", gcc=(10,), tcc=False,
+                                pcc=False, clang=(3, 3))
 
     slug = CSlug(anchor(name()), source)
     slug.make()
