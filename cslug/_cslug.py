@@ -11,6 +11,7 @@ import warnings
 import platform
 import collections
 import weakref
+import tempfile
 
 from cslug import misc, exceptions, c_parse, Types
 from cslug._headers import Header
@@ -114,7 +115,7 @@ class CSlug(object):
         # This would be a simple subprocess.run() if it weren't for having
         # multiple stdins to pipe in. That being said, I'm pretty certain that
         # this doesn't work anyway (see comments below).
-        command, buffers = self.compile_command()
+        command, buffers, temporary_files = self.compile_command()
 
         # gcc 10.2 (the only compiler to support both Windows and unicode)
         # expects utf-8 input - irregardless of codepage.
@@ -123,7 +124,7 @@ class CSlug(object):
 
         # Write pseudo files to stdin. I strongly suspect that this is simply
         # concatenating them into one input rather than writing separate files.
-        for buffer in buffers:
+        for buffer in buffers:  # pragma: no cover
             p.stdin.write(misc.read(buffer)[0])
 
         # Close everything, wait for completion then check for error messages.
@@ -131,6 +132,10 @@ class CSlug(object):
         p.wait()
         msg = p.stderr.read()
         p.stderr.close(), p.stdout.close()
+
+        # If we had to resort to using temporary files then clear them up.
+        for file in temporary_files:  # pragma: no cover
+            os.remove(file.name)
 
         # If error message is just whitespace:
         if not re.search(r"\S", msg):
@@ -263,13 +268,13 @@ class CSlug(object):
             except:
                 pass
 
-    def compile_command(self, _cc=None):
+    def compile_command(self, _cc=None, _cc_version=None):
         """Get the compile command invoked by :meth:`compile`.
 
         I hope to eventually make this function configurable.
         """
         _cc = cc(_cc)
-        cc_name, version = cc_version(_cc)
+        cc_name, version = _cc_version or cc_version(_cc)
 
         # Output filename
         output = ["-o", str(self.path)]
@@ -328,12 +333,27 @@ class CSlug(object):
                       if i.suffix != ".h"]  # yapf: disable
         buffers = [i for i in self.sources if not isinstance(i, Path)]
 
+        # For the compilers that do not support piped source code, convert all
+        # pseudo files to temporary files.
+        temporary_files = []
+        if cc_name in ("pcc",):
+            for buffer in buffers:
+                file = tempfile.NamedTemporaryFile("w", encoding="utf-8",
+                                                   delete=False, suffix=".c")
+                file.write(buffer.read())
+                file.write("\n")
+                file.close()
+                temporary_files.append(file)
+                true_files.append(file.name)
+            buffers.clear()
+
         stdin_flags = "-x c -".split() if buffers else []
 
         link_flags = ["-l" + i for i in self.links]
 
         return ([_cc] + output + flags + warning_flags + self.flags +
-                env_flags + true_files + stdin_flags + link_flags, buffers)
+                env_flags + true_files + stdin_flags + link_flags, buffers,
+                temporary_files)
 
     def _check_printfs(self):
         return any(check_printfs(*misc.read(i)) for i in self.sources)

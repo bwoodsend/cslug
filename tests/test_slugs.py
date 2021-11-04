@@ -163,6 +163,31 @@ def test_printf_warns():
         assert check_printfs("# 100\n\nprintf()")
 
 
+def test_buffers_or_temporary_files():
+    """Test CSlug.compile_command() only with both pseup and temporary files."""
+    self = CSlug(*anchor(name(), io.StringIO("foo"), io.StringIO("bar")))
+
+    # gcc does support pseudo files and therefore they should be used.
+    command, buffers, temporary_files = \
+        self.compile_command(_cc_version=("gcc", (10,)))
+    assert "-" in command
+    assert len(buffers) == 2
+    assert len(temporary_files) == 0
+    assert buffers[0].read() == "foo"
+    for option in command:
+        assert not option.endswith(".c")
+
+    # pcc doesn't support pseudo files so temporary files must be used instead.
+    command, buffers, temporary_files = \
+        self.compile_command(_cc_version=("pcc", (1,)))
+    assert "-" not in command
+    assert len(buffers) == 0
+    assert len(temporary_files) == 2
+    assert temporary_files[0].name in command
+    assert os.path.exists(temporary_files[0].name)
+    assert temporary_files[0].name.endswith(".c")
+
+
 @warnings_are_evil
 def test_names_not_in_dll():
     """
