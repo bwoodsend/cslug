@@ -17,21 +17,14 @@ jobs:
                      'musllinux_1_1_i686', 'musllinux_1_1_ppc64le']
     steps:
       - uses: actions/checkout@v2
-      - run: git fetch --prune --unshallow
 
       - name: Install Docker Buildx
         if: ${{ !startsWith(matrix.base-image, 'manylinux1_') }}
-        id: buildx
         uses: crazy-max/ghaction-docker-buildx@v3.3.0
-        with:
-          buildx-version: latest
-          qemu-version: latest
 
       - name: Build Docker image
         run: |
-          docker build \
-            -t sluggy-image \
-            -f Dockerfile_manylinux \
+          docker build -t sluggy-image -f Dockerfile_manylinux \
             --build-arg BASE=${{ matrix.base-image }} .
       - run: docker run -v "$PWD:/io" sluggy-image pytest
       - run: ls packaging/contains-slugs/dist
