@@ -7,6 +7,7 @@ import array
 from cslug import CSlug, ptr
 
 slug = CSlug("multi-output.c")
+slug.make()
 
 values = array.array("d", range(20))
 

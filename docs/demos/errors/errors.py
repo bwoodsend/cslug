@@ -37,6 +37,7 @@ def log(x):
 import math
 import pytest
 
+slug.make()
 with pytest.raises(ValueError): log(0)
 with pytest.raises(ValueError): log(-2)
 assert log(1) == 0
