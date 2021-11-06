@@ -8,6 +8,7 @@ jobs:
   test-manylinux:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         base-image: ['manylinux1_x86_64', 'manylinux1_i686',
                      'manylinux2014_aarch64', 'manylinux2014_ppc64le',
