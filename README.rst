@@ -19,6 +19,22 @@ Quick and painless wrapping C code into Python.
 The **cslug** package provides a thin layer on top of the built-in ctypes_
 library, making it easier to load functions and structures from C into Python.
 
+.. code-block:: c
+
+    // hello-cslug.c
+
+    int add_1(int x) {
+      return x + 1;
+    }
+
+.. code-block:: python
+
+    >>> from cslug import CSlug
+    >>> slug = CSlug("hello-cslug.c")
+    >>> slug.dll.add_1(12)
+    13
+
+
 Alternatives
 ------------
 
