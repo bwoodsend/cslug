@@ -36,7 +36,7 @@ from cslug import _cc
 assert a_bytes_array.value == b"Hello, my name is Ned."
 if a_string.value != "Сәлам. Минем исемем Нед.":
     cc_name, cc_version = _cc.cc_version()
-    if cc_name in ("tcc", "pcc"):
+    if cc_name in ("tcc", "pcc", "pgcc"):
         pass
     elif cc_name == "clang" and cc_version < (3, 3):
         pass

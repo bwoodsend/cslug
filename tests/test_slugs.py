@@ -18,7 +18,7 @@ from subprocess import run, PIPE
 
 import pytest
 
-from cslug import exceptions, anchor, CSlug, misc, Header
+from cslug import exceptions, anchor, CSlug, misc, Header, cc_version
 
 from tests import DUMP, name, DEMOS, RESOURCES, warnings_are_evil
 from tests.test_pointers import leaks
@@ -527,9 +527,19 @@ def test_custom_include():
     assert self.dll.foo() == 13
 
     # Test without the custom include path. It should lead to a failed build.
+    # This awkward construct asserts that an error is raised however pgcc
+    # indeterminantly ignores such errors and produces non functional
+    # exectaubles. In this case we should xfail().
     self.flags.clear()
-    with pytest.raises(exceptions.BuildError):
+    try:
         self.make()
+
+        if cc_version()[0] == "pgcc":
+            pytest.xfail("pgcc silently created an invalid executable.")
+        else:
+            assert 0, "No build error was raised"
+    except exceptions.BuildError:
+        return
 
 
 @warnings_are_evil

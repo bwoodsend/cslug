@@ -38,6 +38,7 @@ EXPORT_SYMBOLS = {
     "pcc": "-rdynamic",
     "gcc": "-fPIC",
     "clang": "" if OS == "Windows" else "-fPIC",
+    "pgcc": "",
 }
 
 
@@ -130,13 +131,14 @@ class CSlug(object):
         # Close everything, wait for completion then check for error messages.
         p.stdin.close()
         p.wait()
-        msg = p.stderr.read()
+        errors = p.stderr.read()
         p.stderr.close(), p.stdout.close()
 
         # If we had to resort to using temporary files then clear them up.
         for file in temporary_files:  # pragma: no cover
             os.remove(file.name)
 
+        msg = strip_useless_warnings(errors)
         # If error message is just whitespace:
         if not re.search(r"\S", msg):
             # Make it empty.
@@ -336,7 +338,7 @@ class CSlug(object):
         # For the compilers that do not support piped source code, convert all
         # pseudo files to temporary files.
         temporary_files = []
-        if cc_name in ("pcc",):
+        if cc_name in ("pcc", "pgcc"):
             for buffer in buffers:
                 file = tempfile.NamedTemporaryFile("w", encoding="utf-8",
                                                    delete=False, suffix=".c")
@@ -395,3 +397,11 @@ def check_printfs(text, name=None):
             out = True
         i += 1
     return out
+
+
+def strip_useless_warnings(message):
+    """Remove some known harmless warnings from an error/warning message."""
+    # These are both only issued by pgcc.
+    return re.sub(
+        r".*\.ld contains output sections; did you forget -T\?"
+        r"|.* last line of file ends without a newline.*\s*\^", "", message)

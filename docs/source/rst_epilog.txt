@@ -12,6 +12,8 @@
 .. _wheel: https://wheel.readthedocs.io/en/stable/
 .. _`raise an issue on Github`: https://github.com/bwoodsend/cslug/issues/new
 .. _WinLibs: https://www.winlibs.com/
+.. _PGCC: https://docs.nvidia.com/hpc-sdk/pgi-compilers/20.4/x86/pgi-ref-guide/index.htm
+.. _`NVIDIA HPC SDK`: https://developer.nvidia.com/hpc-sdk
 
 .. role:: tooltip(raw)
    :format: html

@@ -101,18 +101,20 @@ Before you commit yourself to any non Pure-Python you should bear in mind that:
 Supported Compilers
 -------------------
 
-The following OS/compiler combinations are fully supported and tested regularly.
+The following OS/compiler combinations are fully supported and tested routinely.
 
-======== ===== ======= ===== ======= ============ ========
-Compiler Linux Windows macOS FreeBSD Cygwin/msys2 Android*
-======== ===== ======= ===== ======= ============ ========
-gcc_     ✓     ✓       ✓     ✓       ✓            ✗
-clang_   ✓     ✓       ✓     ✓       ✗            ✓
-MSVC     ✗     ✗       ✗     ✗       ✗            ✗
-TinyCC_  ✓     ✓       ✗     ✗       ✗            ✗
-======== ===== ======= ===== ======= ============ ========
+========== ===== ======= ===== ======= ============ ========
+Compiler   Linux Windows macOS FreeBSD Cygwin/msys2 Android*
+========== ===== ======= ===== ======= ============ ========
+gcc_       ✓     ✓       ✓     ✓       ✓            ✗
+clang_     ✓     ✓       ✓     ✓       ✗            ✓
+MSVC       ✗     ✗       ✗     ✗       ✗            ✗
+TinyCC_    ✓     ✓       ✗     ✗       ✗            ✗
+PGCC_ \*\* ✓     ✗       ✗     ✗       ✗            ✗
+========== ===== ======= ===== ======= ============ ========
 
 \* Using Termux_.
+\*\* Installable as part of the `NVIDIA HPC SDK`_.
 
 Installation
 ------------
@@ -203,3 +205,5 @@ Credits
 .. _manylinux: https://github.com/pypa/manylinux/tree/manylinux1
 .. _Termux: https://termux.com/
 .. _WinLibs: https://www.winlibs.com/
+.. _PGCC: https://docs.nvidia.com/hpc-sdk/pgi-compilers/20.4/x86/pgi-ref-guide/index.htm
+.. _`NVIDIA HPC SDK`: https://developer.nvidia.com/hpc-sdk

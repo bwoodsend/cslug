@@ -8,9 +8,9 @@ import re
 
 import pytest
 
-from cslug._cc import cc, cc_version, which, _parse_cc_version, \
-    _macos_architecture
+from cslug._cc import cc, which, _parse_cc_version, _macos_architecture
 from cslug import exceptions, misc
+from cslug._cslug import strip_useless_warnings
 
 from tests import DUMP, uuid, RESOURCES
 
@@ -123,9 +123,12 @@ cc_version_files = list((RESOURCES / "cc_versions").glob("*"))
 @pytest.mark.parametrize("path", cc_version_files,
                          ids=[i.name for i in cc_version_files])
 def test_cc_version_parse(path):
-    """Test the parsing of ``$CC -v`` output. So that these can be easily tested
-    on all platforms, sample outputs of ``$CC -v`` are dumped in files located
-    at tests/resources/cc_versions/.
+    """Test the parsing of ``$CC -v`` or ``$CC --version`` outputs.
+
+    So that these can be easily tested on all platforms, sample outputs of
+    ``$CC -v`` or ``$CC --version`` are dumped in files located at
+    tests/resources/cc_versions.
+
     """
     # The intended parse output is the filename.
     name, version, _ = path.name.split("-")
@@ -162,3 +165,13 @@ def test_macos_architecture():
     assert _macos_architecture("x86_64,arm64") == "universal2"
     with pytest.raises(EnvironmentError, match="The MACOS_ARCHITECTURE .*"):
         _macos_architecture("spaghetti")
+
+
+def test_strip_useless_warnings():
+    assert strip_useless_warnings(
+        '"/tmp/05fa2e86-3c3a-11ec-a499-586c251818cf.c", line 6: '
+        'warning: last line of file ends without a newline\n     ^') == ""
+
+    assert strip_useless_warnings(
+        '/opt/nvidia/hpc_sdk/Linux_x86_64/21.9/compilers/lib/nvhpc.ld '
+        'contains output sections; did you forget -T?') == ''

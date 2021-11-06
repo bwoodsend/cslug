@@ -81,6 +81,7 @@ def test_escaped_unicode_literal(source):
 def test_non_escaped_unicode_literal(source):
     """Test a C source file may contain unicode characters in string literals.
     """
+    delayed_skip_if_unsupported("Unicode literals", pgcc=False)
     self = CSlug(anchor(name()), source)
     self.make()
     assert self.dll.a() == "㟐"
@@ -90,7 +91,7 @@ def test_non_escaped_unicode_literal(source):
 def test_unicode_identifiers(source):
     """Test unicode function/variable names."""
     delayed_skip_if_unsupported("Unicode identifiers", gcc=(10,), tcc=False,
-                                pcc=False, clang=(3, 3))
+                                pcc=False, clang=(3, 3), pgcc=False)
 
     slug = CSlug(anchor(name()), source)
     slug.make()

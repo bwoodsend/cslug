@@ -96,17 +96,31 @@ def cc_version(CC=None):
     - ``'tcc'`` for `TinyCC`_ including the 32-bit ``i386-win32-tcc`` version.
     - ``'clang'`` for clang_.
     - ``'pcc'`` for `Portable C Compiler`_.
+    - ``'PGCC'`` for pgcc_.
 
     The `version_info` is in the standard ``(major, minor, micro)`` version
     format.
 
     """
-    cmd = [cc(CC), "-v"]
-    p = run(cmd, stdout=PIPE, stderr=PIPE)
+    CC = cc(CC)
+    # This function is split into two so that both ``$CC -v`` and
+    # ``$CC --version`` can be tried.
+    try:
+        return _cc_version(CC, "-v")
+    except RuntimeError:  # pragma: no cover
+        # Currently, the only compiler to need this variant is pgcc.
+        return _cc_version(CC, "--version")
+
+
+def _cc_version(*command):
+    """Execute some form of ``$CC --what-are-you`` command and attempt to parse
+    the output."""
+    p = run(command, stdout=PIPE, stderr=PIPE)
 
     # Some compilers use stdout and others use stderr - combine them.
     stdout = p.stdout + p.stderr
-    return _parse_cc_version(stdout, cmd)
+
+    return _parse_cc_version(stdout, p.args)
 
 
 def _parse_cc_version(stdout: bytes, cmd: list):
@@ -122,9 +136,11 @@ def _parse_cc_version(stdout: bytes, cmd: list):
         (str, tuple[int]): A ``(name, version_info)`` pair.
 
     """
-    # All compilers except pcc use the format "[name] version [version]".
+    # Most compilers (namely gcc, clang and tcc) use the format
+    # "[name] version [version]" but pcc and pgcc have their own..
     m = re.search(rb"(\S+) version ([\d.]+)", stdout) \
-        or re.search(rb"(pcc) ([\d.]+) for \S+", stdout)
+        or re.search(rb"(pcc) ([\d.]+) for \S+", stdout) \
+        or re.search(rb"(pgcc) \D* ([\d.]+)", stdout)
 
     try:
         name, version = m.groups()

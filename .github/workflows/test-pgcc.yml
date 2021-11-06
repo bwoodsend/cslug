@@ -1,0 +1,25 @@
+# Install and test nvidia's PGCC with clug. Currently this compiler only
+# supports Linux.
+---
+name: Test PGCC
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # The recommended way to install PGCC is just raw wget/paste - no package
+      # managers.
+      - run: |
+          wget -nv https://developer.download.nvidia.com/hpc-sdk/21.9/nvhpc_2021_219_Linux_x86_64_cuda_11.4.tar.gz
+          tar xpzf nvhpc_2021_219_Linux_x86_64_cuda_11.4.tar.gz
+          sudo nvhpc_2021_219_Linux_x86_64_cuda_11.4/install
+          echo PATH=$PATH:/opt/nvidia/hpc_sdk/Linux_x86_64/21.9/compilers/bin/ >> $GITHUB_ENV
+        working-directory: /opt/
+
+      - run: pip install -e .[test]
+      - run: CC=pgcc pytest
