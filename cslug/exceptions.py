@@ -25,7 +25,7 @@ class NoGccError(Exception):
         # user that line.
         if platform.system() == "Darwin":
             # macOS.
-            cmd = "sudo port install mingw-w64"
+            cmd = "port install mingw-w64"
 
         elif platform.system() == "FreeBSD":
             # FreeBSD.
@@ -34,13 +34,10 @@ class NoGccError(Exception):
         elif shutil.which("pacman"):
             # Some Linux distros (Manjaro) and msys2.
             cmd = "pacman -S gcc"
-            if sys.platform != "msys":  # pragma: no cover
-                # msys2 doesn't have sudo.
-                cmd = "sudo " + cmd
 
         elif shutil.which("apt"):
             # Ubuntu Linux.
-            cmd = "sudo apt install gcc"
+            cmd = "apt install gcc"
 
         elif shutil.which("apk"):
             # Alpine Linux.
@@ -49,6 +46,9 @@ class NoGccError(Exception):
         else:
             # Windows, most Linux distributions and unknown OSs.
             cmd = None
+
+        if cmd and shutil.which("sudo"):  # pragma: no cover
+            cmd = "sudo " + cmd
 
         out_ = \
             "Attempted a compile without a C compiler. " \
