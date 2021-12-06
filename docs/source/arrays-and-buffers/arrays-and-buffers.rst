@@ -74,7 +74,7 @@ If you want to create a new buffer from scratch in C and pass it to Python then
 you're in for a bit of a disappointment because,
 as it was when :ref:`writing strings <Writing to strings>`, returning a block of
 memory is disproportionally dangerous in C.
-Instead, create an empty writeable buffer in Python
+Instead, create an empty writable buffer in Python
 (:py:`out = bytearray(length)`), then pass that buffer to C to populate it.
 
 --------------------------------------------------------------------------------
@@ -174,9 +174,12 @@ e.g. If your C function has an argument of type :c:`uint16_t *` then use::
 Writing an array
 ................
 
-Write an array by populating an empty one.
-For example this uninspiring C function takes an input array which it reads from
-and an output array where it writes what you'd typically return in Python.
+As it was when :ref:`writing strings<Writing to strings>`, it is impossible to
+allocate an array in C then pass its ownership to Python.
+Instead, write an array by creating an empty one in Python then populating it
+in C.
+For example, this uninspiring C function takes an input array which it reads
+from and an output array where it writes what you'd typically return in Python.
 
 .. literalinclude:: arrays-demo.c
     :language: C
