@@ -38,8 +38,9 @@ library, making it easier to load functions and structures from C into Python.
 Alternatives
 ------------
 
-Mixing C with Python is nothing new - there are plenty of other ways. A nice
-comparison of the various methods can be found `here
+Mixing C with Python is nothing new - there are plenty of other ways.
+The most common way is to write Python extension modules.
+A nice comparison of the various methods can be found `here
 <https://intermediate-and-advanced-software-carpentry.readthedocs.io/en/latest/c++-wrapping.html>`_.
 **cslug** aims to be the simplest although it certainly isn't the most flexible.
 
@@ -51,7 +52,7 @@ Advantages
 ..........
 
 * C code can be just plain high school level C.
-  Even a hello world Python extension module is some 40 lines of incomprehensible
+  Even a hello world Python extension module is some 40 lines of hairy looking
   macros.
 * Binaries are not linked against Python and are therefore not tied to a
   specific Python version.
@@ -61,6 +62,10 @@ Advantages
 * You can use virtually any C compiler.
   Python extension modules must be built with clang_ on macOS and MSVC on
   Windows.
+  The real advantage of this is that you can use the same compiler on all
+  platforms making them considerably more homogonuos and thus greatly reducing
+  your chances of having to debug an issue present only on your least favourite
+  platform.
 * File sizes of binaries are very small.
   1000 lines of C code equates to about 20KB of binary on Linux.
   Python extension modules are typically several times larger and
@@ -71,8 +76,9 @@ Disadvantages
 .............
 
 * The surrounding Python code is less automated. A Python extension module looks
-  and feels like a native Python module out the box whereas a small wrapper
-  function is generally required for ctypes.
+  and feels like a native Python module out the box complete with function
+  metadata and docstrings whereas a small wrapper function is generally required
+  for ctypes.
 * You can't use native Python types such as ``list`` or ``dict`` within C code.
   Using such types will generally reduce performance down to near pure
   Python levels anyway so this is a small loss in practice.
@@ -84,17 +90,17 @@ Shared Caveats
 
 Before you commit yourself to any non Pure-Python you should bear in mind that:
 
-* You'll need to ship wheels for every platform you wish to support.
-  Otherwise, users of your code will have to install a C compiler to run it.
+* You'll need to ship wheels for every platform you wish to support
+  otherwise users of your code will have to install a C compiler to run it.
   This means that you either need access to all platforms, or you will have to
-  setup Continuous Integration to build you package on a cloud server.
+  setup Continuous Integration to build you package on the cloud.
   Linux users can get around this by using Vagrant_.
 * Linux wheels must be built on a manylinux_ Docker image in order to be
   widely compatible with most distributions of Linux.
 * Recent macOS versions will typically block or delete any binary file you
   produce unless you either purchase a codesign license
   or your software becomes famous enough to be whitelisted for you by Apple
-  (binaries uploaded to PyPI seem to be except automatically).
+  (binaries uploaded to PyPI seem to be excempt automatically).
   Windows users face a similar, albeit lesser, problem with Microsoft Defender.
 
 
