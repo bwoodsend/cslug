@@ -1,4 +1,4 @@
-.. _mingw: http://mingw-w64.org/doku.php/download
+.. _mingw: https://www.mingw-w64.org/downloads/
 .. _gcc: https://gcc.gnu.org/
 .. _TinyCC: https://bellard.org/tcc/
 .. _clang: https://clang.llvm.org/

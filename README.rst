@@ -195,7 +195,7 @@ Credits
 .. _JetBrains: https://jb.gg/OpenSource
 .. _PyCharm: https://www.jetbrains.com/pycharm/
 .. _ctypes: https://docs.python.org/3.9/library/ctypes.html
-.. _mingw-w64: http://mingw-w64.org/doku.php/download
+.. _mingw-w64: https://www.mingw-w64.org/downloads/
 .. _gcc: https://gcc.gnu.org/
 .. _TinyCC: https://bellard.org/tcc/
 .. _clang: https://clang.llvm.org/
