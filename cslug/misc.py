@@ -175,7 +175,7 @@ def flatten(iterable, types=(tuple, list), initial=None):
 def block_compile():
     """Temporarily block |cslug| compilation.
 
-    A context manager to temporarly set the ``CC`` environment variable to
+    A context manager to temporarily set the ``CC`` environment variable to
     ``!block`` which is a signal to |cslug| that it is not allowed to use any
     C compiler.
 

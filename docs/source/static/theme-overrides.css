@@ -51,7 +51,7 @@
   border-bottom: none;
   padding: 2px 5px;
 }
-/* Inline literals writen as
+/* Inline literals written as
     | ``foo``
     | ``bar``
    Should enable wrapping but subsequent lines should be indented. */

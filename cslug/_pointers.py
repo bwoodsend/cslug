@@ -31,7 +31,7 @@ def ptr(bytes_like):
     This reference count is decremented on deletion of the pointer returned by
     this function. With this in place, you generally shouldn't need to worry
     about holding onto or releasing memory. There is one exception to this: If
-    you use pointer arithmetic, preducts of that arithmitic are just regular
+    you use pointer arithmetic, preducts of that arithmetic are just regular
     integers and do not carry the reference.
 
     If you are using :mod:`numpy` then you should be aware that this method only

@@ -17,7 +17,7 @@ Definitions of C standard library functions. Nicked from
 | atoi            | stdlib.h                   | int atoi(const char *string);                              | Converts *string* to an integer.                             |
 | atol            | stdlib.h                   | long int atol(const char *string);                         | Converts *string* to a long integer.                         |
 | bsearch         | stdlib.h                   | void *bsearch(const void *key, const void *base, size_t num, size_t size, int (*compare) (const void *element1, const void *element2)); | Performs a binary search on an array of *num* elements, each of *size* bytes. The array must be sorted in ascending order by the function pointed to by *compare*. |
-| btowc           | stdio.h  wchar.h           | wint_t btowc(int c);                                       | Determines whether *c* constitues a valid multibyte character in the initial shift state. |
+| btowc           | stdio.h  wchar.h           | wint_t btowc(int c);                                       | Determines whether *c* constitutes a valid multibyte character in the initial shift state. |
 | calloc          | stdlib.h                   | void *calloc(size_t num, size_t size);                   | Reserves storage space for an array of *num* elements, each of size *size*, and initializes the values of all elements to 0. |
 | catclose6       | nl_types.h                 | int catclose (nl_catd catd);                                 | Closes a previously opened message catalog.                  |
 | catgets6        | nl_types.h                 | char *catgets(nl_catd catd, int set_id, int msg_id, const char *s); | Retrieves a message from an open message catalog.            |

@@ -100,7 +100,7 @@ Before you commit yourself to any non Pure-Python you should bear in mind that:
 * Recent macOS versions will typically block or delete any binary file you
   produce unless you either purchase a codesign license
   or your software becomes famous enough to be whitelisted for you by Apple
-  (binaries uploaded to PyPI seem to be excempt automatically).
+  (binaries uploaded to PyPI seem to be exempt automatically).
   Windows users face a similar, albeit lesser, problem with Microsoft Defender.
 
 
