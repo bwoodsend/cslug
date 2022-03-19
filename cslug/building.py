@@ -117,24 +117,14 @@ else:
             # before the normalisation, ensures that it gets normalised.
             # Setting ``plat_name`` is equivalent to using the ``--plat`` CLI
             # option.
-            import re, os
+            import platform
             from wheel.bdist_wheel import get_platform
             self.plat_name = get_platform(self.bdist_dir)
 
-            # `wheel` assumes that the macOS target version is the same as the
-            # target version of Python. This is completely irrelevant to cslug.
-            # The correct version is whatever cslug passed to gcc's
-            # -mmacosx-version-min parameter.
-            from cslug._cc import mmacosx_version_min, macos_architecture
-            min_osx = mmacosx_version_min()
-            self.plat_name = re.sub(r"macosx-\d+[.]\d+-", f"macosx-{min_osx}-",
-                                    self.plat_name)
-            # If macOS binaries were either cross compiled or compiled "fat"
-            # (contains two architectures in one binary) then the architecture
-            # tag needs to reflect that.
-            arch = macos_architecture()
-            if arch:
-                self.plat_name = re.sub("x86_64|arm64", arch, self.plat_name)
+            if platform.system() == "Darwin":
+                # If on mac, deal with the x86_64/arm64/universal2 shenanigans
+                # and the deployment target.
+                self.plat_name = _macos_platform_tag(self.plat_name)
 
             super().finalize_options()
 
@@ -160,6 +150,28 @@ else:
             clean.verbose = 0
             self.run_command("clean")
             super().run()
+
+
+def _macos_platform_tag(tag):
+    """Correct the macOS platform tag that wheel assigns wheels by default."""
+    # `wheel` assumes that the macOS target version is the same as the
+    # target version of Python. This is not the case for cslug because it does
+    # not use the compile args from sysconfig like Python extension modules do.
+    # The correct version is whatever cslug passed to gcc's
+    # -mmacosx-version-min parameter.
+    import re
+    import platform
+    from cslug._cc import mmacosx_version_min, macos_architecture
+
+    macos_version = mmacosx_version_min().replace(".", "_")
+    tag = re.sub(r"macosx[-_]\d+[._]\d+[-_]", f"macosx_{macos_version}_", tag)
+
+    # If macOS binaries were either cross compiled or compiled "fat"
+    # (contains two architectures in one binary) then the architecture
+    # tag needs to reflect that.
+    arch = macos_architecture() or platform.machine()
+    tag = re.sub("x86_64|arm64|universal2", arch, tag)
+    return tag
 
 
 def copy_requirements(path="pyproject.toml", exclude=()):

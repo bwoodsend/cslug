@@ -167,7 +167,15 @@ def mmacosx_version_min():  # pragma: Darwin
     # - Python 3.9 -> OSX 10.9
     default = "10.6"
 
-    return os.environ.get("MACOS_DEPLOYMENT_TARGET", default)
+    target = os.environ.get("MACOS_DEPLOYMENT_TARGET", default)
+    if (macos_architecture() or platform.machine()) == "arm64":
+        # arm64 only wheels must be declared >= 11.0 compatible or they are not
+        # deemed installable. A universal2 wheel does not have this constraint.
+        if float(target) < 11:
+            target = "11.0"
+    if "." not in target:
+        target += ".0"
+    return target
 
 
 def macos_architecture():  # pragma: Darwin
