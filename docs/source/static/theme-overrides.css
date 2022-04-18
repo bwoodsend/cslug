@@ -89,14 +89,16 @@ div[class*="highlight-py"] .highlight, div[class*="highlight-default"] .highligh
 }
 
 /* Make the sidebar shrink if the window is narrow (e.g. panel left-ed). */
-.wy-nav-side {
+.wy-nav-side, .rst-versions {
   width: min(28%, 300px);
 }
 .wy-side-scroll, .wy-side-nav-search, .wy-menu-vertical {
   width: 100%;
 }
-.wy-nav-content-wrap {
-  margin-left: min(28%, 300px);
+@media screen and (min-width: 768px) {
+  .wy-nav-content-wrap {
+    margin-left: min(28%, 300px);
+  }
 }
 
 /* Custom `.. rst-class:: in-red` blocks. */
