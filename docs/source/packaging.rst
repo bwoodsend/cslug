@@ -81,8 +81,7 @@ Whilst you rarely use it directly, ``setup.py build`` is called implicitly
 whenever you:
 
 * ``pip install .`` but not ``pip install -e .``
-* ``python setup.py bdist_wheel`` or ``pip wheel .`` but not
-  ``python setup.py sdist``.
+* ``pip wheel .`` but not ``python setup.py sdist``.
 * ``pip install /path/to/source/distribution.tar.gz`` but not
   ``pip install /path/to/binary/distribution.whl``.
 
@@ -152,7 +151,6 @@ other runtime-only dependencies then append them::
 
     install_requires=copy_requirements() + ["toml", "some-other-library"],
 
-
 .. warning::
 
     pip builds packages in an isolated environment which ignores your currently
@@ -165,6 +163,7 @@ other runtime-only dependencies then append them::
     If you find the isolated build environment is maddeningly slow you can skip
     it in pip using the :option:`--no-build-isolation`.
     But only once your sure it works without it.
+
 
 When the build dependencies get noticed
 .......................................
@@ -272,7 +271,7 @@ Now on running:
 
 .. code-block:: shell
 
-    python setup.py bdist_wheel
+    pip wheel --no-deps .
 
 you should notice that the wheel produced has the name of your operating system
 in its filename.
@@ -281,15 +280,3 @@ in its filename.
 
     Building wheels requires the wheel_ package. If you get an error saying
     wheel_ isn't installed then just ``pip install wheel``.
-
-PyPA are pushing (albeit half-heartedly) away from direct ``python setup.py
-command`` usage. To conform to this instead use ``pip wheel .`` to build wheels.
-
-The above is slightly different in that it builds wheels for all your
-dependencies too and places them in your current working directory rather than a
-dedicated *dist* folder. For true equivalence use:
-
-.. code-block:: shell
-
-    pip wheel --wheel-dir dist --no-deps .
-

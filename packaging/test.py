@@ -100,6 +100,10 @@ def master_python(*args, cwd=".", check=True):
     return run(sys.executable, *args, cwd=cwd, check=check)
 
 
+def pip(*args, cwd=".", check=True):
+    return master_python("-m", "pip", *args, cwd=cwd, check=check)
+
+
 # --- making a mess in the source code ---
 # This junk should be ignored.
 
@@ -163,7 +167,7 @@ def inspect_wheel(wheel):
 
 
 @pytest.mark.order(-1)
-@pytest.mark.timeout(300)
+@pytest.mark.timeout(600)
 def test():
     if sys.platform == "cygwin":
         pytest.skip("venv is not supported on cygwin.")
@@ -186,7 +190,7 @@ def test():
 
     # Build a wheel for cslug using the master environment. This will be needed
     # later.
-    p = master_python("setup.py", "-q", "bdist_wheel", cwd=CSLUG_ROOT)
+    p = pip("wheel", "-q", "--no-deps", "--wheel-dir=dist", ".", cwd=CSLUG_ROOT)
 
     # Put some rubbish files into `contains-slugs`. These should not get
     # collected by either sdist or wheel.
@@ -236,7 +240,8 @@ def test():
 
     # Build a wheel for `contains-slugs` using the master environment.
     shutil.rmtree(contains_slugs / "dist", ignore_errors=True)
-    p = master_python("setup.py", "-q", "bdist_wheel", cwd=contains_slugs)
+    p = pip("wheel", "-q", "--no-deps", "--wheel-dir=dist", ".",
+            cwd=contains_slugs)
     # Again, locate and test its contents.
     wheel = next((contains_slugs / "dist").glob("*"))
     inspect_wheel(wheel)
