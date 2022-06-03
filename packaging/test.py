@@ -22,6 +22,7 @@ import os
 
 import re
 from pathlib import Path
+import textwrap
 import venv
 import sys
 import shutil
@@ -45,10 +46,14 @@ contains_slugs = HERE / "contains-slugs"
 
 def run(*args, cwd=".", check=True):
     from subprocess import PIPE, run
+    env = os.environ.copy()
+    env.update(PIP_DISABLE_PIP_VERSION_CHECK="1")
     old = os.getcwd()
     try:
         os.chdir(cwd)
-        p = run(list(map(str, args)), stdout=PIPE, stderr=PIPE)
+        print("$", *args)
+        p = run(list(map(str, args)), stdout=PIPE, stderr=PIPE, env=env)
+        print(textwrap.indent((p.stdout + p.stderr).decode(), "    "))
     finally:
         os.chdir(old)
     if check:
@@ -87,8 +92,8 @@ class Env(object):
         return run(self.context.env_exe, *args, cwd=cwd, check=check)
 
     def pip(self, *args, cwd=".", check=True):
-        return self.python("-m", "pip", "--disable-pip-version-check", "-q",
-                           "--no-cache-dir", *args, cwd=cwd, check=check)
+        return self.python("-m", "pip", "-q", "--no-cache-dir", *args, cwd=cwd,
+                           check=check)
 
 
 def master_python(*args, cwd=".", check=True):
@@ -231,7 +236,7 @@ def test():
 
     # Build a wheel for `contains-slugs` using the master environment.
     shutil.rmtree(contains_slugs / "dist", ignore_errors=True)
-    p = master_python("setup.py", "bdist_wheel", cwd=contains_slugs)
+    p = master_python("setup.py", "-q", "bdist_wheel", cwd=contains_slugs)
     # Again, locate and test its contents.
     wheel = next((contains_slugs / "dist").glob("*"))
     inspect_wheel(wheel)
