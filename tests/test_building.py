@@ -76,7 +76,7 @@ def test_copy_requirements():
 def test_patch_macos_tag(monkeypatch, tag):
     from cslug.building import _macos_platform_tag
 
-    monkeypatch.setattr(platform, "system", lambda : "Darwin")
+    monkeypatch.setattr(platform, "system", lambda: "Darwin")
 
     monkeypatch.setenv("MACOS_ARCHITECTURE", "x86_64")
     monkeypatch.setenv("MACOS_DEPLOYMENT_TARGET", "11")
