@@ -70,11 +70,11 @@ def cc(CC=None):
             raise exceptions.CCNotFoundError(CC)
         return _cc
 
-    CC = which("gcc")
-    if CC is None and platform.system() in ("Darwin", "FreeBSD"):
-        # OSX and FreeBSD officially use clang for pretty much everything.
-        # Therefore clang is more likely to be available than gcc.
-        CC = which("clang")
+    if platform.system() in ("Darwin", "FreeBSD"):  # pragma: no cover
+        # OSX and FreeBSD officially use clang as their default compilers.
+        CC = which("clang") or which("gcc")
+    else:
+        CC = which("gcc")  # pragma: no cover
     if CC is None:  # pragma: no branch
         raise exceptions.NoGccError
     return CC  # pragma: no cover

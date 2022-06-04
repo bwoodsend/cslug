@@ -27,10 +27,6 @@ class NoGccError(Exception):
             # macOS.
             cmd = "port install mingw-w64"
 
-        elif platform.system() == "FreeBSD":
-            # FreeBSD.
-            cmd = "pkg install gcc"
-
         elif shutil.which("pacman"):
             # Some Linux distros (Manjaro) and msys2.
             cmd = "pacman -S gcc"

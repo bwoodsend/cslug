@@ -94,7 +94,7 @@ def test_no_cc_or_blocked_error():
         os.environ.pop("CC", None)
         try:
             if platform.system() in ("Darwin", "FreeBSD"):
-                assert cc() == (which("gcc") or which("clang"))
+                assert cc() == (which("clang") or which("gcc"))
             else:
                 assert cc() == which("gcc")
         except exceptions.NoGccError:
