@@ -22,17 +22,10 @@ Android   A combination of ``libc.so`` and ``libm.so``.
 
 Not every function is made available. A function is excluded if:
 
-* It is not available on every supported platform (shoots a filthy look towards
-  Windows) so that you don't have to worry about cross-platform compatibility.
+* It is not available on your current platform.
 * It uses types which are unavailable to :mod:`ctypes`.
 * It's a macro, meaning that it's refactored away at compile time and doesn't
   exist in any |binaries| format.
-
-
-.. note::
-
-    These functions are tested to check that they exist but not that they work
-    in Python. I don't even know what half of them do...
 
 """
 

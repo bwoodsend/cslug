@@ -22,10 +22,23 @@
         "c_void_p"
       ]
     ],
+    "asctime_r": [
+      "c_char_p",
+      [
+        "c_void_p",
+        "c_char_p"
+      ]
+    ],
     "asin": [
       "c_double",
       [
         "c_double"
+      ]
+    ],
+    "assert": [
+      "None",
+      [
+        "c_int"
       ]
     ],
     "atan": [
@@ -102,6 +115,38 @@
         "c_void_p"
       ]
     ],
+    "ctime64": [
+      "c_char_p",
+      [
+        "c_void_p"
+      ]
+    ],
+    "ctime64_r": [
+      "c_char_p",
+      [
+        "c_void_p",
+        "c_char_p"
+      ]
+    ],
+    "ctime_r": [
+      "c_char_p",
+      [
+        "c_void_p",
+        "c_char_p"
+      ]
+    ],
+    "erf": [
+      "c_double",
+      [
+        "c_double"
+      ]
+    ],
+    "erfc": [
+      "c_double",
+      [
+        "c_double"
+      ]
+    ],
     "exit": [
       "None",
       [
@@ -126,6 +171,13 @@
         "c_void_p"
       ]
     ],
+    "fdopen": [
+      "c_void_p",
+      [
+        "c_int",
+        "c_char_p"
+      ]
+    ],
     "feof": [
       "c_int",
       [
@@ -133,6 +185,53 @@
       ]
     ],
     "ferror": [
+      "c_int",
+      [
+        "c_void_p"
+      ]
+    ],
+    "fflush": [
+      "c_int",
+      [
+        "c_void_p"
+      ]
+    ],
+    "fgetc": [
+      "c_int",
+      [
+        "c_void_p"
+      ]
+    ],
+    "fgetpos": [
+      "c_int",
+      [
+        "c_void_p",
+        "c_void_p"
+      ]
+    ],
+    "fgets": [
+      "c_char_p",
+      [
+        "c_char_p",
+        "c_int",
+        "c_void_p"
+      ]
+    ],
+    "fgetwc": [
+      "c_int",
+      [
+        "c_void_p"
+      ]
+    ],
+    "fgetws": [
+      "c_wchar_p",
+      [
+        "c_wchar_p",
+        "c_int",
+        "c_void_p"
+      ]
+    ],
+    "fileno": [
       "c_int",
       [
         "c_void_p"
@@ -163,6 +262,34 @@
       [
         "c_void_p",
         "c_void_p",
+        "c_void_p"
+      ]
+    ],
+    "fputc": [
+      "c_int",
+      [
+        "c_int",
+        "c_void_p"
+      ]
+    ],
+    "fputs": [
+      "c_int",
+      [
+        "c_char_p",
+        "c_void_p"
+      ]
+    ],
+    "fputwc": [
+      "c_int",
+      [
+        "c_wchar",
+        "c_void_p"
+      ]
+    ],
+    "fputws": [
+      "c_int",
+      [
+        "c_wchar_p",
         "c_void_p"
       ]
     ],
@@ -204,6 +331,42 @@
         "c_void_p"
       ]
     ],
+    "fseek": [
+      "c_int",
+      [
+        "c_void_p",
+        "c_long",
+        "c_int"
+      ]
+    ],
+    "fsetpos": [
+      "c_int",
+      [
+        "c_void_p",
+        "c_void_p"
+      ]
+    ],
+    "ftell": [
+      "c_long",
+      [
+        "c_void_p"
+      ]
+    ],
+    "fwide": [
+      "c_int",
+      [
+        "c_void_p",
+        "c_int"
+      ]
+    ],
+    "fwprintf": [
+      "c_int",
+      [
+        "c_void_p",
+        "c_wchar_p",
+        "c_void_p"
+      ]
+    ],
     "fwrite": [
       "c_size_t",
       [
@@ -212,6 +375,30 @@
         "c_size_t",
         "c_void_p"
       ]
+    ],
+    "fwscanf": [
+      "c_int",
+      [
+        "c_void_p",
+        "c_wchar_p",
+        "c_void_p"
+      ]
+    ],
+    "gamma": [
+      "c_double",
+      [
+        "c_double"
+      ]
+    ],
+    "getc": [
+      "c_int",
+      [
+        "c_void_p"
+      ]
+    ],
+    "getchar": [
+      "c_int",
+      []
     ],
     "getenv": [
       "c_char_p",
@@ -225,10 +412,47 @@
         "c_void_p"
       ]
     ],
+    "getwc": [
+      "c_int",
+      [
+        "c_void_p"
+      ]
+    ],
+    "getwchar": [
+      "c_int",
+      []
+    ],
     "gmtime": [
       "c_void_p",
       [
         "c_void_p"
+      ]
+    ],
+    "gmtime64": [
+      "c_void_p",
+      [
+        "c_void_p"
+      ]
+    ],
+    "gmtime64_r": [
+      "c_void_p",
+      [
+        "c_void_p",
+        "c_void_p"
+      ]
+    ],
+    "gmtime_r": [
+      "c_void_p",
+      [
+        "c_void_p",
+        "c_void_p"
+      ]
+    ],
+    "hypot": [
+      "c_double",
+      [
+        "c_double",
+        "c_double"
       ]
     ],
     "isalnum": [
@@ -238,6 +462,18 @@
       ]
     ],
     "isalpha": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "isascii": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "isblank": [
       "c_int",
       [
         "c_int"
@@ -291,6 +527,103 @@
         "c_int"
       ]
     ],
+    "iswalnum": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "iswalpha": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "iswblank": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "iswcntrl": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "iswdigit": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "iswgraph": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "iswlower": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "iswprint": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "iswpunct": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "iswspace": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "iswupper": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "iswxdigit": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "isxdigit": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "j0": [
+      "c_double",
+      [
+        "c_double"
+      ]
+    ],
+    "j1": [
+      "c_double",
+      [
+        "c_double"
+      ]
+    ],
+    "jn": [
+      "c_double",
+      [
+        "c_int",
+        "c_double"
+      ]
+    ],
     "labs": [
       "c_long",
       [
@@ -314,6 +647,26 @@
         "c_void_p"
       ]
     ],
+    "localtime64": [
+      "c_void_p",
+      [
+        "c_void_p"
+      ]
+    ],
+    "localtime64_r": [
+      "c_void_p",
+      [
+        "c_void_p",
+        "c_void_p"
+      ]
+    ],
+    "localtime_r": [
+      "c_void_p",
+      [
+        "c_void_p",
+        "c_void_p"
+      ]
+    ],
     "log": [
       "c_double",
       [
@@ -330,6 +683,45 @@
       "c_void_p",
       [
         "c_size_t"
+      ]
+    ],
+    "mblen": [
+      "c_int",
+      [
+        "c_char_p",
+        "c_size_t"
+      ]
+    ],
+    "mbrlen": [
+      "c_int",
+      [
+        "c_char_p",
+        "c_size_t",
+        "c_void_p"
+      ]
+    ],
+    "mbrtowc": [
+      "c_int",
+      [
+        "c_wchar_p",
+        "c_char_p",
+        "c_size_t",
+        "c_void_p"
+      ]
+    ],
+    "mbsinit": [
+      "c_int",
+      [
+        "c_void_p"
+      ]
+    ],
+    "mbsrtowc": [
+      "c_size_t",
+      [
+        "c_wchar_p",
+        "c_void_p",
+        "c_size_t",
+        "c_void_p"
       ]
     ],
     "mbstowcs": [
@@ -395,6 +787,34 @@
         "c_void_p"
       ]
     ],
+    "nextafter": [
+      "c_double",
+      [
+        "c_double",
+        "c_double"
+      ]
+    ],
+    "nextafterl": [
+      "c_longdouble",
+      [
+        "c_longdouble",
+        "c_longdouble"
+      ]
+    ],
+    "nexttoward": [
+      "c_double",
+      [
+        "c_double",
+        "c_longdouble"
+      ]
+    ],
+    "nexttowardl": [
+      "c_longdouble",
+      [
+        "c_longdouble",
+        "c_longdouble"
+      ]
+    ],
     "perror": [
       "None",
       [
@@ -415,10 +835,35 @@
         "c_void_p"
       ]
     ],
+    "putc": [
+      "c_int",
+      [
+        "c_int",
+        "c_void_p"
+      ]
+    ],
+    "putchar": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "putenv": [
+      "c_void_p",
+      [
+        "c_char_p"
+      ]
+    ],
     "puts": [
       "c_int",
       [
         "c_char_p"
+      ]
+    ],
+    "putwchar": [
+      "c_int",
+      [
+        "c_wchar"
       ]
     ],
     "raise": [
@@ -431,11 +876,48 @@
       "c_int",
       []
     ],
+    "rand_r": [
+      "c_int",
+      []
+    ],
     "realloc": [
       "c_void_p",
       [
         "c_void_p",
         "c_size_t"
+      ]
+    ],
+    "regcomp": [
+      "c_int",
+      [
+        "c_void_p",
+        "c_char_p",
+        "c_int"
+      ]
+    ],
+    "regerror": [
+      "c_size_t",
+      [
+        "c_int",
+        "c_void_p",
+        "c_char_p",
+        "c_size_t"
+      ]
+    ],
+    "regexec": [
+      "c_int",
+      [
+        "c_void_p",
+        "c_char_p",
+        "c_size_t",
+        "c_void_p",
+        "c_int"
+      ]
+    ],
+    "regfree": [
+      "None",
+      [
+        "c_void_p"
       ]
     ],
     "remove": [
@@ -449,6 +931,12 @@
       [
         "c_char_p",
         "c_char_p"
+      ]
+    ],
+    "rewind": [
+      "None",
+      [
+        "c_void_p"
       ]
     ],
     "scanf": [
@@ -511,6 +999,13 @@
       "None",
       [
         "c_uint"
+      ]
+    ],
+    "srtcasecmp": [
+      "c_int",
+      [
+        "c_char_p",
+        "c_char_p"
       ]
     ],
     "sscanf": [
@@ -584,6 +1079,14 @@
         "c_char_p"
       ]
     ],
+    "strncasecmp": [
+      "c_int",
+      [
+        "c_char_p",
+        "c_char_p",
+        "c_size_t"
+      ]
+    ],
     "strncat": [
       "c_char_p",
       [
@@ -615,6 +1118,14 @@
         "c_char_p"
       ]
     ],
+    "strptime": [
+      "c_char_p",
+      [
+        "c_char_p",
+        "c_char_p",
+        "c_void_p"
+      ]
+    ],
     "strrchr": [
       "c_char_p",
       [
@@ -643,11 +1154,26 @@
         "c_void_p"
       ]
     ],
+    "strtof": [
+      "c_float",
+      [
+        "c_char_p",
+        "c_void_p"
+      ]
+    ],
     "strtok": [
       "c_char_p",
       [
         "c_char_p",
         "c_char_p"
+      ]
+    ],
+    "strtok_r": [
+      "c_char_p",
+      [
+        "c_char_p",
+        "c_char_p",
+        "c_void_p"
       ]
     ],
     "strtol": [
@@ -656,6 +1182,13 @@
         "c_char_p",
         "c_void_p",
         "c_int"
+      ]
+    ],
+    "strtold": [
+      "c_longdouble",
+      [
+        "c_char_p",
+        "c_void_p"
       ]
     ],
     "strtoul": [
@@ -719,6 +1252,12 @@
         "c_char_p"
       ]
     ],
+    "toascii": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
     "tolower": [
       "c_int",
       [
@@ -731,7 +1270,71 @@
         "c_int"
       ]
     ],
+    "towlower": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "towupper": [
+      "c_int",
+      [
+        "c_int"
+      ]
+    ],
+    "ungetc": [
+      "c_int",
+      [
+        "c_int",
+        "c_void_p"
+      ]
+    ],
+    "ungetwc": [
+      "c_int",
+      [
+        "c_int",
+        "c_void_p"
+      ]
+    ],
+    "va_start": [
+      "None",
+      [
+        "c_void_p",
+        "c_void_p"
+      ]
+    ],
     "vfprintf": [
+      "c_int",
+      [
+        "c_void_p",
+        "c_char_p",
+        "c_void_p"
+      ]
+    ],
+    "vfwprintf": [
+      "c_int",
+      [
+        "c_void_p",
+        "c_wchar_p",
+        "c_void_p"
+      ]
+    ],
+    "vfwscanf": [
+      "c_int",
+      [
+        "c_void_p",
+        "c_wchar_p",
+        "c_void_p"
+      ]
+    ],
+    "vscanf": [
+      "c_int",
+      [
+        "c_char_p",
+        "c_void_p"
+      ]
+    ],
+    "vsscanf": [
       "c_int",
       [
         "c_void_p",
@@ -744,6 +1347,28 @@
       [
         "c_wchar_p",
         "c_size_t",
+        "c_wchar_p",
+        "c_void_p"
+      ]
+    ],
+    "vswscanf": [
+      "c_int",
+      [
+        "c_void_p",
+        "c_wchar_p",
+        "c_void_p"
+      ]
+    ],
+    "vwprintf": [
+      "c_int",
+      [
+        "c_wchar_p",
+        "c_void_p"
+      ]
+    ],
+    "vwscanf": [
+      "c_int",
+      [
         "c_wchar_p",
         "c_void_p"
       ]
@@ -763,6 +1388,13 @@
       ]
     ],
     "wcscmp": [
+      "c_int",
+      [
+        "c_wchar_p",
+        "c_wchar_p"
+      ]
+    ],
+    "wcscoll": [
       "c_int",
       [
         "c_wchar_p",
@@ -798,6 +1430,10 @@
         "c_wchar_p"
       ]
     ],
+    "wcslocaleconv": [
+      "c_void_p",
+      []
+    ],
     "wcsncat": [
       "c_wchar_p",
       [
@@ -829,11 +1465,28 @@
         "c_wchar_p"
       ]
     ],
+    "wcsptime": [
+      "c_wchar_p",
+      [
+        "c_wchar_p",
+        "c_wchar_p",
+        "c_void_p"
+      ]
+    ],
     "wcsrchr": [
       "c_wchar_p",
       [
         "c_wchar_p",
         "c_wchar"
+      ]
+    ],
+    "wcsrtombs": [
+      "c_size_t",
+      [
+        "c_char_p",
+        "c_void_p",
+        "c_size_t",
+        "c_void_p"
       ]
     ],
     "wcsspn": [
@@ -857,6 +1510,13 @@
         "c_void_p"
       ]
     ],
+    "wcstof": [
+      "c_float",
+      [
+        "c_wchar_p",
+        "c_void_p"
+      ]
+    ],
     "wcstok": [
       "c_wchar_p",
       [
@@ -871,6 +1531,13 @@
         "c_wchar_p",
         "c_void_p",
         "c_int"
+      ]
+    ],
+    "wcstold": [
+      "c_longdouble",
+      [
+        "c_wchar_p",
+        "c_void_p"
       ]
     ],
     "wcstombs": [
@@ -889,6 +1556,21 @@
         "c_int"
       ]
     ],
+    "wcswidth": [
+      "c_int",
+      [
+        "c_wchar_p",
+        "c_size_t"
+      ]
+    ],
+    "wcsxfrm": [
+      "c_size_t",
+      [
+        "c_wchar_p",
+        "c_wchar_p",
+        "c_size_t"
+      ]
+    ],
     "wctob": [
       "c_int",
       [
@@ -900,6 +1582,79 @@
       [
         "c_char_p",
         "c_wchar"
+      ]
+    ],
+    "wmemchr": [
+      "c_wchar_p",
+      [
+        "c_wchar_p",
+        "c_wchar",
+        "c_size_t"
+      ]
+    ],
+    "wmemcmp": [
+      "c_int",
+      [
+        "c_wchar_p",
+        "c_wchar_p",
+        "c_size_t"
+      ]
+    ],
+    "wmemcpy": [
+      "c_wchar_p",
+      [
+        "c_wchar_p",
+        "c_wchar_p",
+        "c_size_t"
+      ]
+    ],
+    "wmemmove": [
+      "c_wchar_p",
+      [
+        "c_wchar_p",
+        "c_wchar_p",
+        "c_size_t"
+      ]
+    ],
+    "wmemset": [
+      "c_wchar_p",
+      [
+        "c_wchar_p",
+        "c_wchar",
+        "c_size_t"
+      ]
+    ],
+    "wprintf": [
+      "c_int",
+      [
+        "c_wchar_p",
+        "c_void_p"
+      ]
+    ],
+    "wscanf": [
+      "c_int",
+      [
+        "c_wchar_p",
+        "c_void_p"
+      ]
+    ],
+    "y0": [
+      "c_double",
+      [
+        "c_double"
+      ]
+    ],
+    "y1": [
+      "c_double",
+      [
+        "c_double"
+      ]
+    ],
+    "yn": [
+      "c_double",
+      [
+        "c_int",
+        "c_double"
       ]
     ]
   },

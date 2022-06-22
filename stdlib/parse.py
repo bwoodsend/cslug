@@ -29,19 +29,12 @@ unavailable = []
 
 for (_, name, headers, prototype, description, _) in table:
     for (index, header) in enumerate(headers.split()):
-        function = Function(name, prototype, description, not index)
-        if not hasattr(_stdlib.stdlib, name):
-            # Skip any macros which will never be in shared libraries, or
-            # anything not defined on all platforms.
-            unavailable.append(function)
-            continue
         try:
             name = c_parse.parse_function(prototype.rstrip(";"))[0]
         except (exceptions.TypeParseWarning, ValueError) as ex:
             # Ignore anything that cslug doesn't understand.
-            unparsable.append(function)
             continue
-
+        function = Function(name, prototype, description, not index)
         functions[header].append(function)
 
 stdlib_json = Path(__file__, "..", "..", "cslug", "stdlib.json").resolve()
@@ -49,7 +42,8 @@ stdlib_h = io.StringIO("".join(
     j.prototype + "\n" for i in functions.values() for j in i))
 
 types = Types(stdlib_json, headers=stdlib_h, compact=False)
-types.init_from_json()
+types.init_from_source()
+types.write(stdlib_json)
 
 functions = {
     key: [

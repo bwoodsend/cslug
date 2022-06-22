@@ -126,7 +126,7 @@ Definitions of C standard library functions. Nicked from
 | mblen           | stdlib.h                   | int mblen(const char *string, size_t n);                 | Determines the length of a multibyte character *string*.     |
 | mbrlen4         | wchar.h                    | int mbrlen (const char *s, size_t n, mbstate_t *ps);         | Determines the length of a multibyte character. (Restartable version of mblen.) |
 | mbrtowc4        | wchar.h                    | int mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps); | Convert a multibyte character to a wide character (Restartable version of mbtowc.) |
-| mbsinit4        | wchar.h                    | int mbsinit (const mbstate_t *ps);                           | Test state object *ps for initial state.                     |
+| mbsinit4        | wchar.h                    | int mbsinit (const mbstate_t *ps);                           | Test state object ps for initial state.                     |
 | mbsrtowcs4      | wchar.h                    | size_t mbsrtowc (wchar_t *dst, const char **src, size_t len, mbstate_t *ps); | Convert multibyte string to a wide character string. (Restartable version of mbstowcs.) |
 | mbstowcs        | stdlib.h                   | size_t mbstowcs(wchar_t *pwc, const char *string, size_t n); | Converts the multibyte characters in *string* to their corresponding wchar_t codes, and stores not more than *n* codes in *pwc*. |
 | mbtowc          | stdlib.h                   | int mbtowc(wchar_t *pwc, const char *string, size_t n); | Stores the wchar_t code corresponding to the first *n* bytes of multibyte character *string* into the wchar_t character *pwc*. |
@@ -150,7 +150,6 @@ Definitions of C standard library functions. Nicked from
 | putchar1        | stdio.h                    | int putchar(int c);                                        | Prints *c* to stdout.                                        |
 | putenv          | stdlib.h                   | int *putenv(const char *varname);                            | Sets the value of an environment variable by altering an existing variable or creating a new one. |
 | puts            | stdio.h                    | int puts(const char *string);                              | Prints a string to stdout.                                   |
-| putwc6          | stdio.h  wchar.h           | wint_t putwchar(wchar_t wc, FILE *stream);               | Converts the wide character *wc* to a multibyte character, and writes it to the stream at the current position. |
 | putwchar6       | wchar.h                    | wint_t putwchar(wchar_t wc);                               | Converts the wide character *wc* to a multibyte character and writes it to stdout. |
 | qsort           | stdlib.h                   | void qsort(void *base, size_t num, size_t width, int(*compare)(const void *element1, const void *element2)); | Performs a quick sort of an array of *num* elements, each of *width* bytes in size. |
 | quantexpd32     | math.h                     | _Decimal32 quantized32(_Decimal32 x, _Decimal32 y);      | Compute the quantum exponent of a single-precision decimal floating-point value. |
