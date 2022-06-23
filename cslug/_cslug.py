@@ -37,7 +37,7 @@ EXPORT_SYMBOLS = {
     "tcc": "-rdynamic",
     "pcc": "-rdynamic",
     "gcc": "-fPIC",
-    "clang": "" if OS == "Windows" else "-fPIC",
+    "clang": "" if OS == "Windows" or OS.startswith("MSYS") else "-fPIC",
     "pgcc": "",
 }
 

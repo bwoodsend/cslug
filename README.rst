@@ -113,7 +113,7 @@ The following OS/compiler combinations are fully supported and tested routinely.
 Compiler   Linux Windows macOS FreeBSD Cygwin/msys2 Android*
 ========== ===== ======= ===== ======= ============ ========
 gcc_       ✓     ✓       ✓     ✓       ✓            ✗
-clang_     ✓     ✓       ✓     ✓       ✗            ✓
+clang_     ✓     ✓       ✓     ✓       ✓            ✓
 MSVC       ✗     ✗       ✗     ✗       ✗            ✗
 TinyCC_    ✓     ✓       ✗     ✗       ✗            ✗
 PGCC_ \*\* ✓     ✗       ✗     ✗       ✗            ✗
