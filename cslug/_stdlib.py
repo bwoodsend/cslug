@@ -22,18 +22,19 @@ extra_libs = []
 if OS == "Windows":  # pragma: Windows
     _dlclose = ctypes.windll.kernel32.FreeLibrary
     dlclose = lambda handle: 0 if _dlclose(handle) else 1
-    # There's some controversy as to whether this DLL is guaranteed to exist.
-    # It always has so far but isn't documented. However, MinGW assumes that it
-    # is so, should this DLL be removed, then we have much bigger problems than
-    # just this line. There is also vcruntime140.dll which isn't a standard part
-    # of the OS but is always shipped with Python so we can guarantee its
-    # presence. But vcruntime140 contains only a tiny strict-subset of msvcrt.
-    stdlib = ctypes.CDLL("msvcrt")
+    try:
+        # Windows 11 or older Windows with the universal C runtime installed.
+        stdlib = ctypes.CDLL("ucrtbase.dll")
+    except:  # pragma: no cover
+        # Legacy Windows. Note that, as of time of writing, MSVCRT still works
+        # on the latest Windows. However, it never was officially even e feature
+        # of any Windows version and may disappear at any point.
+        stdlib = ctypes.CDLL("msvcrt.dll")
 
 # POSIX should be really simple. The POSIX standard states that a libc, libm and
 # libdl (names are not set in stone) should all be linkable via the names 'c',
 # 'm' and 'dl' (names are set in stone) respectively. The symbols we're
-# interested in a mostly in libc but with math symbols in libm and DLL related
+# interested in are mostly in libc but with math symbols in libm and DLL related
 # symbols in libdl. ctypes.util.find_library() should be able to convert linker
 # names like 'c' to the OS's DLL name to be passed to ctypes.CDLL().
 # In reality however:

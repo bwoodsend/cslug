@@ -7,17 +7,18 @@ library| which is part of your operating system (see the table below). The
 :mod:`cslug.stdlib` module loads and exposes the contents of this library to be
 directly called from Python.
 
-========  ==========================================================================
-Platform  Library/location
-========  ==========================================================================
-Linux     A combination of ``libc.so`` and, if present and not just aliases of ``libc.so``, ``libm.so`` and ``libdl.so``.
-Windows   The somewhat barren ``C:\Windows\system32\msvcrt.dll``.
-macOS     ``libc.dylib``.
-MSYS2     ``msys-2.0.dll``, requires ``cslug >= 0.5.1`` for newer versions of Python.
-Cygwin    ``cygwin1.dll``, requires ``cslug >= 0.4.0``.
-FreeBSD   A combination of ``libc.so`` and ``libm.so``.
-Android   A combination of ``libc.so`` and ``libm.so``.
-========  ==========================================================================
+============  ==========================================================================
+Platform      Library/location
+============  ==========================================================================
+Linux          A combination of ``libc.so`` and, if present and not just aliases of ``libc.so``, ``libm.so`` and ``libdl.so``.
+Windows >11   ``C:\Windows\system32\ucrt.dll``
+Windows 7-10  The somewhat barren ``C:\Windows\system32\msvcrt.dll``.
+macOS         ``libc.dylib``.
+MSYS2         ``msys-2.0.dll``, requires ``cslug >= 0.5.1`` for newer versions of Python.
+Cygwin        ``cygwin1.dll``, requires ``cslug >= 0.4.0``.
+FreeBSD       A combination of ``libc.so`` and ``libm.so``.
+Android       A combination of ``libc.so`` and ``libm.so``.
+============  ==========================================================================
 
 
 Not every function is made available. A function is excluded if:

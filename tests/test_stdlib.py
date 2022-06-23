@@ -24,5 +24,7 @@ def test_smoke():
     assert stdlib.wcsncmp("hello", "héllo", 5) < 0
     assert stdlib.wcsncmp("héllo", "héllo", 5) == 0
 
-    time_ptr = stdlib.localtime(ctypes.byref(ctypes.c_size_t(1656185193)))
-    assert stdlib.asctime(time_ptr) == (time.ctime(1656185193) + "\n").encode()
+    if os.name != "nt":
+        stamp = 1656185193
+        time_ptr = stdlib.localtime(ctypes.byref(ctypes.c_size_t(stamp)))
+        assert stdlib.asctime(time_ptr) == (time.ctime(stamp) + "\n").encode()
