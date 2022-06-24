@@ -1,0 +1,11 @@
+---
+on:
+  workflow_dispatch
+
+jobs:
+  test:
+    runs-on: macos-10.15
+    steps:
+      - uses: actions/checkout@v2
+      - run: vagrant up freebsd
+      - run: vagrant ssh freebsd -- FORCE_COLOR=1 pytest
