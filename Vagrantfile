@@ -11,6 +11,16 @@ Vagrant.configure("2") do |config|
     setup_shell(machine)
   end
 
+  config.vm.define "openbsd" do |machine|
+    machine.vm.box = "generic/openbsd7"
+    setup_rsync(machine)
+    machine.vm.provision "shell", privileged: false, inline:<<-END
+      sudo pkg_add fish py3-pip
+      cd /io && pip install -e .[test] psutil
+    END
+    setup_shell(machine)
+  end
+
 end
 
 def setup_rsync(machine)
