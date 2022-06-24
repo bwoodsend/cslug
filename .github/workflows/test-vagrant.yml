@@ -1,11 +1,31 @@
 ---
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      variants:
 
 jobs:
+  parse-parameters:
+    runs-on: ubuntu-latest
+    steps:
+      - id: parse
+        shell: python
+        run: |
+          import re, json
+          variants = re.findall(r"\w+", "${{ github.event.inputs.variants }}")
+          variants = variants or ["freebsd", "openbsd"]
+          print("::set-output name=variants::" + json.dumps(variants))
+    outputs:
+      variants: ${{ steps.parse.outputs.variants }}
+
   test:
+    needs: parse-parameters
+    strategy:
+      matrix:
+        variant: ${{ fromJson(needs.parse-parameters.outputs.variants) }}
     runs-on: macos-10.15
     steps:
       - uses: actions/checkout@v2
-      - run: vagrant up freebsd
-      - run: vagrant ssh freebsd -- FORCE_COLOR=1 pytest
+      - run: echo ${{ needs.parse-parameters.outputs.variants }}
+      - run: vagrant up ${{ matrix.variant }}
+      - run: vagrant ssh ${{ matrix.variant }} -- FORCE_COLOR=1 pytest

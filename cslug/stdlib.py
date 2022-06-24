@@ -17,6 +17,7 @@ macOS         ``libc.dylib``.
 MSYS2         ``msys-2.0.dll``, requires ``cslug >= 0.5.1`` for newer versions of Python.
 Cygwin        ``cygwin1.dll``, requires ``cslug >= 0.4.0``.
 FreeBSD       A combination of ``libc.so`` and ``libm.so``.
+OpenBSD       A combination of ``libc.so`` and ``libm.so``.
 Android       A combination of ``libc.so`` and ``libm.so``.
 ============  ==========================================================================
 

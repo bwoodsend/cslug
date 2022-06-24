@@ -70,8 +70,9 @@ def cc(CC=None):
             raise exceptions.CCNotFoundError(CC)
         return _cc
 
-    if platform.system() in ("Darwin", "FreeBSD"):  # pragma: no cover
-        # OSX and FreeBSD officially use clang as their default compilers.
+    if platform.system() in ("Darwin", "FreeBSD",
+                             "OpenBSD"):  # pragma: no cover
+        # These platforms officially use clang as their default compilers.
         CC = which("clang") or which("gcc")
     else:
         CC = which("gcc")  # pragma: no cover
