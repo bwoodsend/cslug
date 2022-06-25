@@ -101,7 +101,8 @@ def master_python(*args, cwd=".", check=True):
 
 
 def pip(*args, cwd=".", check=True):
-    return master_python("-m", "pip", *args, cwd=cwd, check=check)
+    return master_python("-m", "pip", "--no-cache-dir", *args, cwd=cwd,
+                         check=check)
 
 
 # --- making a mess in the source code ---
@@ -240,7 +241,8 @@ def test():
 
     # Build a wheel for `contains-slugs` using the master environment.
     shutil.rmtree(contains_slugs / "dist", ignore_errors=True)
-    p = pip("wheel", "-q", "--no-deps", "--wheel-dir=dist", ".",
+    p = pip("wheel", "--no-index", "--find-links", CSLUG_ROOT / "dist",
+            "--find-links", wheel_dump, "--no-deps", "--wheel-dir=dist", ".",
             cwd=contains_slugs)
     # Again, locate and test its contents.
     wheel = next((contains_slugs / "dist").glob("*"))
