@@ -9,6 +9,7 @@ Vagrant.configure("2") do |config|
       cd /io && pip install -e .[test] psutil
     END
     setup_shell(machine)
+    shimify_python(machine, "python3.8")
   end
 
   config.vm.define "openbsd" do |machine|
@@ -19,6 +20,7 @@ Vagrant.configure("2") do |config|
       cd /io && pip install -e .[test]
     END
     setup_shell(machine)
+    shimify_python(machine, "python3")
   end
 
 end
@@ -36,4 +38,15 @@ def setup_shell(machine)
     echo 'cd /io' >> ~/.config/fish/config.fish
     echo set PATH ~/.local/bin '$PATH' >> ~/.config/fish/config.fish
   END
+end
+
+def shimify_python(machine, python)
+  commands = <<-END
+    #!/usr/bin/env fish
+    echo -e '#!/usr/bin/env fish\\n%s $argv' > /usr/bin/python
+    echo -e '#!/usr/bin/env fish\\n%s -m pip $argv' > /usr/bin/pip
+    chmod +x /usr/bin/python /usr/bin/pip
+  END
+  commands = commands % [python, python]
+  machine.vm.provision "shell", privileged: true, inline: commands
 end

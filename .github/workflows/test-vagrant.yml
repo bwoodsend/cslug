@@ -21,6 +21,7 @@ jobs:
   test:
     needs: parse-parameters
     strategy:
+      fail-fast: false
       matrix:
         variant: ${{ fromJson(needs.parse-parameters.outputs.variants) }}
     runs-on: macos-10.15
@@ -29,3 +30,4 @@ jobs:
       - run: echo ${{ needs.parse-parameters.outputs.variants }}
       - run: vagrant up ${{ matrix.variant }}
       - run: vagrant ssh ${{ matrix.variant }} -- FORCE_COLOR=1 pytest
+      - run: vagrant ssh ${{ matrix.variant }} -- python stdlib/availability.py
