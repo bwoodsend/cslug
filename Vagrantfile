@@ -23,6 +23,19 @@ Vagrant.configure("2") do |config|
     shimify_python(machine, "python3")
   end
 
+  config.vm.define "netbsd" do |machine|
+    machine.vm.box = "generic/netbsd9"
+    setup_rsync(machine)
+    machine.vm.provision "shell", privileged: false, inline:<<-END
+      echo y | sudo pkgin install fish py39-pip py39-sqlite3
+    END
+    setup_shell(machine)
+    shimify_python(machine, "python3.9")
+    machine.vm.provision "shell", privileged: false, inline:<<-END
+      cd /io && pip install -e .[test] psutil
+    END
+  end
+
 end
 
 def setup_rsync(machine)

@@ -109,15 +109,15 @@ Supported Compilers
 
 The following OS/compiler combinations are fully supported and tested routinely.
 
-========== ===== ======= ===== ======= ======= ============ ========
-Compiler   Linux Windows macOS FreeBSD OpenBSD Cygwin/msys2 Android*
-========== ===== ======= ===== ======= ======= ============ ========
-gcc_       ✓     ✓       ✓     ✓       ✓       ✓            ✗
-clang_     ✓     ✓       ✓     ✓       ✓       ✓            ✓
-MSVC       ✗     ✗       ✗     ✗       ✗       ✗            ✗
-TinyCC_    ✓     ✓       ✗     ✗       ✗       ✗            ✗
-PGCC_ \*\* ✓     ✗       ✗     ✗       ✗       ✗            ✗
-========== ===== ======= ===== ======= ======= ============ ========
+========== ===== ======= ===== ======= ======= ====== ============ ========
+Compiler   Linux Windows macOS FreeBSD OpenBSD NetBSD Cygwin/msys2 Android*
+========== ===== ======= ===== ======= ======= ====== ============ ========
+gcc_       ✓     ✓       ✓     ✓       ✓       ✓      ✓            ✗
+clang_     ✓     ✓       ✓     ✓       ✓       ✗      ✓            ✓
+MSVC       ✗     ✗       ✗     ✗       ✗       ✗      ✗            ✗
+TinyCC_    ✓     ✓       ✗     ✗       ✗       ✗      ✗            ✗
+PGCC_ \*\* ✓     ✗       ✗     ✗       ✗       ✗      ✗            ✗
+========== ===== ======= ===== ======= ======= ====== ============ ========
 
 \* Using Termux_.
 \*\* Installable as part of the `NVIDIA HPC SDK`_.

@@ -13,7 +13,7 @@ jobs:
         run: |
           import re, json
           variants = re.findall(r"\w+", "${{ github.event.inputs.variants }}")
-          variants = variants or ["freebsd", "openbsd"]
+          variants = variants or ["freebsd", "openbsd", "netbsd"]
           print("::set-output name=variants::" + json.dumps(variants))
     outputs:
       variants: ${{ steps.parse.outputs.variants }}
