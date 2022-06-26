@@ -13,7 +13,7 @@ jobs:
         run: |
           import re, json
           variants = re.findall(r"\w+", "${{ github.event.inputs.variants }}")
-          variants = variants or ["freebsd", "openbsd"]
+          variants = variants or ["freebsd", "openbsd", "NetBSD"]
           print("::set-output name=variants::" + json.dumps(variants))
     outputs:
       variants: ${{ steps.parse.outputs.variants }}
@@ -29,3 +29,4 @@ jobs:
       - run: echo ${{ needs.parse-parameters.outputs.variants }}
       - run: vagrant up ${{ matrix.variant }}
       - run: vagrant ssh ${{ matrix.variant }} -- FORCE_COLOR=1 pytest
+      - run: python stdlib/availability.py

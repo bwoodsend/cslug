@@ -366,7 +366,7 @@ def test_remake():
         # This will happen only on Windows.
         assert path in str(ex)
 
-    if platform.system() == "FreeBSD":
+    if platform.system() in ("FreeBSD", "NetBSD"):
         # dlclose() seems to complain no matter what I do with it.
         stdlib.dlerror.restype = ctypes.c_char_p
         # This fails with an unhelpful b"Service unavailable".
