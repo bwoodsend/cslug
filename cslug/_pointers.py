@@ -13,10 +13,10 @@ def ptr(bytes_like):
     """Get the raw address of any Python object supporting the C buffer
     protocol.
 
-    A `bytes-like` object is anything for which calling ``memoryview(obj)``
-    doesn't raise a :class:`TypeError`. This includes bytes, bytearrays,
-    memoryviews, array.arrays and numpy arrays. The output is a subclass of
-    :class:`int`.
+    A *bytes-like* object is anything for which calling ``memoryview(obj)``
+    doesn't raise a `TypeError`. This includes `bytes`, `bytearray`,
+    `memoryview`, `array.array` and `numpy.array`. The output is a subclass of
+    `int`.
 
     .. code-block:: python
 
@@ -34,10 +34,10 @@ def ptr(bytes_like):
     you use pointer arithmetic, preducts of that arithmetic are just regular
     integers and do not carry the reference.
 
-    If you are using :mod:`numpy` then you should be aware that this method only
+    If you are using `numpy` then you should be aware that this method only
     accepts C-contiguous buffers. If you understand how contiguity works and
-    have explicitly supported non-contiguous buffers in your C code then you may
-    use :meth:`nc_ptr` instead. Otherwise convert your arrays to contiguous ones
+    have explicitly supported non-contiguous buffers in your C code then you
+    may use `nc_ptr` instead. Otherwise convert your arrays to contiguous ones
     using either::
 
         array = np.ascontiguousarray(array)
@@ -84,7 +84,7 @@ Py_buffer = ctypes.ARRAY(ctypes.c_void_p, 120 // ctypes.sizeof(ctypes.c_void_p))
 class PointerType(int):
     """A raw pointer which inc-refs the buffer it points to.
 
-    Please no not instantiate this class directly. Instead use the :func:`ptr()`
+    Please no not instantiate this class directly. Instead use the `ptr()`
     function.
     """
     @staticmethod

@@ -17,17 +17,17 @@ setting the type information for each function on loading the library (invoked
 by accessing ``slug.dll``). This provides some degree of implicit type safety
 and casting for the basic types:
 
-===============================   ======================================================================================
-Python Type                       Equivalent C Type(s)
-===============================   ======================================================================================
-:class:`int`                      `int`, `short`, `long`, `unsigned`, `int16_t` (requires :c:`#include <stdint.h>`), etc
-:class:`float`                    `float` or `double`
-Single character :class:`str`     `wchar_t` (requires :c:`#include <stddef.h>`)
-Arbitrary length :class:`str`     `wchar_t *`
-Single character :class:`bytes`   `char`
-Arbitrary length :class:`bytes`   `char *`
-:class:`bool`                     `bool` (requires :c:`#include <stdbool.h>`)
-===============================   ======================================================================================
+========================   ======================================================================================
+Python Type                Equivalent C Type(s)
+========================   ======================================================================================
+`int`                      ``int``, ``short``, ``long``, ``unsigned``, ``int16_t`` (requires :c:`#include <stdint.h>`), etc
+`float`                    ``float`` or ``double``
+Single character `str`     ``wchar_t`` (requires :c:`#include <stddef.h>`)
+Arbitrary length `str`     ``wchar_t *``
+Single character `bytes`   ``char``
+Arbitrary length `bytes`   ``char *``
+`bool`                     ``bool`` (requires :c:`#include <stdbool.h>`)
+========================   ======================================================================================
 
 
 Type Checking

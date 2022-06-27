@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-=======================
-:mod:`cslug.exceptions`
-=======================
+====================
+``cslug.exceptions``
+====================
 
 All custom exception and warning classes are defined and accessible here.
 

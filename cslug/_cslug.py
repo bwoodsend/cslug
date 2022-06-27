@@ -61,7 +61,7 @@ class CSlug(object):
             flags (str or list[str]):
                 Additional flags to be passed directly to the C compiler.
                 Can also be configured using the ``CC_FLAGS`` environment
-                variable. Inspect using :meth:`compile_command`.
+                variable. Inspect using `compile_command`.
 
         .. versionchanged:: 0.3.0
 
@@ -161,7 +161,7 @@ class CSlug(object):
         return True
 
     def close(self, all=True):
-        """Close the library stored in :attr:`CSlug.dll`.
+        """Close the library stored in `CSlug.dll`.
 
         Args:
             all(bool):
@@ -194,15 +194,15 @@ class CSlug(object):
         Returns:
             ctypes.CDLL:
 
-        This attribute is lazily loaded. On first access, this :class:`property`
+        This attribute is lazily loaded. On first access, this `property`
         will:
 
         * Check the library has been compiled and invoke a full compile with
-          :meth:`make` if it hasn't.
+          `make` if it hasn't.
         * Open the library.
         * Initialise type information for all known symbols (functions).
 
-        Use :meth:`close` to reset.
+        Use `close` to reset.
 
         """
         # If not already loaded:
@@ -240,14 +240,13 @@ class CSlug(object):
         *Everything* here is defined as the following sequence in the
         following order:
 
-        1. :meth:`close` any open handles.
-        2. Rebuild each :class:`Header` in :attr:`!headers` using
-           :meth:`Header.make`.
+        1. `close` any open handles.
+        2. Rebuild each `Header` in ``headers`` using `Header.make`.
         3. Recompile the shared library using :meth`compile`.
         4. Rescan C source code for type information and write it to a json
            file.
 
-        The C library is loaded back into Python on next access of :attr:`dll`.
+        The C library is loaded back into Python on next access of `dll`.
 
         """
         self.close()
@@ -271,7 +270,7 @@ class CSlug(object):
                 pass
 
     def compile_command(self, _cc=None, _cc_version=None):
-        """Get the compile command invoked by :meth:`compile`.
+        """Get the compile command invoked by `compile`.
 
         I hope to eventually make this function configurable.
         """

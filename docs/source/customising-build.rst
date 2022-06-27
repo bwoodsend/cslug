@@ -22,7 +22,7 @@ This may be:
 
 1. A name e.g. ``clang`` which will be searched for in ``PATH``.
 2. A relative path to a compiler executable (rare).
-   If it in the current working directory it should have a `./` prefix to
+   If it in the current working directory it should have a ``./`` prefix to
    disambiguate from form 1.
 3. A full path to a compiler executable.
 

@@ -18,20 +18,18 @@ import ctypes as _ctypes
 
 
 def as_path_or_buffer(file):
-    """Normalise filenames to :class:`pathlib.Path`, leaving streams untouched.
-    """
+    """Normalise filenames to `pathlib.Path`, leaving streams untouched."""
     return file if isinstance(file, _io.IOBase) else _Path(file)
 
 
 def as_path_or_readable_buffer(file):
-    """Normalise filenames to :class:`pathlib.Path`, and streams to
-    :class:`io.StringIO`.
+    """Normalise filenames to `pathlib.Path`, and streams to `io.StringIO`.
 
-    Streams need to be re-readable in |cslug|. An :class:`io.StringIO` is via
+    Streams need to be re-readable in |cslug|. An `io.StringIO` is via
     ``file.getvalue()`` - everything else generally isn't. The goal of using
-    :mod:`io` streams is only to prevent strings of source code from being
-    confused for string filenames - not, as is the more normal usage, to avoid
-    holding large files in memory.
+    `io` streams is only to prevent strings of source code from being confused
+    for string filenames - not, as is the more normal usage, to avoid holding
+    large files in memory.
 
     """
     if isinstance(file, _io.TextIOBase):
@@ -54,7 +52,7 @@ def read(path, mode="r"):
     r"""Read a path or a stream.
 
     Line endings are normalised to Unix ``'\n'`` if :py:`mode == 'r'` so as to
-    be consistent with :func:`open`.
+    be consistent with `open`.
 
     """
     text, path = _read(path, mode)
@@ -72,8 +70,7 @@ def write(path, *data, mode="w"):
         *data (str or bytes):
             Data to write.
         mode (str):
-            A mode to be passed to :func:`open`, ignored if **path** is a
-            stream.
+            A mode to be passed to `open`, ignored if **path** is a stream.
 
     Returns:
         int: The number of characters written.
@@ -98,8 +95,8 @@ def anchor(*paths):
     :return: List of modified paths.
     :rtype: list
 
-    Pseudo files (:class:`io.IOBase`) and absolute paths are left unchanged. Use
-    this function to make your code working-dir independent.
+    Pseudo files (`io.IOBase`) and absolute paths are left unchanged. Use this
+    function to make your code working-dir independent.
     """
     paths = map(as_path_or_buffer, paths)
     file = _sys._getframe().f_back.f_globals.get("__file__")
@@ -113,7 +110,7 @@ def anchor(*paths):
 
 
 def hide_from_PATH(name):
-    """Modify ``PATH`` from :data:`os.environ` so that **name** can't be found.
+    """Modify ``PATH`` from `os.environ` so that **name** can't be found.
 
     Args:
         name (str): The executable name to hide.
@@ -132,17 +129,17 @@ def hide_from_PATH(name):
 
 
 def flatten(iterable, types=(tuple, list), initial=None):
-    """Collapse nested iterables into one flat :class:`list`.
+    """Collapse nested iterables into one flat `list`.
 
     Args:
         iterable:
             Nested container.
         types:
             Type(s) to be collapsed. This argument is passed directly to
-            :func:`isinstance`.
+            `isinstance`.
         initial:
-            A pre-existing :class:`list` to append to. An empty list is created
-            if one is not supplied.
+            A pre-existing `list` to append to. An empty list is created if one
+            is not supplied.
 
     Returns:
         list: The flattened output.
@@ -205,13 +202,13 @@ def block_compile():
 
 
 def array_typecode(c_name):
-    """Choose a type code for :class:`array.array`.
+    """Choose a type code for `array.array`.
 
     Args:
         c_name (str): The name you would use in C to define the type.
 
     Returns:
-        str: Any of :data:`array.typecodes`.
+        str: Any of `array.typecodes`.
 
     Use this function to normalise aliases and platform specific exact types.
 
@@ -234,7 +231,7 @@ def array_typecode(c_name):
 
 @_funtiontools.lru_cache()
 def _array_typecode(c_name: str):
-    """The workhorse behind :func:`array_typecode`.
+    """The workhorse behind `array_typecode`.
 
     The only difference is that this function returns None rather than raising
     an error if it can't find a typecode. Splitting into two allows this

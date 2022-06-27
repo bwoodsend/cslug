@@ -43,7 +43,7 @@ compiler.
 Let's talk through what just happened. |cslug| should have:
 
 * Compiled a |shared library| called **my-first-dll-[...]** in your current
-  working directory (where `[...]` depends on your OS). This library contains a
+  working directory (where *[...]* depends on your OS). This library contains a
   single function called :c:`add_1()`.
 * Extracted type information from our C source code. Namely: :c:`add_1()` takes
   one :c:`int` input and returns an :c:`int` output.

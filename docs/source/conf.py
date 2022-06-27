@@ -120,6 +120,8 @@ import runpy
 sys.path.insert(0, "../..")
 stdlib = runpy.run_path("../../stdlib/docs.py")["epilog"]
 
+# Make `foo` equivalent to :any:`foo`.
+default_role = "any"
 if os.path.exists("stdlib.rst"):
     with open("stdlib.rst", "r") as f:
         needs_reloading = stdlib != f.read()

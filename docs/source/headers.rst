@@ -56,8 +56,8 @@ containing prototypes for every function from :ref:`file1.c` and :ref:`file2.c`.
 
 Passing the header to :class:`~cslug.CSlug` means that calling
 :func:`slug.make() <cslug.CSlug.make>` will implicitly call :func:`header.make()
-<cslug.Header.make>` so that you still only have one `make()` command (although
-you may use :func:`header.make() <cslug.Header.make>` directly or
+<cslug.Header.make>` so that you still only have one ``make()`` command
+(although you may use :func:`header.make() <cslug.Header.make>` directly or
 :func:`header.write() <cslug.Header.write>` to experiment with
 :class:`~cslug.Header`\ s without going through a :class:`~cslug.CSlug`).
 
@@ -161,4 +161,4 @@ Add arbitrary code to generated headers
 
 This is intentionally not supported. If you want custom code in an automatically
 generated header then put your code in a separate file which either
-`#include`\ s or is `#include`\ d by the generated one.
+``#include``\ s or is ``#include``\ d by the generated one.

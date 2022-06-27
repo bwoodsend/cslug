@@ -24,7 +24,7 @@ class Types(object):
       - The name, field names, types and bit-field sizes of structures.
 
     * Stores the above in a portable and quickly deserializable json file.
-    * Sets the types for the contents of a :class:`ctypes.CDLL`.
+    * Sets the types for the contents of a `ctypes.CDLL`.
 
     """
     def __init__(self, path, *sources, headers=(), compact=True):
@@ -54,22 +54,22 @@ class Types(object):
         self.compact = compact
 
     types: dict
-    """All type information collected. This is broken out into :attr:`functions`
-    and :attr:`structs`.
+    """All type information collected. This is broken out into `functions` and
+    `structs`.
 
     Note that this attribute is not set automatically. You must explicitly call
-    either :meth:`init_from_source` or :meth:`init_from_json` before accessing.
+    either `init_from_source` or `init_from_json` before accessing.
     """
 
     json_path: Union[io.TextIOBase, Path]
     """File to read or write the json."""
 
     def init_from_source(self):
-        """Initialise :attr:`types` by scanning source code."""
+        """Initialise `types` by scanning source code."""
         self.types = self._types_from_source()
 
     def init_from_json(self):
-        """Initialise :attr:`types` by  source code."""
+        """Initialise `types` by  source code."""
         self.types = self._types_from_json()
 
     def _types_from_source(self):
@@ -105,8 +105,7 @@ class Types(object):
 
         Args:
             path (str or os.PathLike or io.TextIOBase):
-                A filename or stream to write to. Defaults to
-                :data:`sys.stdout`.
+                A filename or stream to write to. Defaults to `sys.stdout`.
 
         """
         if self.compact:
@@ -131,7 +130,7 @@ class Types(object):
             function_name: [return_type, [arg_type, arg_type, ...]]
 
         All types are strings - either names of structures or attribute names of
-        :mod:`ctypes`.
+        `ctypes`.
 
         """
         return self.types["functions"]
@@ -158,12 +157,12 @@ class Types(object):
             dll (ctypes.CDLL):
                 The opened |../shared library| to apply type information to.
             strict (bool):
-                Raise an :class:`AttributeError` if a symbol wasn't found.
+                Raise an `AttributeError` if a symbol wasn't found.
 
         For every structure in ``self.structs``, turn it into a
-        :class:`ctypes.Structure` and set it as an attribute of **dll**.
-        For every function in ``self.functions``, get it from **dll**
-        then set its ``argtypes`` and ``restype`` attributes.
+        `ctypes.Structure` and set it as an attribute of **dll**. For every
+        function in ``self.functions``, get it from **dll** then set its
+        ``argtypes`` and ``restype`` attributes.
 
         .. note::
 

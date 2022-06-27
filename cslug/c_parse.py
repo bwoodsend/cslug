@@ -9,7 +9,7 @@ tools.
 
 This module's sole purpose is to extract function and struct declarations to
 generate prototypes in automatically generated header files, and to parse
-type information from the declarations to be passed to :class:`cslug.Types`.
+type information from the declarations to be passed to `cslug.Types`.
 
 For a proper C parser, use `pycparser`_.
 
@@ -315,8 +315,7 @@ def parse_structs(text):
     Search for and parse C Structure definitions in a block of text.
 
     :param text:
-    :return: Iterable of (name, parameters) pairs as given by
-             :meth:`parse_struct`.
+    :return: Iterable of (name, parameters) pairs as given by ``parse_struct``.
 
     """
     return (parse_struct(i.group(0)) for i in _struct_re.finditer(text))

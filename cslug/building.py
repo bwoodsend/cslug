@@ -3,10 +3,10 @@ r"""
 Tools for integrating with :std:doc:`setuptools <setuptools>`.
 
 Integration with ``setuptools`` is a somewhat messy affair. By putting a
-:class:`cslug.CSlug` in a package, we now have to coerce our package setup to do
+`cslug.CSlug` in a package, we now have to coerce our package setup to do
 the following 5 things:
 
-1. (Re)build all :class:`cslug.CSlug`\ s on ``setup.py build``.
+1. (Re)build all `cslug.CSlug`\ s on ``setup.py build``.
 2. Include C source code in sdists but exclude them from wheels.
 3. Include |cslug| type jsons and |../binaries| of the correct OS in wheels but
    exclude them from sdists.
@@ -21,12 +21,12 @@ from cslug._cslug import SUFFIX as CSLUG_SUFFIX
 
 
 def make(*names):
-    r"""Import and call :func:`slug.make <cslug.CSlug.make>`.
+    r"""Import and call `cslug.CSlug.make`.
 
-    :param names: Names of :class:`~cslug.CSlug`\ s.
+    :param names: Names of `cslug.CSlug`\ s.
     :type names: str
 
-    The syntax for a :class:`~cslug.CSlug` name is "module_name:attribute_name".
+    The syntax for a `cslug.CSlug` name is "module_name:attribute_name".
     For example, ``make("foo.bar:pop.my_slug")`` is equivalent to::
 
         from foo.bar import pop
@@ -56,10 +56,10 @@ def make(*names):
 
 def build_slugs(*names, base=_build):  # pragma: no cover
     """
-    Overload the :func:`!run()` method of a distutils build class to
-    additionally call :func:`cslug.building.make`.
+    Overload the ``run()`` method of a distutils build class to
+    additionally call `cslug.building.make`.
 
-    :param names: Names to be passed to :func:`cslug.building.make`.
+    :param names: Names to be passed to `cslug.building.make`.
     :param base: An alternative base class to inherit from.
     :return: A modified subclass of **base**.
 
@@ -96,8 +96,8 @@ except ImportError:  # pragma: no cover
 else:
 
     class bdist_wheel(_bdist_wheel):
-        """:mod:`!wheel.bdist_wheel` with platform dependent but Python
-        independent tags.
+        """``wheel.bdist_wheel`` with platform dependent but Python independent
+        tags.
 
         In addition to setting the tags, also prevent setuptools's build cache
         from leaking binaries for the wrong platform into the wheel. See
@@ -176,7 +176,7 @@ def _macos_platform_tag(tag):
 
 def copy_requirements(path="pyproject.toml", exclude=()):
     """
-    Parse the `build-system: requires` list from a :pep:`PEP518 pyproject.toml
+    Parse the *build-system: requires* list from a :pep:`PEP518 pyproject.toml
     <0518#build-system-table>`.
 
     :param path: Specify an alternative toml file to parse from, defaults to

@@ -15,7 +15,7 @@ from cslug import exceptions
 def which(name):
     """Locate an executable in ``PATH``.
 
-    This is equivalent to :func:`shutil.which` except that if you give it a path
+    This is equivalent to `shutil.which` except that if you give it a path
     instead of just a name, it returns that path. The output of this function
     will always include the executable suffix.
 
@@ -85,13 +85,13 @@ def cc_version(CC=None):
     """Get C compiler's name and version.
 
     Args:
-        CC: See :func:`cslug.cc`.
+        CC: See `cslug.cc`.
 
     Returns:
         (str, tuple[int]): A ``(name, version_info)`` pair.
 
-    The `name` is determined by parsing the output of ``$CC -v`` (or ``%CC% -v``
-    on Windows). It can be:
+    The ``name`` is determined by parsing the output of ``$CC -v`` (or
+    ``%CC% -v`` on Windows). It can be:
 
     - ``'gcc'`` for `gcc`_ (both 32 and 64 bit).
     - ``'tcc'`` for `TinyCC`_ including the 32-bit ``i386-win32-tcc`` version.
@@ -99,7 +99,7 @@ def cc_version(CC=None):
     - ``'pcc'`` for `Portable C Compiler`_.
     - ``'PGCC'`` for pgcc_.
 
-    The `version_info` is in the standard ``(major, minor, micro)`` version
+    The ``version_info`` is in the standard ``(major, minor, micro)`` version
     format.
 
     """
@@ -125,7 +125,7 @@ def _cc_version(*command):
 
 
 def _parse_cc_version(stdout: bytes, cmd: list):
-    """The parser for :func:`cc_version`.
+    """The parser for `cc_version`.
 
     Args:
         stdout:
@@ -180,7 +180,7 @@ def mmacosx_version_min():  # pragma: Darwin
 
 
 def macos_architecture():  # pragma: Darwin
-    """Read and validate the contents of the :envvar:`MACOS_ARCHITECTURE`
+    """Read and validate the contents of the `MACOS_ARCHITECTURE`
     environment variable.
 
     Returns:

@@ -2,9 +2,9 @@
 r"""
 Standard library C functions exposed to Python.
 
-Most of the functions in the C standard library are included in a single |shared
-library| which is part of your operating system (see the table below). The
-:mod:`cslug.stdlib` module loads and exposes the contents of this library to be
+Most of the functions in the C standard library are included in a single
+|shared library| which is part of your operating system (see the table below).
+The `cslug.stdlib` module loads and exposes the contents of this library to be
 directly called from Python.
 
 ============  ==========================================================================
@@ -25,7 +25,7 @@ Android       A combination of ``libc.so`` and ``libm.so``.
 Not every function is made available. A function is excluded if:
 
 * It is not available on your current platform.
-* It uses types which are unavailable to :mod:`ctypes`.
+* It uses types which are unavailable to `ctypes`.
 * It's a macro, meaning that it's refactored away at compile time and doesn't
   exist in any |binaries| format.
 
