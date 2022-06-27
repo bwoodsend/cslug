@@ -8,14 +8,22 @@ Welcome to cslug!
     :target: https://pypi.org/project/cslug/
 
 .. image:: https://img.shields.io/badge/coverage-100%25-%2326543A
+    :target: https://github.com/bwoodsend/cslug/blob/9bbee6fc4f1f92f47d2b2aca5e7ce6fa68e197d7/.coveragerc#L22
+
+∘
+`MIT license <https://github.com/bwoodsend/cslug/blob/master/LICENSE>`_
+∘
+`PyPI <https://pypi.org/project/cslug>`_
+∘
+`Documentation <https://cslug.readthedocs.io/>`_
+∘
+`Source Code <https://github.com/bwoodsend/cslug>`_
+∘
+`Raise Bugs <https://github.com/bwoodsend/cslug/issues>`_
+∘
+`Get Support <https://github.com/bwoodsend/cslug/discussions>`_
 
 Quick and painless wrapping C code into Python.
-
-* Free software: MIT license
-* Documentation: https://cslug.readthedocs.io/
-* Source: https://github.com/bwoodsend/cslug/
-* Releases: https://github.com/bwoodsend/cslug/releases/
-
 The **cslug** package provides a thin layer on top of the built-in ctypes_
 library, making it easier to load functions and structures from C into Python.
 
@@ -27,12 +35,18 @@ library, making it easier to load functions and structures from C into Python.
       return x + 1;
     }
 
+    double times_2(double x) {
+      return x * 2.0;
+    }
+
 .. code-block:: python
 
     >>> from cslug import CSlug
     >>> slug = CSlug("hello-cslug.c")
     >>> slug.dll.add_1(12)
     13
+    >>> slug.dll.times_2(-5)
+    -10.0
 
 
 Alternatives
