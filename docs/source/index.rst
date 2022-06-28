@@ -1,3 +1,4 @@
+.. module:: cslug
 
 .. include:: ../../README.rst
 

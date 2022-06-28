@@ -1,0 +1,39 @@
+* Fix macOS wheel tag when building an ``arm64`` only wheel.
+
+* Fix macOS wheel tags when building from a ``universal2`` build of Python.
+
+* .. rst-class:: in-red
+
+    Make clang the default compiler on macOS and FreeBSD. Since these platforms
+    officially use clang as their default compilers, clang is much more likely
+    to be available. gcc is still used as a fallback if clang is not find-able.
+
+* Expose all stdlib functions available on the current operating system.
+  The original plan of making `cslug.stdlib` expose only symbols that are
+  universally available on all platforms meant that, as cslug gained new
+  platforms or newer versions of existing platforms deprecated functions (in
+  particularly the dropping of the insecure family of functions that took NULL
+  terminated string inputs), that the pool of functions cslug could expose was
+  constantly shrinking and cslug was essentially having to make breaking
+  changes every time. The new approach is simply to expose anything that's
+  available on the current platform. The documentation (`cslug.stdlib`) lists
+  which platforms each function can be used on.
+
+* .. rst-class:: in-red
+
+    On Windows versions that support it (11 and, if the relevant update is
+    installed, 10), use the new Universal C Runtime for `cslug.stdlib`. Unlike
+    ``msvcrt.dll`` which `cslug` used originally, it receives updates and is
+    officially documented and supported API so it shouldn't disappear at some
+    unknown point in the future! The following functions are in ``msvcrt`` but
+    not in UCRT: :ref:`ctime() <stdlib-ctime>`, :ref:`fprintf()
+    <stdlib-fprintf>`, :ref:`fscanf() <stdlib-fscanf>`, :ref:`gmtime()
+    <stdlib-gmtime>`, :ref:`localtime() <stdlib-localtime>`, :ref:`printf()
+    <stdlib-printf>`, :ref:`scanf() <stdlib-scanf>`, :ref:`sprintf()
+    <stdlib-sprintf>`, :ref:`sscanf() <stdlib-sscanf>`, :ref:`swprintf()
+    <stdlib-swprintf>`, :ref:`swscanf() <stdlib-swscanf>`, :ref:`vfprintf()
+    <stdlib-vfprintf>`, :ref:`vswprintf() <stdlib-vswprintf>`.
+
+* Add support for clang on MSYS2.
+
+* Add support for OpenBSD and NetBSD.
