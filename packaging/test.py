@@ -168,7 +168,7 @@ def inspect_wheel(wheel):
 
 
 @pytest.mark.order(-1)
-@pytest.mark.timeout(600)
+@pytest.mark.timeout(900)
 def test():
     if sys.platform == "cygwin":
         pytest.skip("venv is not supported on cygwin.")
