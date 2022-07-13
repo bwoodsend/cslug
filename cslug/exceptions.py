@@ -87,7 +87,10 @@ class CCNotFoundError(Exception):
 class BuildError(Exception):
     """Compiler raised an error during a compile."""
     def __str__(self):
-        return "The build command:\n\n%s\n\nFailed with:\n\n%s\n" % self.args
+        import shlex
+        command, output = self.args
+        command = " ".join(map(shlex.quote, command))
+        return f"The build command:\n\n{command}\n\nFailed with:\n\n{output}\n"
 
 
 class BuildBlockedError(Exception):
