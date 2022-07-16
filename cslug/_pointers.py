@@ -6,7 +6,7 @@ https://docs.python.org/3/c-api/buffer.html
 
 """
 
-import ctypes
+from cslug.__pointers import Pointer as PointerType, PyBUF_STRIDES
 
 
 def ptr(bytes_like):
@@ -70,45 +70,4 @@ def nc_ptr(bytes_like):
     errors.
 
     """
-    # Yeah, that 0x18 is a hard-coded int flag. It's name is PyBUF_STRIDES.
-    return PointerType(bytes_like, 0x18)
-
-
-# Py_buffer is a structure and its definition, short of copy/pasting from a
-# Python.h (which may change), can't be got. Instead just use a void array.
-# A Py_buffer is 80 bytes for 64-bit Pythons 3.5 to 3.9 but may grow in later
-# versions. Assume a max of 120 bytes to be safe.
-Py_buffer = ctypes.ARRAY(ctypes.c_void_p, 120 // ctypes.sizeof(ctypes.c_void_p))
-
-
-class PointerType(int):
-    """A raw pointer which inc-refs the buffer it points to.
-
-    Please no not instantiate this class directly. Instead use the `ptr()`
-    function.
-    """
-    @staticmethod
-    def __new__(cls, bytes_like, flags):
-
-        obj = ctypes.py_object(bytes_like)
-        # Allocate a Py_buffer.
-        _py_buffer = Py_buffer()
-        # And populate it.
-        ctypes.pythonapi.PyObject_GetBuffer(obj, _py_buffer, flags)
-        # The pointer is the 1st item. The rest of the structure is size, shape,
-        # strides and writability flags. These can be accessed easier elsewhere.
-        address = _py_buffer[0]
-
-        self = super().__new__(cls, address)
-        self._py_buffer = _py_buffer
-        return self
-
-    def __del__(self):
-        # PyObject_GetBuffer() inc-refs the buffer to prevent dangling pointers
-        # but leads to memory leaks unless we remember to call the following
-        # after we're finished with the pointer to safely allow the buffer to be
-        # deleted.
-        ctypes.pythonapi.PyBuffer_Release(self._py_buffer)
-
-    def __repr__(self):
-        return "<Void Pointer %s>" % super().__repr__()
+    return PointerType(bytes_like, PyBUF_STRIDES)

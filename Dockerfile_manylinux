@@ -29,6 +29,7 @@ RUN pip install wheel
 COPY setup.py /io/setup.py
 COPY README.rst /io/README.rst
 COPY cslug/_version.py /io/cslug/_version.py
+COPY cslug/pointers.c /io/cslug/pointers.c
 
 # Set the repo's root as the cwd.
 WORKDIR /io

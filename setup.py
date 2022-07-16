@@ -2,7 +2,7 @@
 """
 """
 
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Extension
 import runpy
 
 with open('README.rst') as readme_file:
@@ -25,6 +25,7 @@ setup(
         'Programming Language :: Python :: 3.10',
     ],
     description="Quick and painless wrapping C code into Python",
+    ext_modules=[Extension("cslug.__pointers", ["cslug/pointers.c"])],
     extras_require={
         "test": [
             'pytest>=3', 'pytest-order', 'pytest-timeout', 'toml', 'coverage',
@@ -40,5 +41,5 @@ setup(
     test_suite='tests',
     url='https://github.com/bwoodsend/cslug',
     version=runpy.run_path("cslug/_version.py")["__version__"],
-    zip_safe=True,
+    zip_safe=False,
 )

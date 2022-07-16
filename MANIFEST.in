@@ -1,2 +1,3 @@
 include LICENSE
 include cslug/stdlib.json
+include cslug/pointers.c

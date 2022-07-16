@@ -1,0 +1,96 @@
+---
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+env:
+  FORCE_COLOR: 1
+
+jobs:
+  build-native-wheels:
+    runs-on: ${{ matrix.permutation.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        permutation:
+          - os: windows-latest
+            architecture: AMD64
+          - os: windows-latest
+            architecture: x86
+          # Build separate wheels for macOS's different architectures.
+          - os: macOS-latest
+            architecture: x86_64 arm64
+          # Build only on Linux architectures that don't need qemu emulation.
+          - os: ubuntu-latest
+            architecture: x86_64 i686
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v3
+      - run: pip install cibuildwheel==2.3.0
+
+      - if: startsWith(matrix.permutation.os, 'windows')
+        uses: bwoodsend/setup-winlibs-action@v1
+        with:
+          architecture: ${{ matrix.permutation.architecture }}
+
+      - run: python -m cibuildwheel --output-dir dist
+        env:
+          CIBW_ARCHS: ${{ matrix.permutation.architecture }}
+          # Don't build with prerelease Python versions.
+          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.6,<3.11"
+          # Or on PyPy.
+          CIBW_SKIP: pp*
+          # Run the test suite after each build.
+          CIBW_TEST_EXTRAS: test
+          CIBW_TEST_COMMAND: >
+            cp -r {package}/tests {package}/packaging {package}/docs
+            {package}/pytest.ini {package}/.coveragerc . &&
+            pytest tests
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: wheels
+          path: dist/*.whl
+
+  build-QEMU-emulated-wheels:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        architecture: ["aarch64"]
+        python-version:
+          - cp36
+          - cp37
+          - cp38
+          - cp39
+          - cp310
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v3
+      - run: pip install cibuildwheel==2.3.0
+
+      - uses: docker/setup-qemu-action@v1
+      - uses: docker/setup-buildx-action@v1
+
+      - run: python -m cibuildwheel --output-dir dist
+        env:
+          # Build only the currently selected Linux architecture (so we can
+          # parallelise for speed).
+          CIBW_ARCHS_LINUX: "${{ matrix.architecture }}"
+          # Likewise, select only one Python version per job to speed this up.
+          CIBW_BUILD: "${{ matrix.python-version }}-*"
+          # Run the test suite after each build.
+          CIBW_TEST_EXTRAS: test
+          CIBW_TEST_COMMAND: >
+            cp -r {package}/tests {package}/packaging {package}/docs
+            {package}/pytest.ini {package}/.coveragerc . &&
+            pytest tests
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: wheels
+          path: dist/*.whl
