@@ -5,11 +5,11 @@ Vagrant.configure("2") do |config|
     setup_rsync(machine)
     machine.vm.provision "shell", privileged: false, inline:<<-END
       sudo pkg update
-      sudo pkg install -y fish py38-pip py38-sqlite3
+      sudo pkg install -y fish py39-pip py39-sqlite3
       cd /io && pip install -e .[test] psutil
     END
     setup_shell(machine)
-    shimify_python(machine, "python3.8")
+    shimify_python(machine, "python3.9")
   end
 
   config.vm.define "openbsd" do |machine|
