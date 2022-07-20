@@ -52,15 +52,16 @@ def run(*args, cwd=".", check=True):
     try:
         os.chdir(cwd)
         print("$", *args)
-        p = run(list(map(str, args)), stdout=PIPE, stderr=PIPE, env=env)
-        print(textwrap.indent((p.stdout + p.stderr).decode(), "    "))
+        p = run(list(map(str, args)), stdout=PIPE, stderr=PIPE, env=env,
+                universal_newlines=True)
+        print(textwrap.indent(p.stdout + p.stderr, "    "))
     finally:
         os.chdir(old)
     if check:
         # Raise any errors.
-        assert not p.returncode, p.stdout.decode() + p.stderr.decode()
+        assert not p.returncode, p.stdout + p.stderr
         # Propagate any warnings.
-        for line in p.stderr.decode().split("\n"):
+        for line in p.stderr.split("\n"):
             if re.search(r"\S", line):
                 # These warnings are harmless and I can't find any way to
                 # silence them.
@@ -182,7 +183,7 @@ def test():
     # Sanity check that `contains-slugs` isn't accessible via cwd or PYTHONPATH.
     p = target.python("-m", "contains_slugs", check=False)
     assert p.returncode
-    assert re.search(b"No module named contains_slugs", p.stderr), p.stderr
+    assert re.search("No module named contains_slugs", p.stderr), p.stderr
 
     # Clean out dist folder to prevent interference with wheels from previous
     # runs.
