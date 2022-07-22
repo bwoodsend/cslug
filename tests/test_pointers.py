@@ -15,12 +15,12 @@ from cslug import ptr, nc_ptr
 @pytest.mark.parametrize("ptr", [ptr, nc_ptr])
 def test_ptr(ptr):
     a = array.array("i", range(100))
-    assert a.buffer_info() == (ptr(a)._as_parameter_, len(a))
-    assert a.buffer_info() == (ptr(memoryview(a))._as_parameter_, len(a))
+    assert a.buffer_info() == (ptr(a).value, len(a))
+    assert a.buffer_info() == (ptr(memoryview(a)).value, len(a))
 
     if sys.version_info >= (3, 8):
         assert a.buffer_info() == \
-        (ptr(memoryview(a).toreadonly())._as_parameter_, len(a))
+        (ptr(memoryview(a).toreadonly()).value, len(a))
 
     # bytes() and bytearray() make copies so the ids won't match. Still check
     # we can get their pointers though.
@@ -40,15 +40,15 @@ def test_strided():
     a = memoryview(_a).cast("b", (10, 10, _a.itemsize))
     address = _a.buffer_info()[0]
 
-    assert ptr(a)._as_parameter_ == address
-    assert nc_ptr(a)._as_parameter_ == address
+    assert ptr(a).value == address
+    assert nc_ptr(a).value == address
 
     with pytest.raises(ValueError):
         ptr(a[::2])
 
     # I would put more tests here but memoryview doesn't support them.
 
-    assert nc_ptr(a[::2])._as_parameter_ == address
+    assert nc_ptr(a[::2]).value == address
 
 
 # Gobble up memory in 256MB chunks.
@@ -97,8 +97,8 @@ def test_ptr_leaks():
 
 def test_repr():
     p = ptr(b"")
-    assert repr(p._as_parameter_) in repr(p)
-    assert repr(p._as_parameter_) != repr(p)
+    assert repr(p.value) in repr(p)
+    assert repr(p.value) != repr(p)
     leaks(lambda : repr(p), MEM_LEAK_TOL)
 
 

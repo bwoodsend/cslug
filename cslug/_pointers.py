@@ -6,6 +6,8 @@ https://docs.python.org/3/c-api/buffer.html
 
 """
 
+import ctypes
+
 from cslug.__pointers import Pointer as PointerType, PyBUF_STRIDES
 
 
@@ -48,7 +50,10 @@ def ptr(bytes_like):
 
     """
     try:
-        return PointerType(bytes_like, 0)
+        pointer = PointerType(bytes_like, 0)
+        out = ctypes.c_void_p(pointer._as_parameter_)
+        out._pointer = pointer
+        return out
     # I'm not sure why the difference but depending on the input, you may get
     # either of these exception types from requesting a contiguous buffer from
     # a non-contiguous one.
@@ -70,4 +75,7 @@ def nc_ptr(bytes_like):
     errors.
 
     """
-    return PointerType(bytes_like, PyBUF_STRIDES)
+    pointer = PointerType(bytes_like, PyBUF_STRIDES)
+    out = ctypes.c_void_p(pointer._as_parameter_)
+    out._pointer = pointer
+    return out

@@ -31,7 +31,7 @@ def test_character_arrays_dont_need_null_termination(binary):
         array = ctypes.create_unicode_buffer(text)
 
     for i in range(100):
-        unterminated = (char * i).from_address(ptr(array)._as_parameter_)
+        unterminated = (char * i).from_address(ptr(array).value)
         value = unterminated.value
         assert len(value) == i
         assert value == text[:i]
