@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-"""
-
 import sys
 from pathlib import Path
 import collections
@@ -61,7 +57,6 @@ class Header(object):
 
     def _generate(self):
         lines = [
-            "// -*- coding: utf-8 -*-\n",
             "// Header file generated automatically by cslug.\n",
             "// Do not modify this file directly as your changes will be "
             "overwritten.\n\n",

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 r"""
 Standard library C functions exposed to Python.
 

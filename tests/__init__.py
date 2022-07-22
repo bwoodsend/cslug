@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-"""
-
 from pathlib import Path
 from uuid import uuid1 as uuid
 from functools import wraps

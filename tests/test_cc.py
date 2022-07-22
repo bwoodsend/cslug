@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-"""
-
 import os, sys
 import platform
 import re

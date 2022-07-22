@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This ugly mess doubles as a source of code snippets to be embedded in the
 globals.rst docs and a test.

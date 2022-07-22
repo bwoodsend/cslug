@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Get pointers to buffers using the buffer protocol.
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 r"""
 Tools for integrating with :std:doc:`setuptools <setuptools>`.
 

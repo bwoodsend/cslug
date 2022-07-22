@@ -66,7 +66,6 @@ The resulting header file looks something like:
 .. code-block:: C
     :caption: my-header.h
 
-    // -*- coding: utf-8 -*-
     // Header file generated automatically by cslug.
     // Do not modify this file directly as your changes will be overwritten.
 

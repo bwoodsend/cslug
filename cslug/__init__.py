@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-"""
-
 from ._version import __version__, __version_info__
 from . import exceptions
 from . import c_parse

@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-"""
-
 from cslug import CSlug, anchor, ptr, nc_ptr
 
 slug = CSlug(anchor("flatten.c"))

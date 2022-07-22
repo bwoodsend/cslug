@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 End to end test for setuptools distributing a package containing CSlugs.
 

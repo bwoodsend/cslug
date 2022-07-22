@@ -1,5 +1,3 @@
-// -*- coding: utf-8 -*-
-
 int add_1(int x) {
   return x + 1;
   }

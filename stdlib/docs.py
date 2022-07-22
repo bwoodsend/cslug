@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-"""
-
 from pathlib import Path
 
 from stdlib.parse import functions, Function

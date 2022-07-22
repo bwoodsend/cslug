@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-"""
-
 import os, sys
 import io
 from pathlib import Path

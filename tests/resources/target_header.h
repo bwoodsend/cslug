@@ -1,4 +1,3 @@
-// -*- coding: utf-8 -*-
 // Header file generated automatically by cslug.
 // Do not modify this file directly as your changes will be overwritten.
 

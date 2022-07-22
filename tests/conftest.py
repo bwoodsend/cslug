@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-"""
-
-
 def pytest_report_header(config):
     """
     Add C compiler name/version/availability and the chosen executable suffix to
