@@ -50,6 +50,7 @@ def setup_shell(machine)
     echo '' | fish --login
     echo 'cd /io' >> ~/.config/fish/config.fish
     echo set PATH ~/.local/bin '$PATH' >> ~/.config/fish/config.fish
+    echo set -x FORCE_COLOR 1 >> ~/.config/fish/config.fish
   END
 end
 

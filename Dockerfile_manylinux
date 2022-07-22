@@ -21,6 +21,7 @@ ARG BASE=manylinux1_x86_64
 FROM quay.io/pypa/${BASE}
 # Choosing a Python version is done just by prepending its bin dir to PATH.
 ENV PATH=/opt/python/cp39-cp39/bin:$PATH
+ENV FORCE_COLOR=1
 RUN pip install wheel
 
 # Install dependencies. Installing as many as possible before the ``COPY . /io``

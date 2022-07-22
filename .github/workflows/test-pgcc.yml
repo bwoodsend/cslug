@@ -6,6 +6,9 @@ name: Test PGCC
 on:
   workflow_dispatch:
 
+env:
+  FORCE_COLOR: 1
+
 jobs:
   test:
     runs-on: ubuntu-latest
