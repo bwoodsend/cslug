@@ -25,4 +25,4 @@ jobs:
         working-directory: /opt/
 
       - run: pip install -e .[test]
-      - run: CC=pgcc pytest
+      - run: CC=pgcc ./test

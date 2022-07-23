@@ -7,6 +7,10 @@ on:
 env:
   FORCE_COLOR: 1
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   test:
     strategy:
@@ -63,7 +67,7 @@ jobs:
 
       - name: Test native compiler
         if: ${{ matrix.architecture == 'x64' }}
-        run: pytest
+        run: ./test
 
       - uses: bwoodsend/setup-winlibs-action@v1
         if:  ${{ runner.os == 'Windows' }}
@@ -73,12 +77,12 @@ jobs:
 
       - name: Test Winlibs gcc
         if:  ${{ runner.os == 'Windows' }}
-        run: pytest
+        run: ./test
 
       - name: Test Clang
         env:
           CC: clang
-        run: pytest
+        run: ./test
 
       # Just gcc is an alias for clang on modern macOSs. Use gcc-[version] to
       # get a genuine gcc.
@@ -87,7 +91,7 @@ jobs:
         env:
           CC: gcc-9
           MACOS_DEPLOYMENT_TARGET: '10.10'
-        run: pytest
+        run: ./test
 
       - name: Install TinyCC
         if: ${{ runner.os == 'Linux' }}
@@ -104,25 +108,24 @@ jobs:
         if: ${{ runner.os == 'linux' }}
         env:
           CC: tcc
-        run: pytest
+        run: ./test
 
       - name: Test TinyCC
         if: ${{ runner.os == 'windows' && matrix.architecture == 'x64' }}
-        run: set CC=%ProgramFiles%/tcc/tcc/tcc && pytest
+        run: set CC=%ProgramFiles%/tcc/tcc/tcc && bash ./test
         shell: cmd
 
       - name: Test TinyCC
         if: ${{ runner.os == 'windows' && matrix.architecture == 'x86' }}
-        run: set CC=%ProgramFiles%/tcc/tcc/i386-win32-tcc && pytest
+        run: set CC=%ProgramFiles%/tcc/tcc/i386-win32-tcc && bash ./test
         shell: cmd
 
       - name: Show wheel suffix
         run: ls packaging/contains-slugs/dist/
-        shell: bash
 
       # Test running the whole test suite, compiling everything fat. Only the
       # macOS 11 images have a new enough Xcode to do this.
-      - run: pytest && ls packaging/contains-slugs/dist
+      - run: ./test && ls packaging/contains-slugs/dist
         if:  ${{ matrix.os == 'macos-11.0' }}
         env:
           MACOS_ARCHITECTURE: universal2

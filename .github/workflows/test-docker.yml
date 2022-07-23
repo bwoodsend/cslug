@@ -26,7 +26,7 @@ jobs:
         run: |
           docker build -t sluggy-image -f Dockerfile_manylinux \
             --build-arg BASE=${{ matrix.base-image }} .
-      - run: docker run -v "$PWD:/io" sluggy-image pytest
+      - run: docker run -v "$PWD:/io" sluggy-image ./test
       - run: ls packaging/contains-slugs/dist
 
       # Verify that precompiled cslug packages can install and run without a C
@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: docker build -t cslug-alpine -f Dockerfile_alpine .
-      - run: docker run -v "$PWD:/io" cslug-alpine pytest
+      - run: docker run -v "$PWD:/io" cslug-alpine ./test
 
       # Verify that precompiled cslug packages can install and run without a C
       # compiler.

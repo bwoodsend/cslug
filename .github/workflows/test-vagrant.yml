@@ -29,5 +29,5 @@ jobs:
       - uses: actions/checkout@v2
       - run: echo ${{ needs.parse-parameters.outputs.variants }}
       - run: vagrant up ${{ matrix.variant }}
-      - run: vagrant ssh ${{ matrix.variant }} -- pytest
+      - run: vagrant ssh ${{ matrix.variant }} -- ./test
       - run: vagrant ssh ${{ matrix.variant }} -- python stdlib/availability.py
