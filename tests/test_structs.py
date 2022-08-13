@@ -4,11 +4,7 @@ import ctypes
 
 from cslug import CSlug, anchor
 
-import pytest
-
 from tests import name
-
-pytestmark = pytest.mark.order(-2)
 
 
 def test_struct_io():

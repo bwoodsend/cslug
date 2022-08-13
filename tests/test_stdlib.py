@@ -2,11 +2,7 @@ import os
 import time
 import ctypes
 
-import pytest
-
 from cslug import stdlib
-
-pytestmark = pytest.mark.order(-1)
 
 
 def test_smoke():

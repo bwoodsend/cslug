@@ -23,8 +23,9 @@ setup(
     description="Quick and painless wrapping C code into Python",
     extras_require={
         "test": [
-            'pytest>=3', 'pytest-order', 'pytest-timeout', 'toml', 'coverage',
-            'coverage-conditional-plugin', 'wheel'
+            'pytest>=3', 'pytest-timeout', 'toml', 'coverage',
+            'coverage-conditional-plugin', 'wheel',
+            'pytest_ordered @ https://github.com/bwoodsend/pytest-ordered/archive/480e13c0c23ca8f4601f18aff9990f42935cc8c4.zip'
         ]
     },
     license="MIT license",

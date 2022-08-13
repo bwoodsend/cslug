@@ -4,8 +4,6 @@ import runpy
 
 import pytest
 
-pytestmark = pytest.mark.order(-2)
-
 from cslug import CSlug
 from tests import DEMOS, DOCS
 

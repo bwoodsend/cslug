@@ -4,8 +4,6 @@ import pytest
 
 from cslug import ptr
 
-pytestmark = pytest.mark.order(-2)
-
 
 @pytest.mark.parametrize("binary", range(2))
 def test_character_arrays_dont_need_null_termination(binary):

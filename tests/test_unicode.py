@@ -7,8 +7,6 @@ import pytest
 from cslug import CSlug, anchor
 from cslug._cc import cc_version
 
-pytestmark = pytest.mark.order(-2)
-
 from tests import name, RESOURCES, DUMP
 
 # Unicode source files live in their own `unicode` folder.

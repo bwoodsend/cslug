@@ -167,7 +167,6 @@ def inspect_wheel(wheel):
 # --- The test itself ---
 
 
-@pytest.mark.order(-1)
 @pytest.mark.timeout(900)
 def test():
     if sys.platform == "cygwin":

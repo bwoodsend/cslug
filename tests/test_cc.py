@@ -10,8 +10,6 @@ from cslug._cslug import strip_useless_warnings
 
 from tests import DUMP, uuid, RESOURCES
 
-pytestmark = pytest.mark.order(-4)
-
 if platform.system() == "Windows":
     executable_suffixes = os.environ["PATHEXT"].strip(";").split(";")
 elif re.search("msys", platform.system(), re.IGNORECASE):

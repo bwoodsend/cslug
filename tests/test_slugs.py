@@ -19,10 +19,7 @@ from cslug import exceptions, anchor, CSlug, misc, Header, cc_version
 from tests import DUMP, name, DEMOS, RESOURCES, warnings_are_evil
 from tests.test_pointers import leaks
 
-pytestmark = pytest.mark.order(-3)
 
-
-@pytest.mark.order(-4)
 @pytest.mark.parametrize("true_file", [True, False])
 @warnings_are_evil
 def test_basic(true_file):
