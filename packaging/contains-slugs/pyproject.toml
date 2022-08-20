@@ -1,3 +1,13 @@
+[project]
+name="contains_slugs"
+version="1.0.0"
+authors = [{name="Mr Slug", email="sluggy989@seaslugmail.com"}]
+dynamic = ["dependencies"]
+
+[project.urls]
+HomePage = "https://toomanyslugs.com"
+
+
 [build-system]
 requires = [
   "setuptools",
@@ -5,3 +15,5 @@ requires = [
   "toml",
   "cslug",
 ]
+
+[tool.cslug_make]
