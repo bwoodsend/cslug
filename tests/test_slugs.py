@@ -559,7 +559,7 @@ def test_macos_arches(monkeypatch):
         # Try compiling.
         try:
             self.make()
-        except exceptions.BuildError:
+        except (exceptions.BuildError, exceptions.BuildWarning):
             # This is unlikely to be cslug specific. More likely its Xcode
             # getting into a mess.
             pytest.skip("This compiler appears not to be setup to build cross "
@@ -587,3 +587,18 @@ def _xcode_version():
         return
     version = re.search(r"Xcode (\d+)\.(\d+)", p.stdout.decode()).groups()
     return tuple(map(int, version))
+
+
+@warnings_are_evil
+@pytest.mark.skipif(platform.system() != "Darwin", reason="macOS only")
+def test_macos_deployment_target_enforcement(monkeypatch):
+    if cc_version()[0] != "clang":
+        pytest.xfail("gcc has no check for the deployment target")
+    monkeypatch.setenv("MACOS_ARCHITECTURE", "x86_64")
+    self = CSlug(anchor(name()), RESOURCES / "high_macos_deployment_target.m",
+                 flags=["-framework", "CoreGraphics"])
+    monkeypatch.setenv("MACOS_DEPLOYMENT_TARGET", "10.8")
+    with pytest.raises(exceptions.BuildError):
+        self.make()
+    monkeypatch.setenv("MACOS_DEPLOYMENT_TARGET", "10.12")
+    self.make()
