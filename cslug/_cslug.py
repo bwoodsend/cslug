@@ -1,7 +1,7 @@
 import os, sys
 from pathlib import Path
 import ctypes
-from subprocess import Popen, PIPE, run
+from subprocess import Popen, PIPE
 import re
 import warnings
 import platform
@@ -289,6 +289,11 @@ class CSlug(object):
         # Compile for older versions of macOS.
         if cc_name in ("gcc", "clang") and OS == "Darwin":  # pragma: no cover
             flags += [f"-mmacosx-version-min={mmacosx_version_min()}"]
+            # And ensure that attempts to use too new symbols are detected.
+            if cc_name == "clang":
+                flags += [
+                    "-Wunguarded-availability", "-Werror=unguarded-availability"
+                ]
 
         # gcc does not automatically use the latest version of of the C
         # standard it knows and unfortunately there is no option to do so
