@@ -1,5 +1,5 @@
 r"""
-Tools for integrating with :std:doc:`setuptools <setuptools>`.
+Tools for integrating with `setuptools`_.
 
 Integration with ``setuptools`` is a somewhat messy affair. By putting a
 `cslug.CSlug` in a package, we now have to coerce our package setup to do
