@@ -71,7 +71,7 @@ Advantages
 * Binaries are not linked against Python and are therefore not tied to a
   specific Python version.
   A Python extension module needs to be recompiled for every minor version of
-  Python (3.6, 3.7, 3.8, 3.9) and for every platform (Windows, macOS, Linux)
+  Python (3.8, 3.9, 3.10, 3.11) and for every platform (Windows, macOS, Linux)
   whereas a **cslug** binary need only be compiled for every platform.
 * You can use virtually any C compiler.
   Python extension modules must be built with clang_ on macOS and MSVC on
@@ -214,7 +214,7 @@ Credits
 .. _changelog: https://cslug.readthedocs.io/en/latest/history.html
 .. _JetBrains: https://jb.gg/OpenSource
 .. _PyCharm: https://www.jetbrains.com/pycharm/
-.. _ctypes: https://docs.python.org/3.9/library/ctypes.html
+.. _ctypes: https://docs.python.org/3/library/ctypes.html
 .. _mingw-w64: https://www.mingw-w64.org/downloads/
 .. _gcc: https://gcc.gnu.org/
 .. _TinyCC: https://bellard.org/tcc/

@@ -76,7 +76,7 @@ def test_patch_macos_tag(monkeypatch, tag):
     monkeypatch.setenv("MACOS_DEPLOYMENT_TARGET", "11")
     assert _macos_platform_tag(tag) == "macosx_11_0_x86_64"
     monkeypatch.delenv("MACOS_DEPLOYMENT_TARGET")
-    assert _macos_platform_tag(tag) == "macosx_10_6_x86_64"
+    assert _macos_platform_tag(tag) == "macosx_10_9_x86_64"
 
     monkeypatch.setenv("MACOS_ARCHITECTURE", "arm64")
     monkeypatch.setenv("MACOS_DEPLOYMENT_TARGET", "10.10")
@@ -92,13 +92,13 @@ def test_patch_macos_tag(monkeypatch, tag):
     monkeypatch.setenv("MACOS_DEPLOYMENT_TARGET", "12.7")
     assert _macos_platform_tag(tag) == "macosx_12_7_universal2"
     monkeypatch.delenv("MACOS_DEPLOYMENT_TARGET")
-    assert _macos_platform_tag(tag) == "macosx_10_6_universal2"
+    assert _macos_platform_tag(tag) == "macosx_10_9_universal2"
 
     monkeypatch.setenv("MACOS_ARCHITECTURE", "universal2")
     monkeypatch.setenv("MACOS_DEPLOYMENT_TARGET", "12.7")
     assert _macos_platform_tag(tag) == "macosx_12_7_universal2"
     monkeypatch.delenv("MACOS_DEPLOYMENT_TARGET")
-    assert _macos_platform_tag(tag) == "macosx_10_6_universal2"
+    assert _macos_platform_tag(tag) == "macosx_10_9_universal2"
 
     monkeypatch.delenv("MACOS_ARCHITECTURE")
     assert "universal2" not in _macos_platform_tag(tag)

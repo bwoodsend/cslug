@@ -33,7 +33,7 @@ jobs:
       # compiler.
       - if: matrix.base-image == 'manylinux1_x86_64'
         run: |
-          docker run -v "$PWD:/io" python:3.9.0-slim bash -c '
+          docker run -v "$PWD:/io" python:slim bash -c '
             pip install /io
             pip install /io/packaging/contains-slugs/dist/*.whl
             python -m contains_slugs
@@ -49,7 +49,7 @@ jobs:
       # Verify that precompiled cslug packages can install and run without a C
       # compiler.
       - run: |
-          docker run -v "$PWD:/io" python:3.9.0-alpine ash -c '
+          docker run -v "$PWD:/io" python:alpine ash -c '
             pip install /io
             pip install /io/packaging/contains-slugs/dist/*.whl
             python -m contains_slugs

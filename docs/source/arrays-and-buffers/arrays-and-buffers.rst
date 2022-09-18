@@ -195,4 +195,4 @@ The above may be wrapped with something like the following.
 
 
 .. _`Buffer Protocol`: https://docs.python.org/3/c-api/buffer.html
-.. _`array's table of type codes`: https://docs.python.org/3.8/library/array.html#module-array
+.. _`array's table of type codes`: https://docs.python.org/3/library/array.html#module-array
