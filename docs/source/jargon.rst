@@ -80,8 +80,8 @@ Glossary
         this is not an option.
 
         Note that *zero* in this context is ascii/unicode zero, denoted by
-        :py:`'\x00'` or :py:`chr(0)` in Python, or :c:`'\00'` or :c:`0` in C,
-        not simply the character ``'0'`` (which is actually :c:`'\30'` or
+        :py:`'\x00'` or :py:`chr(0)` in Python, or ``'\00'`` or :c:`0` in C,
+        not simply the character ``'0'`` (which is actually ``'\30'`` or
         :c:`48` in C).
 
         See :ref:`Null terminated or not null terminated?` for when it safe to

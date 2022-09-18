@@ -123,7 +123,7 @@ def test_block_compile():
 
 def test_array_typecodes():
     # Basic types from
-    # https://docs.python.org/3.8/library/array.html#module-array
+    # https://docs.python.org/3/library/array.html#module-array
     int_types = "il" if ctypes.c_int is ctypes.c_long else "i"
     assert array_typecode("int") in int_types
     assert array_typecode("signed int") in int_types

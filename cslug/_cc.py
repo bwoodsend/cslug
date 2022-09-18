@@ -158,11 +158,8 @@ def mmacosx_version_min():  # pragma: Darwin
     # oldest Python version supported by cslug so as to
     # maximise -mmacosx-version-min without cutting off anything that Python
     # doesn't already. Whilst cslug supports:
-    # - Python 3.6 -> OSX 10.6
-    # - Python 3.7 -> OSX 10.6 (again)
-    # - Python 3.8 -> OSX 10.9
-    # - Python 3.9 -> OSX 10.9
-    default = "10.6"
+    # - Python 3.8-3.11 -> OSX 10.9
+    default = "10.9"
 
     target = os.environ.get("MACOS_DEPLOYMENT_TARGET", default)
     if (macos_architecture() or platform.machine()) == "arm64":

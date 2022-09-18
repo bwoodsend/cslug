@@ -9,7 +9,7 @@
 # To run pytest:
 #  $ docker run -v `pwd`:/io -it cslug-alpine pytest
 
-FROM python:3.9.0-alpine
+FROM python:alpine
 RUN pip install wheel auditwheel
 RUN apk add gcc musl-dev
 ENV FORCE_COLOR=1

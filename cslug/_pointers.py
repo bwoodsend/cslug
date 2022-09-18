@@ -75,7 +75,7 @@ def nc_ptr(bytes_like):
 
 # Py_buffer is a structure and its definition, short of copy/pasting from a
 # Python.h (which may change), can't be got. Instead just use a void array.
-# A Py_buffer is 80 bytes for 64-bit Pythons 3.5 to 3.9 but may grow in later
+# A Py_buffer is 80 bytes for 64-bit Pythons 3.5 to 3.11 but may grow in later
 # versions. Assume a max of 120 bytes to be safe.
 Py_buffer = ctypes.ARRAY(ctypes.c_void_p, 120 // ctypes.sizeof(ctypes.c_void_p))
 

@@ -248,7 +248,7 @@ Because a |cslug| package contains |binaries| but those binaries do not use the
 Python ABI (i.e. don't include the line ``#include <Python.h>`` anywhere in the
 C code), a package is platform specific but independent of Python/ABI version.
 i.e. You can't compile on Linux and run on Windows but you can compile using
-Python 3.8 and run on Python 3.6.
+Python 3.10 and run on Python 3.8.
 
 We need to tell setuptools this, otherwise it incorrectly assumes that our
 packages are Pure Python which would eventually lead to pip installing binaries
