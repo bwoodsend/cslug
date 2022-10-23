@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name="cslug"
+version = "0.7.0"
+authors = [
+  { name="Brénainn Woodsend", email="bwoodsend@gmail.com" },
+]
+description="Quick and painless wrapping C code into Python"
+readme = "README.rst"
+license = { file="LICENSE" }
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/bwoodsend/cslug"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=3", "pytest-timeout", "toml", "coverage",
+    "coverage-conditional-plugin", "wheel",
+    "pytest_ordered @ https://github.com/bwoodsend/pytest-ordered/archive/480e13c0c23ca8f4601f18aff9990f42935cc8c4.zip",
+]
+
+[tool.setuptools.packages.find]
+include = ["cslug"]
