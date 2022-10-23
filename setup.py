@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-import runpy
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -35,6 +34,6 @@ setup(
     package_data={"cslug": ["stdlib.json"]},
     test_suite='tests',
     url='https://github.com/bwoodsend/cslug',
-    version=runpy.run_path("cslug/_version.py")["__version__"],
+    version="0.7.0",
     zip_safe=True,
 )
