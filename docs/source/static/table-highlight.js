@@ -1,7 +1,7 @@
 /* Set different font colors for table cells containing '✓' and '✗'. */
 
-$(window).bind("load", function() {
-  for (let cell of $('td')) {
+window.onload = function() {
+  for (let cell of document.getElementsByTagName('td')) {
     if (cell.textContent.match("✓")) {
       cell.style.color = "#1E432E";
     }
@@ -9,4 +9,4 @@ $(window).bind("load", function() {
       cell.style.color = "#BBA";
     }
   }
-});
+};
