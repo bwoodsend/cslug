@@ -16,7 +16,7 @@ jobs:
                      'musllinux_1_1_aarch64', 'musllinux_1_1_s390x',
                      'musllinux_1_1_i686', 'musllinux_1_1_ppc64le']
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Install Docker Buildx
         if: ${{ !startsWith(matrix.base-image, 'manylinux1_') }}
@@ -42,7 +42,7 @@ jobs:
   test-alpine:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: docker build -t cslug-alpine -f Dockerfile_alpine .
       - run: docker run -v "$PWD:/io" cslug-alpine ./test
 
