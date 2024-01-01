@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'cslug'
-copyright = "2020, Brénainn Woodsend"
+copyright = "2020-2024, Brénainn Woodsend"
 author = "Brénainn Woodsend"
 
 # The version info for the project you're documenting, acts as replacement
