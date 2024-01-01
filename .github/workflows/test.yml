@@ -16,51 +16,30 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: [3.9, 3.8, '3.10', 3.11]
+        python-version: [3.9, 3.8, '3.10', 3.11, 3.12]
         architecture: ['x64']
         include:
-          - os: macos-10.15
+          - os: macos-latest
             python-version: 3.11
             architecture: 'x64'
-          - os: macos-11.0
+          - os: windows-latest
             python-version: 3.11
             architecture: 'x64'
-          - name: Windows
-            os: windows-latest
-            python-version: 3.11
-            architecture: 'x64'
-          - name: Windows 32-bit
-            os: windows-latest
+          - os: windows-latest
             python-version: 3.11
             architecture: 'x86'
-
       fail-fast: false
-
     runs-on: ${{ matrix.os }}
 
     steps:
-
       - uses: actions/checkout@v4
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
-      - name: Cache pip cached wheels
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: pip-cache
-          key: restore-key
-          restore-keys: restore-key
 
-      - name: Install
-        run: |
-          pip install --cache-dir=pip-cache wheel
-          pip install --cache-dir=pip-cache psutil
-          pip install --cache-dir=pip-cache -e .[test]
+      - run: pip install wheel psutil setuptools
+      - run: pip install -e .[test]
 
       - name: Show gcc
         run: gcc -v
@@ -89,7 +68,7 @@ jobs:
       - name: Test gcc macOS
         if: ${{ runner.os == 'macOS' }}
         env:
-          CC: gcc-9
+          CC: gcc-13
           MACOS_DEPLOYMENT_TARGET: '10.10'
         run: ./test
 
@@ -123,9 +102,8 @@ jobs:
       - name: Show wheel suffix
         run: ls packaging/contains-slugs/dist/
 
-      # Test running the whole test suite, compiling everything fat. Only the
-      # macOS 11 images have a new enough Xcode to do this.
+      # Test running the whole test suite, compiling everything fat.
       - run: ./test && ls packaging/contains-slugs/dist
-        if:  ${{ matrix.os == 'macos-11.0' }}
+        if:  runner.os == 'macOS'
         env:
           MACOS_ARCHITECTURE: universal2

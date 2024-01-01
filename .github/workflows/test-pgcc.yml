@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
 
       # The recommended way to install PGCC is just raw wget/paste - no package
       # managers.
@@ -24,5 +27,6 @@ jobs:
           echo PATH=$PATH:/opt/nvidia/hpc_sdk/Linux_x86_64/21.9/compilers/bin/ >> $GITHUB_ENV
         working-directory: /opt/
 
+      - run: pip install setuptools wheel
       - run: pip install -e .[test]
       - run: CC=pgcc ./test
