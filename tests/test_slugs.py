@@ -499,6 +499,8 @@ def test_contradictory_flags():
 
     # Specify no warnings to override the default of all warnings -Wall.
     self.flags.append("-w")
+    if cc_version()[0] == "clang":
+        self.flags += ["-Wno-error=implicit-function-declaration"]
 
     with warnings.catch_warnings():
         warnings.filterwarnings("error", category=exceptions.BuildWarning)

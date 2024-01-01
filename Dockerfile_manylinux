@@ -27,14 +27,14 @@ RUN pip install wheel
 # Install dependencies. Installing as many as possible before the ``COPY . /io``
 # helps docker to cache them.
 # Otherwise this block could be replaced with just ``COPY . /io``.
-COPY setup.py /io/setup.py
+COPY pyproject.toml /io/pyproject.toml
 COPY README.rst /io/README.rst
-COPY cslug/_version.py /io/cslug/_version.py
 
 # Set the repo's root as the cwd.
 WORKDIR /io
 # Install more dependencies.
 RUN pip install --prefer-binary -e .[test]
-RUN pip install psutil
+# Work around new metapath nonsense
+RUN ln -s /io/cslug /opt/python/cp39-cp39/lib/python3.9/site-packages/cslug
 # Copy across this repo.
 COPY . /io
