@@ -161,7 +161,8 @@ def mmacosx_version_min():  # pragma: Darwin
     # - Python 3.8-3.11 -> OSX 10.9
     default = "10.9"
 
-    target = os.environ.get("MACOS_DEPLOYMENT_TARGET", default)
+    target = os.environ.get("MACOSX_DEPLOYMENT_TARGET") or \
+             os.environ.get("MACOS_DEPLOYMENT_TARGET") or  default
     if (macos_architecture() or platform.machine()) == "arm64":
         # arm64 only wheels must be declared >= 11.0 compatible or they are not
         # deemed installable. A universal2 wheel does not have this constraint.
@@ -173,7 +174,7 @@ def mmacosx_version_min():  # pragma: Darwin
 
 
 def macos_architecture():  # pragma: Darwin
-    """Read and validate the contents of the `MACOS_ARCHITECTURE`
+    """Read and validate the contents of the `MACOS(X)_ARCHITECTURE`
     environment variable.
 
     Returns:
@@ -184,7 +185,9 @@ def macos_architecture():  # pragma: Darwin
 
     """
     if platform.system() == "Darwin":  # pragma: no branch
-        return _macos_architecture(os.environ.get("MACOS_ARCHITECTURE"))
+        return _macos_architecture(
+            os.environ.get("MACOSX_ARCHITECTURE")
+            or os.environ.get("MACOS_ARCHITECTURE"))
 
 
 def _macos_architecture(env_value):
@@ -198,5 +201,5 @@ def _macos_architecture(env_value):
         return env_value
     elif sorted(re.findall(r"[^\s,]+", env_value)) == ["arm64", "x86_64"]:
         return "universal2"
-    raise EnvironmentError(f"The MACOS_ARCHITECTURE environment variable must "
+    raise EnvironmentError(f"The MACOSX_ARCHITECTURE environment variable must "
                            f"be one of {valid}. Received '{env_value}'.")

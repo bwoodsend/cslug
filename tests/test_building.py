@@ -1,5 +1,6 @@
 import io
 import platform
+import contextlib
 
 from cslug import CSlug, anchor
 
@@ -70,7 +71,14 @@ def test_copy_requirements():
 def test_patch_macos_tag(monkeypatch, tag):
     from cslug.building import _macos_platform_tag
 
+    with contextlib.suppress(KeyError):
+        monkeypatch.delenv("MACOSX_ARCHITECTURE")
+
     monkeypatch.setattr(platform, "system", lambda: "Darwin")
+    with contextlib.suppress(KeyError):
+        monkeypatch.delenv("MACOSX_ARCHITECTURE")
+    with contextlib.suppress(KeyError):
+        monkeypatch.delenv("MACOSX_DEPLOYMENT_TARGET")
 
     monkeypatch.setenv("MACOS_ARCHITECTURE", "x86_64")
     monkeypatch.setenv("MACOS_DEPLOYMENT_TARGET", "11")
@@ -94,11 +102,16 @@ def test_patch_macos_tag(monkeypatch, tag):
     monkeypatch.delenv("MACOS_DEPLOYMENT_TARGET")
     assert _macos_platform_tag(tag) == "macosx_10_9_universal2"
 
-    monkeypatch.setenv("MACOS_ARCHITECTURE", "universal2")
-    monkeypatch.setenv("MACOS_DEPLOYMENT_TARGET", "12.7")
+    monkeypatch.setenv("MACOSX_ARCHITECTURE", "universal2")
+    monkeypatch.setenv("MACOSX_DEPLOYMENT_TARGET", "12.7")
     assert _macos_platform_tag(tag) == "macosx_12_7_universal2"
-    monkeypatch.delenv("MACOS_DEPLOYMENT_TARGET")
+
+    for key in ("MACOS_DEPLOYMENT_TARGET", "MACOSX_DEPLOYMENT_TARGET"):
+        with contextlib.suppress(KeyError):
+            monkeypatch.delenv(key)
     assert _macos_platform_tag(tag) == "macosx_10_9_universal2"
 
-    monkeypatch.delenv("MACOS_ARCHITECTURE")
+    for key in ("MACOS_ARCHITECTURE", "MACOSX_ARCHITECTURE"):
+        with contextlib.suppress(KeyError):
+            monkeypatch.delenv(key)
     assert "universal2" not in _macos_platform_tag(tag)

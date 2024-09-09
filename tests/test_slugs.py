@@ -160,6 +160,8 @@ def test_buffers_or_temporary_files(monkeypatch):
 
     with contextlib.suppress(KeyError):
         monkeypatch.delenv("MACOS_ARCHITECTURE")
+    with contextlib.suppress(KeyError):
+        monkeypatch.delenv("MACOSX_ARCHITECTURE")
 
     # gcc does support pseudo files and therefore they should be used.
     command, buffers, temporary_files = \
@@ -518,6 +520,8 @@ def test_macos_arches(monkeypatch):
     """Test cross compiling for arm64/x86_64 on macOS."""
     with contextlib.suppress(KeyError):
         monkeypatch.delenv("MACOS_ARCHITECTURE")
+    with contextlib.suppress(KeyError):
+        monkeypatch.delenv("MACOSX_ARCHITECTURE")
 
     if platform.system() != "Darwin":
         return

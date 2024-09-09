@@ -56,12 +56,18 @@ Add compiler flags
 |cslug| supports two ways to add compiler flags.
 
 1. Using the **flags** option of :class:`cslug.CSlug`.
-2. Via the ``CC_FLAGS`` environment variable.
+2. Via the ``CFLAGS``  environment variable (or its legacy alias ``CC_FLAGS``).
 
 Option :math:`1` is the preferred long term approach.
-``CC_FLAGS`` may be used to temporarily trial new options.
+``CFLAGS`` may be used to temporarily trial new options.
 
 .. versionadded:: 0.3.0
+
+    The ``CC_FLAGS`` environment variable.
+
+.. versionadded:: 1.0.0
+
+    The ``CFLAGS`` alias for ``CC_FLAGS``.
 
 
 Select warnings
@@ -97,14 +103,21 @@ oldest version of Python that |cslug| supports, so in theory you should never
 have reason to lower it.
 You may however need to raise it if your compiler lacks the SDKs for older
 versions.
-Do this by setting the ``MACOS_DEPLOYMENT_TARGET`` environment variable
+Do this by setting the ``MACOSX_DEPLOYMENT_TARGET`` environment variable
 (assuming that you set up :ref:`setuptools integration <Packaging with
 setuptools>`)
 ::
 
-    MACOS_DEPLOYMENT_TARGET=10.10 python setup.py build
+    MACOSX_DEPLOYMENT_TARGET=10.10 python setup.py build
 
 .. versionadded:: 0.3.0
+
+    The ``MACOS_DEPLOYMENT_TARGET`` environment variable.
+
+.. versionadded:: 1.0.0
+
+    The ``MACOSX_DEPLOYMENT_TARGET`` alias for
+    ``MACOS_DEPLOYMENT_TARGET``.
 
 
 Architectures for macOS
@@ -127,22 +140,21 @@ and the XCode command line tools with version :math:`\ge 12.2`.
 If you lack these requirements, you will typically get some strange compiler
 errors somewhere deep in the macOS SDK when compiling ``arm64`` slices.
 
-Architecture selection is done via the ``MACOS_ARCHITECTURE`` environment
-variable.
-Again assuming that you set up :ref:`setuptools integration <Packaging with
-setuptools>`:
+Architecture selection is done via the ``MACOSX_ARCHITECTURE`` environment
+variable. Again assuming that you set up :ref:`setuptools integration <Packaging
+with setuptools>`:
 
 * Build an ``arm64`` wheel::
 
-    MACOS_ARCHITECTURE=arm64 python setup.py bdist_wheel
+    MACOSX_ARCHITECTURE=arm64 python setup.py bdist_wheel
 
 * Build an ``x86_64`` wheel::
 
-    MACOS_ARCHITECTURE=x86_64 python setup.py bdist_wheel
+    MACOSX_ARCHITECTURE=x86_64 python setup.py bdist_wheel
 
 * Build a dual ``universal2`` wheel::
 
-    MACOS_ARCHITECTURE=universal2 python setup.py bdist_wheel
+    MACOSX_ARCHITECTURE=universal2 python setup.py bdist_wheel
 
 You can verify a wheel's architecture simply by looking at its filename.
 It should contain either ``arm64``, ``x86_64`` or ``universal2`` in it.
@@ -154,3 +166,9 @@ To verify a single binary's architecture, use macOS's builtin ``lipo`` tool.
     x86_64 arm64
 
 .. versionadded:: v0.5.0
+
+    The ``MACOS_ARCHITECTURE`` environment variable.
+
+.. versionadded:: v1.0.0
+
+    The ``MACOSX_ARCHITECTURE`` alias for ``MACOS_DEPLOYMENT_TARGET``.
