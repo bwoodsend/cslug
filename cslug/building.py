@@ -42,6 +42,10 @@ def make(*names):
     """
     import importlib
     import operator
+    import sys
+    import os
+
+    sys.path.insert(0, os.getcwd())
 
     for name in names:
         import_, *attrs = name.split(":")
@@ -71,8 +75,13 @@ def build_slugs(*names, base=_build):  # pragma: no cover
     return build
 
 
-try:
-    from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
+try:  # pragma: no cover
+    try:
+        from setuptools.command.bdist_wheel import bdist_wheel as _bdist_wheel
+        from setuptools.command.bdist_wheel import get_platform as _get_platform
+    except ImportError:
+        from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
+        from wheel.bdist_wheel import get_platform as _get_platform
 
 except ImportError:  # pragma: no cover
     # Provide a self-explanatory error message on `setup.py bdist_wheel` if the
@@ -90,8 +99,8 @@ except ImportError:  # pragma: no cover
 
         def run(self):
             raise SystemExit(
-                "ERROR: The bdist_wheel command requires the wheel package. "
-                "Please `pip install wheel` then try again.")
+                "ERROR: The bdist_wheel command requires setuptools >= 70.1. "
+                "Please `pip install -U setuptools` then try again.")
 else:
 
     class bdist_wheel(_bdist_wheel):
@@ -117,8 +126,7 @@ else:
             # Setting ``plat_name`` is equivalent to using the ``--plat`` CLI
             # option.
             import platform
-            from wheel.bdist_wheel import get_platform
-            self.plat_name = get_platform(self.bdist_dir)
+            self.plat_name = _get_platform(self.bdist_dir)
 
             if platform.system() == "Darwin":
                 # If on mac, deal with the x86_64/arm64/universal2 shenanigans
