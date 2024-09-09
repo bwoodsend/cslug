@@ -38,7 +38,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
 
-      - run: pip install wheel psutil setuptools
+      - run: pip install -U wheel psutil setuptools
       - run: pip install -e .[test]
 
       - name: Show gcc
