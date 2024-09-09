@@ -2,14 +2,6 @@
 Welcome to cslug!
 =================
 
-.. image::
-    https://img.shields.io/pypi/pyversions/cslug?color=%2326543A&label=Python
-    :alt: PyPI version
-    :target: https://pypi.org/project/cslug/
-
-.. image:: https://img.shields.io/badge/coverage-100%25-%2326543A
-    :target: https://github.com/bwoodsend/cslug/blob/9bbee6fc4f1f92f47d2b2aca5e7ce6fa68e197d7/.coveragerc#L22
-
 ∘
 `MIT license <https://github.com/bwoodsend/cslug/blob/master/LICENSE>`_
 ∘
@@ -21,7 +13,7 @@ Welcome to cslug!
 ∘
 `Raise Bugs <https://github.com/bwoodsend/cslug/issues>`_
 ∘
-`Get Support <https://github.com/bwoodsend/cslug/discussions>`_
+`Support <https://github.com/bwoodsend/cslug/discussions>`_
 
 Quick and painless wrapping C code into Python.
 The **cslug** package provides a thin layer on top of the built-in ctypes_
