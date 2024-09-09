@@ -6,8 +6,7 @@ CSlug API Reference
 Module contents
 ---------------
 
-.. module:: cslug
-    :noindex:
+.. currentmodule:: cslug
 
 .. autoclass:: CSlug
     :special-members: __init__

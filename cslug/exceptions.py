@@ -1,10 +1,5 @@
 """
-====================
-``cslug.exceptions``
-====================
-
 All custom exception and warning classes are defined and accessible here.
-
 """
 
 

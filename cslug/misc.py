@@ -1,10 +1,5 @@
 """
-=================
-:mod:`cslug.misc`
-=================
-
 The miff-muffet-moof module.
-
 """
 
 import io as _io

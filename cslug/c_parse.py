@@ -1,8 +1,4 @@
 """
-====================
-:mod:`cslug.c_parse`
-====================
-
 The :mod:`cslug.c_parse` submodule provides some very bare-bones C parsing
 tools.
 
