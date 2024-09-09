@@ -68,7 +68,6 @@ def test_which(suffix):
     old = os.environ["PATH"]
     try:
         os.environ["PATH"] += os.pathsep + str(DIR)
-        print(os.environ["PATH"])
         import shutil
         assert shutil.which(path.name)
 
@@ -157,7 +156,7 @@ def test_macos_architecture():
     assert _macos_architecture("x86_64, arm64") == "universal2"
     assert _macos_architecture("x86_64 arm64") == "universal2"
     assert _macos_architecture("x86_64,arm64") == "universal2"
-    with pytest.raises(EnvironmentError, match="The MACOS_ARCHITECTURE .*"):
+    with pytest.raises(EnvironmentError, match="The MACOSX_ARCHITECTURE .*"):
         _macos_architecture("spaghetti")
 
 

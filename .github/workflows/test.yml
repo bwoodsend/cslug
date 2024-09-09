@@ -69,7 +69,7 @@ jobs:
         if: ${{ runner.os == 'macOS' }}
         env:
           CC: gcc-13
-          MACOS_DEPLOYMENT_TARGET: '10.10'
+          MACOSX_DEPLOYMENT_TARGET: '10.10'
         run: ./test
 
       - name: Install TinyCC
@@ -106,4 +106,4 @@ jobs:
       - run: ./test && ls packaging/contains-slugs/dist
         if:  runner.os == 'macOS'
         env:
-          MACOS_ARCHITECTURE: universal2
+          MACOSX_ARCHITECTURE: universal2

@@ -55,13 +55,17 @@ class CSlug(object):
                 Other C libraries to link to via the ``-l`` compiler switch.
                 Should not contain the ``-l`` prefix or platform suffix.
             flags (str or list[str]):
-                Additional flags to be passed directly to the C compiler.
-                Can also be configured using the ``CC_FLAGS`` environment
-                variable. Inspect using `compile_command`.
+                Additional flags to be passed directly to the C compiler. Can
+                also be configured using the ``CFLAGS`` or ``CC_FLAGS``
+                environment variable. Inspect using `compile_command`.
 
         .. versionchanged:: 0.3.0
 
             Add **flags** parameter and the ``CC_FLAGS`` variable.
+
+        .. versionchanged:: 1.0.0
+
+            Add ``CFLAGS`` alias for ``CC_FLAGS``.
 
         """
         path, *sources = misc.flatten(sources, initial=misc.flatten(path))
@@ -325,9 +329,10 @@ class CSlug(object):
         # Super noisy build warnings.
         warning_flags = "-Wall -Wextra".split()
 
-        # Custom flags from the CC_FLAGS environment variable. Delimited
+        # Custom flags from the CFLAGS/CC_FLAGS environment variables. Delimited
         # with whitespace.
-        env_flags = re.findall(r"[^\s]+", os.environ.get("CC_FLAGS", ""))
+        env_flags = re.findall(r"[^\s]+", os.environ.get("CFLAGS", ""))
+        env_flags += re.findall(r"[^\s]+", os.environ.get("CC_FLAGS", ""))
 
         # Compile all .c files into 1 combined library.
         # Note that you don't pass header files to compilers.
