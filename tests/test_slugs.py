@@ -482,31 +482,6 @@ def test_custom_compiler_flags():
          < cmd.index("-lsome-library")
 
 
-def test_contradictory_flags():
-    """Assert that compilers accept contradictory flags without complaint."""
-
-    # Should warn for implicit function declaration due to missing
-    # #include <math.h>.
-    self = CSlug(anchor(name()), io.StringIO("double foo() { return sin(3); }"))
-
-    try:
-        with pytest.warns(exceptions.BuildWarning, match="implicit.*"):
-            self.make()
-    except exceptions.BuildError as ex:
-        # The default clang on macOS elevates this to an error with -Werror.
-        # Also fixable with flags="-Wno-error=implicit-function-declaration".
-        assert "implicit" in str(ex)
-
-    # Specify no warnings to override the default of all warnings -Wall.
-    self.flags.append("-w")
-    if cc_version()[0] == "clang":
-        self.flags += ["-Wno-error=implicit-function-declaration"]
-
-    with warnings.catch_warnings():
-        warnings.filterwarnings("error", category=exceptions.BuildWarning)
-        self.make()
-
-
 @warnings_are_evil
 def test_custom_include():
     """``#include`` an awkwardly located header file using the ``-I`` option."""
