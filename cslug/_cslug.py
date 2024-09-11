@@ -338,7 +338,7 @@ class CSlug(object):
         # For the compilers that do not support piped source code, convert all
         # pseudo files to temporary files.
         temporary_files = []
-        if cc_name in ("pcc", "pgcc"):
+        if cc_name in ("pcc", "pgcc") or (OS == "Darwin" and arch == "universal2"):
             for buffer in buffers:
                 file = tempfile.NamedTemporaryFile("w", encoding="utf-8",
                                                    delete=False, suffix=".c")
