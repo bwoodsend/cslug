@@ -7,13 +7,12 @@ import itertools
 import math
 import random
 import platform
-import shutil
-import re
+import contextlib
 from subprocess import run, PIPE
 
 import pytest
 
-from cslug import exceptions, anchor, CSlug, misc, Header, cc_version
+from cslug import exceptions, anchor, CSlug, misc, Header, cc_version, _cc
 
 from tests import DUMP, name, DEMOS, RESOURCES, warnings_are_evil
 from tests.test_pointers import leaks
@@ -155,9 +154,12 @@ def test_printf_warns():
         assert check_printfs("# 100\n\nprintf()")
 
 
-def test_buffers_or_temporary_files():
+def test_buffers_or_temporary_files(monkeypatch):
     """Test CSlug.compile_command() only with both pseup and temporary files."""
     self = CSlug(*anchor(name(), io.StringIO("foo"), io.StringIO("bar")))
+
+    with contextlib.suppress(KeyError):
+        monkeypatch.delenv("MACOS_ARCHITECTURE")
 
     # gcc does support pseudo files and therefore they should be used.
     command, buffers, temporary_files = \
@@ -503,8 +505,8 @@ def test_custom_include():
     try:
         self.make()
 
-        if cc_version()[0] == "pgcc":
-            pytest.xfail("pgcc silently created an invalid executable.")
+        if cc_version()[0] == "pgcc" or _cc.macos_architecture() == "universal2":
+            pytest.xfail("compiler silently created an invalid executable.")
         else:
             assert 0, "No build error was raised"
     except exceptions.BuildError:
@@ -514,12 +516,11 @@ def test_custom_include():
 @warnings_are_evil
 def test_macos_arches(monkeypatch):
     """Test cross compiling for arm64/x86_64 on macOS."""
+    with contextlib.suppress(KeyError):
+        monkeypatch.delenv("MACOS_ARCHITECTURE")
 
     if platform.system() != "Darwin":
         return
-    xcode = _xcode_version()
-    if xcode is None or xcode < (12, 2):
-        pytest.skip("Needs Xcode >= 12.2")
 
     # The test C code should require linking to be meaningful.
     self = CSlug(anchor(name()), io.StringIO("""\
@@ -552,17 +553,6 @@ def test_macos_arches(monkeypatch):
         # and it should work.
         if platform.machine() in arches:
             self.dll.take_sin(2) == pytest.approx(math.sin(2))
-
-
-def _xcode_version():
-    """Get xcode version if installed or None if not."""
-    if shutil.which("xcodebuild") is None:
-        return
-    p = run(["xcodebuild", "-version"], stdout=PIPE, stderr=PIPE)
-    if p.returncode:
-        return
-    version = re.search(r"Xcode (\d+)\.(\d+)", p.stdout.decode()).groups()
-    return tuple(map(int, version))
 
 
 @warnings_are_evil
