@@ -1,5 +1,4 @@
-import os, sys
-from pathlib import Path
+import os
 import ctypes
 import collections
 import subprocess
@@ -9,7 +8,7 @@ from pprint import pprint
 import requests
 from progressbar import progressbar
 
-from stdlib.parse import unavailable, Function
+from stdlib.parse import unavailable
 
 
 @functools.lru_cache()

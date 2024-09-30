@@ -1,4 +1,4 @@
-import os, sys
+import os
 from pathlib import Path
 import io
 import ctypes
@@ -7,7 +7,6 @@ import itertools
 import math
 import random
 import platform
-import warnings
 import shutil
 import re
 from subprocess import run, PIPE
