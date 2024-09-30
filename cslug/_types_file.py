@@ -1,10 +1,10 @@
-import os, sys
+import sys
 import io
 from pathlib import Path
 import json
 import ctypes
 import itertools
-from typing import Union, Dict, List
+from typing import Union
 
 from cslug.c_parse import parse_functions, parse_structs
 from cslug import misc

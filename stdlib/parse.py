@@ -3,7 +3,7 @@ import collections
 import warnings
 import io
 
-from cslug import exceptions, _stdlib, c_parse, Types
+from cslug import exceptions, c_parse, Types
 
 warnings.filterwarnings("error", category=exceptions.TypeParseWarning)
 
@@ -27,7 +27,7 @@ for (_, name, headers, prototype, description, _) in table:
     for (index, header) in enumerate(headers.split()):
         try:
             name = c_parse.parse_function(prototype.rstrip(";"))[0]
-        except (exceptions.TypeParseWarning, ValueError) as ex:
+        except (exceptions.TypeParseWarning, ValueError):
             # Ignore anything that cslug doesn't understand.
             continue
         function = Function(name, prototype, description, not index)

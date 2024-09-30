@@ -1,5 +1,3 @@
-import os, sys
-from pathlib import Path
 import re
 
 import pytest
