@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name="cslug"
-version = "0.7.0"
+name = "cslug"
+version = "1.0.0"
 authors = [
   { name="Brénainn Woodsend", email="bwoodsend@gmail.com" },
 ]

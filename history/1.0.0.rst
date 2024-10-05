@@ -1,0 +1,19 @@
+* Support the semi-standardised ``CFLAGS``, ``MACOSX_DEPLOYMENT_TARGET`` and
+  ``MACOSX_ARCHITECTURE`` as aliases for the pre-existing ``CC_FLAGS``,
+  ``MACOS_DEPLOYMENT_TARGET`` and ``MACOS_ARCHITECTURE`` environment variables.
+
+* Fix building wheels with new setuptools+wheel versions.
+
+* .. rst-class:: in-red
+
+    Remove ``cslug.__version__`` attribute. Use
+    ``importlib.metadata.version("cslug")`` instead.
+
+* .. rst-class:: in-red
+
+    Fix the macOS deployment target not being enforced for targets below 10.12.
+
+* Drop end of life Python versions 3.6 and 3.7.
+
+* The build command in :class:`~cslug.exceptions.BuildError` now uses shell-like
+  syntax instead of an argument list.
