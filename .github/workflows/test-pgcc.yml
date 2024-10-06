@@ -30,10 +30,10 @@ jobs:
       # The recommended way to install PGCC is just raw wget/paste - no package
       # managers.
       - run: |
-          wget -nv https://developer.download.nvidia.com/hpc-sdk/21.9/nvhpc_2021_219_Linux_x86_64_cuda_11.4.tar.gz
-          tar xpzf nvhpc_2021_219_Linux_x86_64_cuda_11.4.tar.gz
-          sudo nvhpc_2021_219_Linux_x86_64_cuda_11.4/install
-          echo PATH=$PATH:/opt/nvidia/hpc_sdk/Linux_x86_64/21.9/compilers/bin/ >> $GITHUB_ENV
+          wget -nv https://developer.download.nvidia.com/hpc-sdk/24.9/nvhpc_2024_249_Linux_x86_64_cuda_12.6.tar.gz
+          tar xpzf nvhpc_2024_249_Linux_x86_64_cuda_12.6.tar.gz
+          sudo nvhpc_2024_249_Linux_x86_64_cuda_12.6/install
+          echo /opt/nvidia/hpc_sdk/Linux_x86_64/24.9/compilers/bin  >> $GITHUB_PATH
         working-directory: /opt/
 
       - run: pip install setuptools wheel
