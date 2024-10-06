@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
     machine.vm.provision "shell", privileged: false, inline:<<-END
       sudo pkg update
       sudo pkg install -y fish py39-pip py39-sqlite3
-      cd /io && pip install -e .[test] psutil
+      cd /io && pip install -e . -r tests/requirements.txt psutil
     END
     setup_shell(machine)
     shimify_python(machine, "python3.9")
@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
     setup_rsync(machine)
     machine.vm.provision "shell", privileged: false, inline:<<-END
       sudo pkg_add fish py3-pip
-      cd /io && pip install -e .[test]
+      cd /io && pip install -e . -r tests/requirements.txt
     END
     setup_shell(machine)
     shimify_python(machine, "python3")
@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
     setup_shell(machine)
     shimify_python(machine, "python3.9")
     machine.vm.provision "shell", privileged: false, inline:<<-END
-      cd /io && pip install -e .[test] psutil
+      cd /io && pip install -e . -r tests/requirements.txt psutil
     END
   end
 

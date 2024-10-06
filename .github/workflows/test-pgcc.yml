@@ -28,5 +28,5 @@ jobs:
         working-directory: /opt/
 
       - run: pip install setuptools wheel
-      - run: pip install -e .[test]
+      - run: pip install -e . -r tests/requirements.txt
       - run: CC=pgcc ./test

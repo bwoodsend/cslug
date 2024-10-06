@@ -26,12 +26,5 @@ classifiers = [
 [project.urls]
 "Homepage" = "https://github.com/bwoodsend/cslug"
 
-[project.optional-dependencies]
-test = [
-    "pytest>=3", "pytest-timeout", "toml", "coverage",
-    "coverage-conditional-plugin", "wheel", "setuptools",
-    "pytest_ordered @ https://github.com/bwoodsend/pytest-ordered/archive/480e13c0c23ca8f4601f18aff9990f42935cc8c4.zip",
-]
-
 [tool.setuptools.packages.find]
 include = ["cslug"]
