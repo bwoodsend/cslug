@@ -13,6 +13,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Free up disk space
+        run: |
+          df -h
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          df -h
+
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
