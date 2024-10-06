@@ -15,4 +15,4 @@ RUN apk add gcc musl-dev
 ENV FORCE_COLOR=1
 COPY . /io
 WORKDIR /io
-RUN pip install --prefer-binary -e .[test]
+RUN pip install --prefer-binary -e . -r tests/requirements.txt

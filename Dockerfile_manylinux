@@ -29,11 +29,12 @@ RUN pip install wheel
 # Otherwise this block could be replaced with just ``COPY . /io``.
 COPY pyproject.toml /io/pyproject.toml
 COPY README.rst /io/README.rst
+COPY tests/requirements.txt /io/tests/requirements.txt
 
 # Set the repo's root as the cwd.
 WORKDIR /io
 # Install more dependencies.
-RUN pip install --prefer-binary -e .[test]
+RUN pip install --prefer-binary -e . -r tests/requirements.txt
 # Work around new metapath nonsense
 RUN ln -s /io/cslug /opt/python/cp39-cp39/lib/python3.9/site-packages/cslug
 # Copy across this repo.

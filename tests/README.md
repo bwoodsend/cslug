@@ -4,7 +4,7 @@ Test requirements are specified as an extras-require.
 Run from the root of this repo:
 
 ```shell
-pip install -e .[test]
+pip install -e . -r tests/requirements.txt
 ```
 
 Then invoke tests using:
