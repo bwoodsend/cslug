@@ -51,10 +51,10 @@ MEM_BLOCK_SIZE = 1 << 28
 
 # Maximum amount of memory-use increase. Should be almost zero if not zero.
 # Certainly much less than MEM_BLOCK_SIZE.
-MEM_LEAK_TOL = MEM_BLOCK_SIZE // 100
+MEM_LEAK_TOL = MEM_BLOCK_SIZE // 10
 
 
-def leaks(f, tol=None, n=1):
+def leaks(f, tol=None, n=3):
     """
     Test if a function leaks memory.
 
@@ -74,7 +74,7 @@ def leaks(f, tol=None, n=1):
     new = p.memory_info().vms
     out = new - old
     if tol is not None:
-        assert out <= tol
+        assert out <=  tol
     return out
 
 

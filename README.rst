@@ -123,9 +123,12 @@ Windows      ✓    ✓      ✗    ✓       ✗
 macOS        ✓    ✓      ✗    ✗       ✗
 FreeBSD      ✓    ✓      ✗    ✗       ✗
 OpenBSD      ✓    ✓      ✗    ✗       ✗
-NetBSD       ✓    ✗      ✗    ✗       ✗
+NetBSD       ✓    ✓      ✗    ✗       ✗
+DragonFlyBSD ✓    ✓      ✗    ✗       ✗
 Cygwin/msys2 ✓    ✓      ✗    ✗       ✗
 Android*     ✗    ✓      ✗    ✗       ✗
+Omnios       ✓    ✓      ✗    ✗       ✗
+Solaris      ✓    ✓      ✗    ✗       ✗
 ============ ==== ====== ==== ======= ==========
 
 \* Using Termux_.

@@ -45,13 +45,16 @@ can be found on. See the key below for which platform each icon symbolises:
 
 * |Android| Android
 * |Cygwin| Cygwin (UNIX emulator for Windows).
+* |DragonFlyBSD| DragonFlyBSD
 * |FreeBSD| FreeBSD
 * |glibc Linux| Linux distributions using GNU libc (i.e. the vast majority of them)
 * |macOS| macOS (``x86_64`` or ``arm64``)
 * |MSYS2| MSYS2 (another UNIX emulator for Windows)
 * |musl Linux| Linux distributions using musl libc (most famously Alpine)
 * |NetBSD| NetBSD
+* |Omnios| Omnios
 * |OpenBSD| OpenBSD
+* |Solaris| Solaris
 * |Windows MSVCRT| Windows 7 to 10 (using the MSVC runtime)
 * |Windows UCRT| Windows 11 (using the new Universal C Runtime)
 
