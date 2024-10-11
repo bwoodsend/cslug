@@ -1,0 +1,115 @@
+name: VMs
+
+on:
+  workflow_dispatch:
+    inputs:
+      variants:
+        default: freebsd openbsd netbsd solaris dragonflybsd omnios
+      debug:
+
+env:
+  test_code: |
+    set -e
+    export FORCE_COLOR=1
+    . /tmp/env/bin/activate
+    pip install -Uq setuptools pip
+    pip install -qe . -r tests/requirements.txt
+    pip install -q psutil || true
+    pip freeze
+    CC=gcc ./test
+    python stdlib/availability.py
+    ls packaging/contains-slugs/dist/
+    CC=clang ./test
+
+jobs:
+  freebsd:
+    runs-on: ubuntu-latest
+    if: contains(inputs.variants, 'freebsd')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: vmactions/freebsd-vm@v1
+        with:
+          usesh: true
+          run: |
+            pkg install -y python311 py311-sqlite3 gcc
+            python3.11 -m venv /tmp/env
+            ${{ env.test_code }}
+      - uses: neilpang/debugger-action@master
+        if: failure() && inputs.debug
+
+  openbsd:
+    runs-on: ubuntu-latest
+    if: contains(inputs.variants, 'openbsd')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: vmactions/openbsd-vm@v1
+        with:
+          usesh: true
+          run: |
+            pkg_add python3 gcc%11
+            ln /usr/local/bin/egcc /usr/local/bin/gcc
+            python3 -m venv /tmp/env
+            ${{ env.test_code }}
+      - uses: neilpang/debugger-action@master
+        if: failure() && inputs.debug
+
+  netbsd:
+    runs-on: ubuntu-latest
+    if: contains(inputs.variants, 'netbsd')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: vmactions/netbsd-vm@v1
+        with:
+          usesh: true
+          run: |
+            /usr/sbin/pkg_add python312 clang
+            python3.12 -m venv /tmp/env
+            ${{ env.test_code }}
+      - uses: neilpang/debugger-action@master
+        if: failure() && inputs.debug
+
+  dragonflybsd:
+    runs-on: ubuntu-latest
+    if: contains(inputs.variants, 'dragonflybsd')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: vmactions/dragonflybsd-vm@v1
+        with:
+          usesh: true
+          run: |
+            pkg install -y py311-sqlite3 clang-mesa
+            ln /usr/local/bin/clang-mesa /usr/local/bin/clang
+            python3.11 -m venv /tmp/env
+            ${{ env.test_code }}
+      - uses: neilpang/debugger-action@master
+        if: failure() && inputs.debug
+
+  solaris:
+    runs-on: ubuntu-latest
+    if: contains(inputs.variants, 'solaris')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: vmactions/solaris-vm@v1
+        with:
+          usesh: true
+          run: |
+            pkg install runtime/python-39 developer/gcc developer/llvm/clang
+            python3.9 -m venv /tmp/env
+            ${{ env.test_code }}
+      - uses: neilpang/debugger-action@master
+        if: failure() && inputs.debug
+
+  omnios:
+    runs-on: ubuntu-latest
+    if: contains(inputs.variants, 'omnios')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: vmactions/omnios-vm@v1
+        with:
+          usesh: true
+          run: |
+            pkg install developer/gcc13 ooce/developer/clang-18
+            python -m venv /tmp/env
+            ${{ env.test_code }}
+      - uses: neilpang/debugger-action@master
+        if: failure() && inputs.debug
