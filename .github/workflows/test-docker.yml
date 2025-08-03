@@ -18,9 +18,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Docker Buildx
+      - uses: docker/setup-qemu-action@v3
         if: ${{ !startsWith(matrix.base-image, 'manylinux1_') }}
-        uses: crazy-max/ghaction-docker-buildx@v3.3.0
 
       - name: Build Docker image
         run: |
