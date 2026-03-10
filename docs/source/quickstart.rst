@@ -42,7 +42,7 @@ compiler.
 
 Let's talk through what just happened. |cslug| should have:
 
-* Compiled a |shared library| called **my-first-dll-[...]** in your current
+* Compiled a |shared library| called **my-first-slug-[...]** in your current
   working directory (where *[...]* depends on your OS). This library contains a
   single function called :c:`add_1()`.
 * Extracted type information from our C source code. Namely: :c:`add_1()` takes
@@ -104,7 +104,7 @@ To invoke a recompile use :meth:`slug.make() <cslug.CSlug.make>`.
 
     slug.make()
 
-If your source code is C file then just modify it, save it and call make - no
+If your source code is a C file then just modify it, save it and call make - no
 need to create a new :class:`~cslug.CSlug`. If you're using
 :class:`io.StringIO`\ s as source files you can edit a source like below,
 although it's generally easier either to create a new slug or to start putting C
@@ -183,7 +183,7 @@ your Python code's location (typically using ``__file__``)::
     slug = CSlug(HERE / "name", HERE / "c-code.c")
 
 This gets clunky very quickly so |cslug| provides an :func:`~cslug.anchor`
-function replace it. The above can be rewritten as::
+function to replace it. The above can be rewritten as::
 
     from cslug import cslug, anchor
     slug = CSlug(anchor("name"), anchor("c-code.c"))
