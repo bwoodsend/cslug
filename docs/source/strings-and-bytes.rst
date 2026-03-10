@@ -105,14 +105,14 @@ Writing to strings
 Writing to strings inplace or to new strings is possible but not so streamlined.
 
 1. In order to avoid the cacophony of memory issues that is creating and sharing
-   buffers in C, strings should only be created in Python. To write a string in
+   buffers in C, strings should only be created in Python. To write to a string in
    C, create an empty one of the right length then give it to C to populate.
    This unfortunately means that you must know how long your string will be
    before you write it.
 
 2. As we've seen above, strings are converted to :mod:`ctypes` character arrays
    when passed to a C function.
-   Writing to the converted on does not update the original and the converted
+   Writing to the converted one does not update the original and the converted
    array is discarded immediately after the function is complete, losing any
    changes the function made. To avoid this we must must do the conversion
    explicitly.

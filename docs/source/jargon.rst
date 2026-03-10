@@ -36,7 +36,7 @@ Glossary
 
     Binaries
 
-        Nick-name for |shared library|.
+        Nickname for |shared library|.
 
     DLL
 

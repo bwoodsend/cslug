@@ -166,13 +166,6 @@ Install **cslug** itself with the usual::
 
     pip install cslug
 
-Whilst **cslug** is still in its 0.x versions, breaking changes may occur on
-minor version increments.
-Please don't assume forward compatibility - pick a version you like and
-pin it in a ``requirements.txt``.
-Inspect the `changelog`_ for anything that may break your code.
-
-
 Quickstart
 ----------
 

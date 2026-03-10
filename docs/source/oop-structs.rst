@@ -187,7 +187,7 @@ Instead use the :ref:`free <stdlib-free>` function directly::
 Warning for Structs Containing Pointers
 ---------------------------------------
 
-Be vary careful for |dangling pointers| if you're struct contains pointers.
+Be very careful of |dangling pointers| if your struct contains pointers.
 This harmless looking structure, containing a string pointer, is deceptively
 dangerous:
 
